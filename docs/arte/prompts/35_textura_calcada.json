@@ -1,0 +1,38 @@
+{
+  "id": "35_textura_calcada",
+  "titulo_pt": "Textura de calçada",
+  "uso_no_jogo_pt": "Calçadas.",
+  "ferramenta_destino": "Godot (textura direta)",
+  "como_usar_pt": "Cole no ChatGPT. Esta imagem vai direto para o jogo, sem passar pelo gerador 3D.",
+  "prompt": {
+    "task": "Generate one single image.",
+    "output": {
+      "aspect_ratio": "1:1",
+      "resolution": "highest available",
+      "count": 1
+    },
+    "subject": {
+      "material": "square concrete sidewalk slabs (about 1.5 m) with thin expansion joints, subtle stains, warm light-gray",
+      "view": "perfectly top-down orthographic photo-texture covering the whole frame"
+    },
+    "style": {
+      "art_style": "stylized hand-painted game texture with subtle comic-book ink detailing, matching cel-shaded 3D art",
+      "palette": "muted, slightly desaturated real-world colors; no color cast from the environment"
+    },
+    "constraints": {
+      "tiling": "seamless and tileable on all four edges",
+      "lighting": "completely flat and uniform, no light direction",
+      "scale": "about 2 x 2 meters of surface"
+    },
+    "negative": [
+      "text",
+      "logos",
+      "perspective",
+      "objects",
+      "shadows from objects",
+      "vignette",
+      "visible seams",
+      "lighting gradient"
+    ]
+  }
+}

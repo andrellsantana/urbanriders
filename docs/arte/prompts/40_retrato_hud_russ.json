@@ -1,0 +1,34 @@
+{
+  "id": "40_retrato_hud_russ",
+  "titulo_pt": "Retrato do HUD — Russ",
+  "uso_no_jogo_pt": "Retrato circular no canto do HUD e tela de classificação.",
+  "ferramenta_destino": "Godot (imagem 2D direta)",
+  "como_usar_pt": "Gere na MESMA conversa da vista frontal de Russ para manter o rosto igual.",
+  "prompt": {
+    "task": "Generate one single image.",
+    "output": {
+      "aspect_ratio": "1:1",
+      "resolution": "highest available",
+      "count": 1
+    },
+    "subject": {
+      "character": "Russ",
+      "description": "13-year-old boy, pale skin with freckles, pale ice-blue eyes, mischievous smirk with one raised eyebrow; short spiky ginger-red hair",
+      "outfit": "faded olive-green bomber jacket with orange inner lining visible at the collar, worn over a black T-shirt; dark-gray worn jeans with a scuffed knee; dirty black-and-white canvas high-top sneakers with no logos; fingerless black gloves",
+      "framing": "head-and-shoulders portrait, face centered, looking slightly toward the viewer with a characteristic expression, fits inside a circle (keep all important features within the central 80%)",
+      "consistency": "match the same character from earlier images in this conversation exactly"
+    },
+    "style": {
+      "art_style": "1980s comic-book illustration, bold ink lines, cel shading, dramatic warm red-orange rim light from behind",
+      "background": "plain dark crimson background"
+    },
+    "negative": [
+      "text",
+      "logos",
+      "watermark",
+      "multiple people",
+      "hands",
+      "cropped hair"
+    ]
+  }
+}

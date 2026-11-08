@@ -1,0 +1,51 @@
+{
+  "id": "19_bmx_three_quarter",
+  "titulo_pt": "Bicicleta BMX — vista 3/4",
+  "uso_no_jogo_pt": "Modelo 3D único da BMX; no jogo eu troco a cor do quadro para cada ciclista (vermelha = Andrew-Mike).",
+  "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+  "como_usar_pt": "Vista lateral primeiro (conversa nova); as demais na mesma conversa: 'Mesma bicicleta da imagem anterior, só muda o ângulo.'",
+  "prompt": {
+    "task": "Generate one single image.",
+    "output": {
+      "aspect_ratio": "3:2",
+      "resolution": "highest available",
+      "count": 1
+    },
+    "subject": {
+      "object": "1980s BMX bicycle, 20-inch wheels",
+      "description": "classic early-80s BMX: glossy RED steel frame (paint will be recolored in-game for the other riders, so keep the frame a single flat color), chrome raised BMX handlebar with cross brace, black foam grips, chrome fork, black knobby tires, chrome spoked rims (36 spokes), black padded seat, single-speed chain with chrome crank and black platform pedals, no brand decals, no number plate, no rider",
+      "orientation_notes": "both wheels perfectly straight (not steered), pedals horizontal, kickstand absent",
+      "view": "three-quarter front view at 45 degrees",
+      "consistency": "if a previous image of this bicycle exists in this conversation, match it exactly; only the angle changes"
+    },
+    "style": {
+      "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+      "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+      "era_details": "authentic early-1980s clothing and objects, no modern items"
+    },
+    "constraints_for_3d": {
+      "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+      "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+      "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+      "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+      "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+      "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+    },
+    "negative": [
+      "text",
+      "letters",
+      "watermark",
+      "signature",
+      "logos or brand marks (no Nike swoosh, no car brand)",
+      "extra limbs or fingers",
+      "props held in hands",
+      "dramatic red sky",
+      "background scenery",
+      "cropped body parts",
+      "multiple characters",
+      "perspective distortion",
+      "shadows on the ground darker than a soft contact shadow",
+      "references to existing films/series (no 'Hawkins', no monsters)"
+    ]
+  }
+}

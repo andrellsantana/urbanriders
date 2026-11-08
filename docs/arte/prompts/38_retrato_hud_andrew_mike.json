@@ -1,0 +1,34 @@
+{
+  "id": "38_retrato_hud_andrew_mike",
+  "titulo_pt": "Retrato do HUD — Andrew-Mike Starr",
+  "uso_no_jogo_pt": "Retrato circular no canto do HUD e tela de classificação.",
+  "ferramenta_destino": "Godot (imagem 2D direta)",
+  "como_usar_pt": "Gere na MESMA conversa da vista frontal de Andrew-Mike Starr para manter o rosto igual.",
+  "prompt": {
+    "task": "Generate one single image.",
+    "output": {
+      "aspect_ratio": "1:1",
+      "resolution": "highest available",
+      "count": 1
+    },
+    "subject": {
+      "character": "Andrew-Mike Starr",
+      "description": "12-year-old boy, light-tan skin, warm brown eyes, friendly confident expression; thick wavy medium-length chestnut-brown hair, slightly messy, covering the ears and forehead",
+      "outfit": "navy-blue zip-up track jacket with two parallel white stripes running down each sleeve, ribbed cuffs and waistband, open over a cream T-shirt with horizontal red and navy stripes; straight-leg medium-blue denim jeans with one wide rolled cuff at the ankle; plain white high-top canvas sneakers with no logos; brown canvas school backpack with two shoulder straps worn on both shoulders",
+      "framing": "head-and-shoulders portrait, face centered, looking slightly toward the viewer with a characteristic expression, fits inside a circle (keep all important features within the central 80%)",
+      "consistency": "match the same character from earlier images in this conversation exactly"
+    },
+    "style": {
+      "art_style": "1980s comic-book illustration, bold ink lines, cel shading, dramatic warm red-orange rim light from behind",
+      "background": "plain dark crimson background"
+    },
+    "negative": [
+      "text",
+      "logos",
+      "watermark",
+      "multiple people",
+      "hands",
+      "cropped hair"
+    ]
+  }
+}

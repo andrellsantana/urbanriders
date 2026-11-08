@@ -1,0 +1,1963 @@
+[
+  {
+    "id": "01_andrew_mike_front",
+    "titulo_pt": "Andrew-Mike Starr — vista frontal",
+    "uso_no_jogo_pt": "Modelo 3D do(a) Andrew-Mike Starr (jogador). Envie as vistas frontal + lateral + costas juntas no Meshy/Tripo (modo multi-view).",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "PRIMEIRO desta personagem. Gere em uma conversa nova do ChatGPT. Repita até gostar do resultado; esta imagem vira a referência das outras vistas.",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "2:3",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "character": "Andrew-Mike Starr",
+        "description": "12-year-old boy, light-tan skin, warm brown eyes, friendly confident expression; thick wavy medium-length chestnut-brown hair, slightly messy, covering the ears and forehead",
+        "outfit": "navy-blue zip-up track jacket with two parallel white stripes running down each sleeve, ribbed cuffs and waistband, open over a cream T-shirt with horizontal red and navy stripes; straight-leg medium-blue denim jeans with one wide rolled cuff at the ankle; plain white high-top canvas sneakers with no logos; brown canvas school backpack with two shoulder straps worn on both shoulders",
+        "pose": "neutral A-pose: standing straight, arms angled ~45 degrees away from the body, palms facing down/inward, fingers slightly apart, legs straight and slightly apart (shoulder width), feet flat, neutral relaxed face, mouth closed, looking straight ahead",
+        "view": "front view, character facing the camera",
+        "consistency": "if a previous image of this character exists in this conversation, match it exactly: same face, hair, proportions, clothes, colors and details; only the camera angle changes"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "02_andrew_mike_side",
+    "titulo_pt": "Andrew-Mike Starr — vista lateral",
+    "uso_no_jogo_pt": "Modelo 3D do(a) Andrew-Mike Starr (jogador). Envie as vistas frontal + lateral + costas juntas no Meshy/Tripo (modo multi-view).",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "Gere NA MESMA conversa da vista frontal de Andrew-Mike Starr, logo após ela. Cole este JSON e escreva: 'Mesma personagem da imagem anterior, idêntica em tudo, só muda o ângulo.'",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "2:3",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "character": "Andrew-Mike Starr",
+        "description": "12-year-old boy, light-tan skin, warm brown eyes, friendly confident expression; thick wavy medium-length chestnut-brown hair, slightly messy, covering the ears and forehead",
+        "outfit": "navy-blue zip-up track jacket with two parallel white stripes running down each sleeve, ribbed cuffs and waistband, open over a cream T-shirt with horizontal red and navy stripes; straight-leg medium-blue denim jeans with one wide rolled cuff at the ankle; plain white high-top canvas sneakers with no logos; brown canvas school backpack with two shoulder straps worn on both shoulders",
+        "pose": "neutral A-pose: standing straight, arms angled ~45 degrees away from the body, palms facing down/inward, fingers slightly apart, legs straight and slightly apart (shoulder width), feet flat, neutral relaxed face, mouth closed, looking straight ahead",
+        "view": "exact left-side profile view (90 degrees), character facing left",
+        "consistency": "if a previous image of this character exists in this conversation, match it exactly: same face, hair, proportions, clothes, colors and details; only the camera angle changes"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "03_andrew_mike_back",
+    "titulo_pt": "Andrew-Mike Starr — vista de costas",
+    "uso_no_jogo_pt": "Modelo 3D do(a) Andrew-Mike Starr (jogador). Envie as vistas frontal + lateral + costas juntas no Meshy/Tripo (modo multi-view).",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "Gere NA MESMA conversa da vista frontal de Andrew-Mike Starr, logo após ela. Cole este JSON e escreva: 'Mesma personagem da imagem anterior, idêntica em tudo, só muda o ângulo.'",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "2:3",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "character": "Andrew-Mike Starr",
+        "description": "12-year-old boy, light-tan skin, warm brown eyes, friendly confident expression; thick wavy medium-length chestnut-brown hair, slightly messy, covering the ears and forehead",
+        "outfit": "navy-blue zip-up track jacket with two parallel white stripes running down each sleeve, ribbed cuffs and waistband, open over a cream T-shirt with horizontal red and navy stripes; straight-leg medium-blue denim jeans with one wide rolled cuff at the ankle; plain white high-top canvas sneakers with no logos; brown canvas school backpack with two shoulder straps worn on both shoulders",
+        "pose": "neutral A-pose: standing straight, arms angled ~45 degrees away from the body, palms facing down/inward, fingers slightly apart, legs straight and slightly apart (shoulder width), feet flat, neutral relaxed face, mouth closed, looking straight ahead",
+        "view": "back view, character facing directly away from the camera",
+        "consistency": "if a previous image of this character exists in this conversation, match it exactly: same face, hair, proportions, clothes, colors and details; only the camera angle changes"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "04_andrew_mike_three_quarter",
+    "titulo_pt": "Andrew-Mike Starr — vista 3/4",
+    "uso_no_jogo_pt": "Modelo 3D do(a) Andrew-Mike Starr (jogador). Envie as vistas frontal + lateral + costas juntas no Meshy/Tripo (modo multi-view).",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "Gere NA MESMA conversa da vista frontal de Andrew-Mike Starr, logo após ela. Cole este JSON e escreva: 'Mesma personagem da imagem anterior, idêntica em tudo, só muda o ângulo.'",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "2:3",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "character": "Andrew-Mike Starr",
+        "description": "12-year-old boy, light-tan skin, warm brown eyes, friendly confident expression; thick wavy medium-length chestnut-brown hair, slightly messy, covering the ears and forehead",
+        "outfit": "navy-blue zip-up track jacket with two parallel white stripes running down each sleeve, ribbed cuffs and waistband, open over a cream T-shirt with horizontal red and navy stripes; straight-leg medium-blue denim jeans with one wide rolled cuff at the ankle; plain white high-top canvas sneakers with no logos; brown canvas school backpack with two shoulder straps worn on both shoulders",
+        "pose": "neutral A-pose: standing straight, arms angled ~45 degrees away from the body, palms facing down/inward, fingers slightly apart, legs straight and slightly apart (shoulder width), feet flat, neutral relaxed face, mouth closed, looking straight ahead",
+        "view": "three-quarter front view (45 degrees), character turned toward the left",
+        "consistency": "if a previous image of this character exists in this conversation, match it exactly: same face, hair, proportions, clothes, colors and details; only the camera angle changes"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "05_lucienne_front",
+    "titulo_pt": "Lucienne — vista frontal",
+    "uso_no_jogo_pt": "Modelo 3D do(a) Lucienne (adversária (cautelosa, imprevisível, rápida na reta)). Envie as vistas frontal + lateral + costas juntas no Meshy/Tripo (modo multi-view).",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "PRIMEIRO desta personagem. Gere em uma conversa nova do ChatGPT. Repita até gostar do resultado; esta imagem vira a referência das outras vistas.",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "2:3",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "character": "Lucienne",
+        "description": "12-year-old girl, fair skin with light freckles, green-brown eyes, focused alert expression; chestnut-brown hair parted in the middle and tied in two pigtails (maria-chiquinhas) with red hair ties, pigtails reaching the shoulders",
+        "outfit": "light-blue denim jacket with chest pockets and rolled sleeves over a white T-shirt; medium-blue denim jeans; white canvas low-top sneakers with no logos; white tube socks with no stripes",
+        "pose": "neutral A-pose: standing straight, arms angled ~45 degrees away from the body, palms facing down/inward, fingers slightly apart, legs straight and slightly apart (shoulder width), feet flat, neutral relaxed face, mouth closed, looking straight ahead",
+        "view": "front view, character facing the camera",
+        "consistency": "if a previous image of this character exists in this conversation, match it exactly: same face, hair, proportions, clothes, colors and details; only the camera angle changes"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "06_lucienne_side",
+    "titulo_pt": "Lucienne — vista lateral",
+    "uso_no_jogo_pt": "Modelo 3D do(a) Lucienne (adversária (cautelosa, imprevisível, rápida na reta)). Envie as vistas frontal + lateral + costas juntas no Meshy/Tripo (modo multi-view).",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "Gere NA MESMA conversa da vista frontal de Lucienne, logo após ela. Cole este JSON e escreva: 'Mesma personagem da imagem anterior, idêntica em tudo, só muda o ângulo.'",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "2:3",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "character": "Lucienne",
+        "description": "12-year-old girl, fair skin with light freckles, green-brown eyes, focused alert expression; chestnut-brown hair parted in the middle and tied in two pigtails (maria-chiquinhas) with red hair ties, pigtails reaching the shoulders",
+        "outfit": "light-blue denim jacket with chest pockets and rolled sleeves over a white T-shirt; medium-blue denim jeans; white canvas low-top sneakers with no logos; white tube socks with no stripes",
+        "pose": "neutral A-pose: standing straight, arms angled ~45 degrees away from the body, palms facing down/inward, fingers slightly apart, legs straight and slightly apart (shoulder width), feet flat, neutral relaxed face, mouth closed, looking straight ahead",
+        "view": "exact left-side profile view (90 degrees), character facing left",
+        "consistency": "if a previous image of this character exists in this conversation, match it exactly: same face, hair, proportions, clothes, colors and details; only the camera angle changes"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "07_lucienne_back",
+    "titulo_pt": "Lucienne — vista de costas",
+    "uso_no_jogo_pt": "Modelo 3D do(a) Lucienne (adversária (cautelosa, imprevisível, rápida na reta)). Envie as vistas frontal + lateral + costas juntas no Meshy/Tripo (modo multi-view).",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "Gere NA MESMA conversa da vista frontal de Lucienne, logo após ela. Cole este JSON e escreva: 'Mesma personagem da imagem anterior, idêntica em tudo, só muda o ângulo.'",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "2:3",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "character": "Lucienne",
+        "description": "12-year-old girl, fair skin with light freckles, green-brown eyes, focused alert expression; chestnut-brown hair parted in the middle and tied in two pigtails (maria-chiquinhas) with red hair ties, pigtails reaching the shoulders",
+        "outfit": "light-blue denim jacket with chest pockets and rolled sleeves over a white T-shirt; medium-blue denim jeans; white canvas low-top sneakers with no logos; white tube socks with no stripes",
+        "pose": "neutral A-pose: standing straight, arms angled ~45 degrees away from the body, palms facing down/inward, fingers slightly apart, legs straight and slightly apart (shoulder width), feet flat, neutral relaxed face, mouth closed, looking straight ahead",
+        "view": "back view, character facing directly away from the camera",
+        "consistency": "if a previous image of this character exists in this conversation, match it exactly: same face, hair, proportions, clothes, colors and details; only the camera angle changes"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "08_lucienne_three_quarter",
+    "titulo_pt": "Lucienne — vista 3/4",
+    "uso_no_jogo_pt": "Modelo 3D do(a) Lucienne (adversária (cautelosa, imprevisível, rápida na reta)). Envie as vistas frontal + lateral + costas juntas no Meshy/Tripo (modo multi-view).",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "Gere NA MESMA conversa da vista frontal de Lucienne, logo após ela. Cole este JSON e escreva: 'Mesma personagem da imagem anterior, idêntica em tudo, só muda o ângulo.'",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "2:3",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "character": "Lucienne",
+        "description": "12-year-old girl, fair skin with light freckles, green-brown eyes, focused alert expression; chestnut-brown hair parted in the middle and tied in two pigtails (maria-chiquinhas) with red hair ties, pigtails reaching the shoulders",
+        "outfit": "light-blue denim jacket with chest pockets and rolled sleeves over a white T-shirt; medium-blue denim jeans; white canvas low-top sneakers with no logos; white tube socks with no stripes",
+        "pose": "neutral A-pose: standing straight, arms angled ~45 degrees away from the body, palms facing down/inward, fingers slightly apart, legs straight and slightly apart (shoulder width), feet flat, neutral relaxed face, mouth closed, looking straight ahead",
+        "view": "three-quarter front view (45 degrees), character turned toward the left",
+        "consistency": "if a previous image of this character exists in this conversation, match it exactly: same face, hair, proportions, clothes, colors and details; only the camera angle changes"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "09_russ_front",
+    "titulo_pt": "Russ — vista frontal",
+    "uso_no_jogo_pt": "Modelo 3D do(a) Russ (adversário trapaceiro). Envie as vistas frontal + lateral + costas juntas no Meshy/Tripo (modo multi-view).",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "PRIMEIRO desta personagem. Gere em uma conversa nova do ChatGPT. Repita até gostar do resultado; esta imagem vira a referência das outras vistas.",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "2:3",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "character": "Russ",
+        "description": "13-year-old boy, pale skin with freckles, pale ice-blue eyes, mischievous smirk with one raised eyebrow; short spiky ginger-red hair",
+        "outfit": "faded olive-green bomber jacket with orange inner lining visible at the collar, worn over a black T-shirt; dark-gray worn jeans with a scuffed knee; dirty black-and-white canvas high-top sneakers with no logos; fingerless black gloves",
+        "pose": "neutral A-pose: standing straight, arms angled ~45 degrees away from the body, palms facing down/inward, fingers slightly apart, legs straight and slightly apart (shoulder width), feet flat, neutral relaxed face, mouth closed, looking straight ahead",
+        "view": "front view, character facing the camera",
+        "consistency": "if a previous image of this character exists in this conversation, match it exactly: same face, hair, proportions, clothes, colors and details; only the camera angle changes"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "10_russ_side",
+    "titulo_pt": "Russ — vista lateral",
+    "uso_no_jogo_pt": "Modelo 3D do(a) Russ (adversário trapaceiro). Envie as vistas frontal + lateral + costas juntas no Meshy/Tripo (modo multi-view).",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "Gere NA MESMA conversa da vista frontal de Russ, logo após ela. Cole este JSON e escreva: 'Mesma personagem da imagem anterior, idêntica em tudo, só muda o ângulo.'",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "2:3",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "character": "Russ",
+        "description": "13-year-old boy, pale skin with freckles, pale ice-blue eyes, mischievous smirk with one raised eyebrow; short spiky ginger-red hair",
+        "outfit": "faded olive-green bomber jacket with orange inner lining visible at the collar, worn over a black T-shirt; dark-gray worn jeans with a scuffed knee; dirty black-and-white canvas high-top sneakers with no logos; fingerless black gloves",
+        "pose": "neutral A-pose: standing straight, arms angled ~45 degrees away from the body, palms facing down/inward, fingers slightly apart, legs straight and slightly apart (shoulder width), feet flat, neutral relaxed face, mouth closed, looking straight ahead",
+        "view": "exact left-side profile view (90 degrees), character facing left",
+        "consistency": "if a previous image of this character exists in this conversation, match it exactly: same face, hair, proportions, clothes, colors and details; only the camera angle changes"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "11_russ_back",
+    "titulo_pt": "Russ — vista de costas",
+    "uso_no_jogo_pt": "Modelo 3D do(a) Russ (adversário trapaceiro). Envie as vistas frontal + lateral + costas juntas no Meshy/Tripo (modo multi-view).",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "Gere NA MESMA conversa da vista frontal de Russ, logo após ela. Cole este JSON e escreva: 'Mesma personagem da imagem anterior, idêntica em tudo, só muda o ângulo.'",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "2:3",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "character": "Russ",
+        "description": "13-year-old boy, pale skin with freckles, pale ice-blue eyes, mischievous smirk with one raised eyebrow; short spiky ginger-red hair",
+        "outfit": "faded olive-green bomber jacket with orange inner lining visible at the collar, worn over a black T-shirt; dark-gray worn jeans with a scuffed knee; dirty black-and-white canvas high-top sneakers with no logos; fingerless black gloves",
+        "pose": "neutral A-pose: standing straight, arms angled ~45 degrees away from the body, palms facing down/inward, fingers slightly apart, legs straight and slightly apart (shoulder width), feet flat, neutral relaxed face, mouth closed, looking straight ahead",
+        "view": "back view, character facing directly away from the camera",
+        "consistency": "if a previous image of this character exists in this conversation, match it exactly: same face, hair, proportions, clothes, colors and details; only the camera angle changes"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "12_russ_three_quarter",
+    "titulo_pt": "Russ — vista 3/4",
+    "uso_no_jogo_pt": "Modelo 3D do(a) Russ (adversário trapaceiro). Envie as vistas frontal + lateral + costas juntas no Meshy/Tripo (modo multi-view).",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "Gere NA MESMA conversa da vista frontal de Russ, logo após ela. Cole este JSON e escreva: 'Mesma personagem da imagem anterior, idêntica em tudo, só muda o ângulo.'",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "2:3",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "character": "Russ",
+        "description": "13-year-old boy, pale skin with freckles, pale ice-blue eyes, mischievous smirk with one raised eyebrow; short spiky ginger-red hair",
+        "outfit": "faded olive-green bomber jacket with orange inner lining visible at the collar, worn over a black T-shirt; dark-gray worn jeans with a scuffed knee; dirty black-and-white canvas high-top sneakers with no logos; fingerless black gloves",
+        "pose": "neutral A-pose: standing straight, arms angled ~45 degrees away from the body, palms facing down/inward, fingers slightly apart, legs straight and slightly apart (shoulder width), feet flat, neutral relaxed face, mouth closed, looking straight ahead",
+        "view": "three-quarter front view (45 degrees), character turned toward the left",
+        "consistency": "if a previous image of this character exists in this conversation, match it exactly: same face, hair, proportions, clothes, colors and details; only the camera angle changes"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "13_mint_front",
+    "titulo_pt": "Mint — vista frontal",
+    "uso_no_jogo_pt": "Modelo 3D do(a) Mint (adversária competitiva e justa). Envie as vistas frontal + lateral + costas juntas no Meshy/Tripo (modo multi-view).",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "PRIMEIRO desta personagem. Gere em uma conversa nova do ChatGPT. Repita até gostar do resultado; esta imagem vira a referência das outras vistas.",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "2:3",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "character": "Mint",
+        "description": "11-year-old Black girl, short and small for her age (about 10% shorter than the other kids), dark-brown skin, dark-brown eyes, determined confident smile; natural curly black hair in a rounded puff on top, held with a mint-green headband",
+        "outfit": "mint-green and white color-block windbreaker jacket, white T-shirt; navy athletic shorts with white piping over knee-length gray leggings; white sneakers with mint-green details and no logos; white wristbands",
+        "pose": "neutral A-pose: standing straight, arms angled ~45 degrees away from the body, palms facing down/inward, fingers slightly apart, legs straight and slightly apart (shoulder width), feet flat, neutral relaxed face, mouth closed, looking straight ahead",
+        "view": "front view, character facing the camera",
+        "consistency": "if a previous image of this character exists in this conversation, match it exactly: same face, hair, proportions, clothes, colors and details; only the camera angle changes"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "14_mint_side",
+    "titulo_pt": "Mint — vista lateral",
+    "uso_no_jogo_pt": "Modelo 3D do(a) Mint (adversária competitiva e justa). Envie as vistas frontal + lateral + costas juntas no Meshy/Tripo (modo multi-view).",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "Gere NA MESMA conversa da vista frontal de Mint, logo após ela. Cole este JSON e escreva: 'Mesma personagem da imagem anterior, idêntica em tudo, só muda o ângulo.'",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "2:3",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "character": "Mint",
+        "description": "11-year-old Black girl, short and small for her age (about 10% shorter than the other kids), dark-brown skin, dark-brown eyes, determined confident smile; natural curly black hair in a rounded puff on top, held with a mint-green headband",
+        "outfit": "mint-green and white color-block windbreaker jacket, white T-shirt; navy athletic shorts with white piping over knee-length gray leggings; white sneakers with mint-green details and no logos; white wristbands",
+        "pose": "neutral A-pose: standing straight, arms angled ~45 degrees away from the body, palms facing down/inward, fingers slightly apart, legs straight and slightly apart (shoulder width), feet flat, neutral relaxed face, mouth closed, looking straight ahead",
+        "view": "exact left-side profile view (90 degrees), character facing left",
+        "consistency": "if a previous image of this character exists in this conversation, match it exactly: same face, hair, proportions, clothes, colors and details; only the camera angle changes"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "15_mint_back",
+    "titulo_pt": "Mint — vista de costas",
+    "uso_no_jogo_pt": "Modelo 3D do(a) Mint (adversária competitiva e justa). Envie as vistas frontal + lateral + costas juntas no Meshy/Tripo (modo multi-view).",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "Gere NA MESMA conversa da vista frontal de Mint, logo após ela. Cole este JSON e escreva: 'Mesma personagem da imagem anterior, idêntica em tudo, só muda o ângulo.'",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "2:3",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "character": "Mint",
+        "description": "11-year-old Black girl, short and small for her age (about 10% shorter than the other kids), dark-brown skin, dark-brown eyes, determined confident smile; natural curly black hair in a rounded puff on top, held with a mint-green headband",
+        "outfit": "mint-green and white color-block windbreaker jacket, white T-shirt; navy athletic shorts with white piping over knee-length gray leggings; white sneakers with mint-green details and no logos; white wristbands",
+        "pose": "neutral A-pose: standing straight, arms angled ~45 degrees away from the body, palms facing down/inward, fingers slightly apart, legs straight and slightly apart (shoulder width), feet flat, neutral relaxed face, mouth closed, looking straight ahead",
+        "view": "back view, character facing directly away from the camera",
+        "consistency": "if a previous image of this character exists in this conversation, match it exactly: same face, hair, proportions, clothes, colors and details; only the camera angle changes"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "16_mint_three_quarter",
+    "titulo_pt": "Mint — vista 3/4",
+    "uso_no_jogo_pt": "Modelo 3D do(a) Mint (adversária competitiva e justa). Envie as vistas frontal + lateral + costas juntas no Meshy/Tripo (modo multi-view).",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "Gere NA MESMA conversa da vista frontal de Mint, logo após ela. Cole este JSON e escreva: 'Mesma personagem da imagem anterior, idêntica em tudo, só muda o ângulo.'",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "2:3",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "character": "Mint",
+        "description": "11-year-old Black girl, short and small for her age (about 10% shorter than the other kids), dark-brown skin, dark-brown eyes, determined confident smile; natural curly black hair in a rounded puff on top, held with a mint-green headband",
+        "outfit": "mint-green and white color-block windbreaker jacket, white T-shirt; navy athletic shorts with white piping over knee-length gray leggings; white sneakers with mint-green details and no logos; white wristbands",
+        "pose": "neutral A-pose: standing straight, arms angled ~45 degrees away from the body, palms facing down/inward, fingers slightly apart, legs straight and slightly apart (shoulder width), feet flat, neutral relaxed face, mouth closed, looking straight ahead",
+        "view": "three-quarter front view (45 degrees), character turned toward the left",
+        "consistency": "if a previous image of this character exists in this conversation, match it exactly: same face, hair, proportions, clothes, colors and details; only the camera angle changes"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "17_bmx_side",
+    "titulo_pt": "Bicicleta BMX — vista lateral",
+    "uso_no_jogo_pt": "Modelo 3D único da BMX; no jogo eu troco a cor do quadro para cada ciclista (vermelha = Andrew-Mike).",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "Vista lateral primeiro (conversa nova); as demais na mesma conversa: 'Mesma bicicleta da imagem anterior, só muda o ângulo.'",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "3:2",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "object": "1980s BMX bicycle, 20-inch wheels",
+        "description": "classic early-80s BMX: glossy RED steel frame (paint will be recolored in-game for the other riders, so keep the frame a single flat color), chrome raised BMX handlebar with cross brace, black foam grips, chrome fork, black knobby tires, chrome spoked rims (36 spokes), black padded seat, single-speed chain with chrome crank and black platform pedals, no brand decals, no number plate, no rider",
+        "orientation_notes": "both wheels perfectly straight (not steered), pedals horizontal, kickstand absent",
+        "view": "exact right-side profile view, bicycle facing right, perfectly perpendicular to the camera",
+        "consistency": "if a previous image of this bicycle exists in this conversation, match it exactly; only the angle changes"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "18_bmx_front",
+    "titulo_pt": "Bicicleta BMX — vista frontal",
+    "uso_no_jogo_pt": "Modelo 3D único da BMX; no jogo eu troco a cor do quadro para cada ciclista (vermelha = Andrew-Mike).",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "Vista lateral primeiro (conversa nova); as demais na mesma conversa: 'Mesma bicicleta da imagem anterior, só muda o ângulo.'",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "3:2",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "object": "1980s BMX bicycle, 20-inch wheels",
+        "description": "classic early-80s BMX: glossy RED steel frame (paint will be recolored in-game for the other riders, so keep the frame a single flat color), chrome raised BMX handlebar with cross brace, black foam grips, chrome fork, black knobby tires, chrome spoked rims (36 spokes), black padded seat, single-speed chain with chrome crank and black platform pedals, no brand decals, no number plate, no rider",
+        "orientation_notes": "both wheels perfectly straight (not steered), pedals horizontal, kickstand absent",
+        "view": "exact front view, front wheel toward the camera",
+        "consistency": "if a previous image of this bicycle exists in this conversation, match it exactly; only the angle changes"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "19_bmx_three_quarter",
+    "titulo_pt": "Bicicleta BMX — vista 3/4",
+    "uso_no_jogo_pt": "Modelo 3D único da BMX; no jogo eu troco a cor do quadro para cada ciclista (vermelha = Andrew-Mike).",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "Vista lateral primeiro (conversa nova); as demais na mesma conversa: 'Mesma bicicleta da imagem anterior, só muda o ângulo.'",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "3:2",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "object": "1980s BMX bicycle, 20-inch wheels",
+        "description": "classic early-80s BMX: glossy RED steel frame (paint will be recolored in-game for the other riders, so keep the frame a single flat color), chrome raised BMX handlebar with cross brace, black foam grips, chrome fork, black knobby tires, chrome spoked rims (36 spokes), black padded seat, single-speed chain with chrome crank and black platform pedals, no brand decals, no number plate, no rider",
+        "orientation_notes": "both wheels perfectly straight (not steered), pedals horizontal, kickstand absent",
+        "view": "three-quarter front view at 45 degrees",
+        "consistency": "if a previous image of this bicycle exists in this conversation, match it exactly; only the angle changes"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "20_bmx_back",
+    "titulo_pt": "Bicicleta BMX — vista de costas",
+    "uso_no_jogo_pt": "Modelo 3D único da BMX; no jogo eu troco a cor do quadro para cada ciclista (vermelha = Andrew-Mike).",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "Vista lateral primeiro (conversa nova); as demais na mesma conversa: 'Mesma bicicleta da imagem anterior, só muda o ângulo.'",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "3:2",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "object": "1980s BMX bicycle, 20-inch wheels",
+        "description": "classic early-80s BMX: glossy RED steel frame (paint will be recolored in-game for the other riders, so keep the frame a single flat color), chrome raised BMX handlebar with cross brace, black foam grips, chrome fork, black knobby tires, chrome spoked rims (36 spokes), black padded seat, single-speed chain with chrome crank and black platform pedals, no brand decals, no number plate, no rider",
+        "orientation_notes": "both wheels perfectly straight (not steered), pedals horizontal, kickstand absent",
+        "view": "exact back view, rear wheel toward the camera",
+        "consistency": "if a previous image of this bicycle exists in this conversation, match it exactly; only the angle changes"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "21_casa_suburbio_a",
+    "titulo_pt": "Casa de subúrbio A",
+    "uso_no_jogo_pt": "Casas que ladeiam as ruas de Red City.",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "Cole este JSON inteiro no ChatGPT e peça: 'Gere a imagem descrita neste JSON, seguindo todas as restrições.'",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "4:3",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "object": "single-story 1980s American suburban house, gray-brown painted wood siding, dark shingle gable roof, covered front porch with white railing and three wooden steps, two double-hung windows with warm light inside, small chimney, no fence, no garden clutter",
+        "view": "three-quarter front view from slightly above eye level (like an isometric product shot)",
+        "scale_hint": "realistic real-world proportions"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "22_casa_suburbio_b",
+    "titulo_pt": "Casa de subúrbio B",
+    "uso_no_jogo_pt": "Segunda variação de casa para não repetir.",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "Cole este JSON inteiro no ChatGPT e peça: 'Gere a imagem descrita neste JSON, seguindo todas as restrições.'",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "4:3",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "object": "two-story 1980s American suburban house, pale green wood siding, white trim, attached single garage with white door, dark roof, small front stoop with two steps, three windows on the upper floor",
+        "view": "three-quarter front view from slightly above eye level",
+        "scale_hint": "realistic real-world proportions"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "23_caixa_dagua_red_city",
+    "titulo_pt": "Caixa d'água de Red City",
+    "uso_no_jogo_pt": "Marco visual no horizonte do circuito.",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "Cole este JSON inteiro no ChatGPT e peça: 'Gere a imagem descrita neste JSON, seguindo todas as restrições.'",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "2:3",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "object": "classic tall municipal water tower: rounded silver-white steel tank on four tall steel legs with cross bracing, a ladder and a narrow catwalk around the tank; the tank is BLANK (no text; the name 'RED CITY' will be added in-game)",
+        "view": "three-quarter view from ground level, entire tower in frame",
+        "scale_hint": "realistic real-world proportions"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "24_placa_boas_vindas",
+    "titulo_pt": "Placa de boas-vindas",
+    "uso_no_jogo_pt": "Placa na entrada da cidade.",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "Cole este JSON inteiro no ChatGPT e peça: 'Gere a imagem descrita neste JSON, seguindo todas as restrições.'",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "3:2",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "object": "rectangular dark-green wooden roadside welcome sign on two brown wooden posts, white border, the sign face is BLANK (text added in-game)",
+        "view": "three-quarter front view",
+        "scale_hint": "realistic real-world proportions"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "25_poste_eletrico",
+    "titulo_pt": "Poste de energia",
+    "uso_no_jogo_pt": "Postes ao longo das ruas (obstáculo de colisão).",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "Cole este JSON inteiro no ChatGPT e peça: 'Gere a imagem descrita neste JSON, seguindo todas as restrições.'",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "1:2",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "object": "wooden utility pole with one horizontal crossarm, glass insulators and a small transformer can; no wires attached",
+        "view": "three-quarter view, whole pole in frame",
+        "scale_hint": "realistic real-world proportions"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "26_picape_anos80",
+    "titulo_pt": "Picape anos 80",
+    "uso_no_jogo_pt": "Carro estacionado (obstáculo).",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "Cole este JSON inteiro no ChatGPT e peça: 'Gere a imagem descrita neste JSON, seguindo todas as restrições.'",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "3:2",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "object": "generic early-1980s full-size pickup truck, faded teal-blue paint, chrome front bumper and grille, round headlights, no brand badges or emblems, no license plate text",
+        "view": "three-quarter front view",
+        "scale_hint": "realistic real-world proportions"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "27_arvore_outono",
+    "titulo_pt": "Árvore de outono",
+    "uso_no_jogo_pt": "Árvores nas calçadas e quintais.",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "Cole este JSON inteiro no ChatGPT e peça: 'Gere a imagem descrita neste JSON, seguindo todas as restrições.'",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "2:3",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "object": "medium deciduous tree in autumn, dark brown trunk, clustered foliage in burnt orange, rust and dark red, stylized chunky leaf clumps suitable for low-poly game art",
+        "view": "side view, whole tree in frame",
+        "scale_hint": "realistic real-world proportions"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "28_cerca_alambrado",
+    "titulo_pt": "Cerca de alambrado",
+    "uso_no_jogo_pt": "Limites de terrenos e do circuito.",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "Cole este JSON inteiro no ChatGPT e peça: 'Gere a imagem descrita neste JSON, seguindo todas as restrições.'",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "3:1",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "object": "one straight 3-meter segment of galvanized chain-link fence with two round metal posts and a top rail",
+        "view": "front view, perfectly straight",
+        "scale_hint": "realistic real-world proportions"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "29_cone_transito",
+    "titulo_pt": "Cone de trânsito",
+    "uso_no_jogo_pt": "Obstáculos e marcação do circuito.",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "Cole este JSON inteiro no ChatGPT e peça: 'Gere a imagem descrita neste JSON, seguindo todas as restrições.'",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "1:1",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "object": "standard orange traffic cone with two white reflective bands and square black base",
+        "view": "three-quarter view",
+        "scale_hint": "realistic real-world proportions"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "30_lixeira_metal",
+    "titulo_pt": "Lixeira de metal",
+    "uso_no_jogo_pt": "Obstáculo de calçada.",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "Cole este JSON inteiro no ChatGPT e peça: 'Gere a imagem descrita neste JSON, seguindo todas as restrições.'",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "1:1",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "object": "classic galvanized metal trash can with lid, slightly dented",
+        "view": "three-quarter view",
+        "scale_hint": "realistic real-world proportions"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "31_caixa_correio",
+    "titulo_pt": "Caixa de correio",
+    "uso_no_jogo_pt": "Detalhe das casas.",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "Cole este JSON inteiro no ChatGPT e peça: 'Gere a imagem descrita neste JSON, seguindo todas as restrições.'",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "1:1",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "object": "1980s American rural-style mailbox on a wooden post, dark green metal, red flag raised, no text",
+        "view": "three-quarter view",
+        "scale_hint": "realistic real-world proportions"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "32_hidrante",
+    "titulo_pt": "Hidrante",
+    "uso_no_jogo_pt": "Obstáculo de calçada.",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "Cole este JSON inteiro no ChatGPT e peça: 'Gere a imagem descrita neste JSON, seguindo todas as restrições.'",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "1:1",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "object": "classic red fire hydrant with white cap",
+        "view": "three-quarter view",
+        "scale_hint": "realistic real-world proportions"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "33_barreira_obra",
+    "titulo_pt": "Barreira de obras",
+    "uso_no_jogo_pt": "Bloqueio de atalhos ilegais e trechos fechados.",
+    "ferramenta_destino": "Meshy/Tripo (image-to-3D)",
+    "como_usar_pt": "Cole este JSON inteiro no ChatGPT e peça: 'Gere a imagem descrita neste JSON, seguindo todas as restrições.'",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "3:2",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "object": "wooden road barricade with orange and white diagonal stripes on two A-frame legs, no text",
+        "view": "three-quarter front view",
+        "scale_hint": "realistic real-world proportions"
+      },
+      "style": {
+        "art_style": "stylized semi-realistic 3D game character concept art, 1980s American suburb, graphic-novel / comic-book look: clean bold ink outlines, cel-shaded flat color blocks with one shadow tone, slightly exaggerated proportions (teen kid, head ~1/6.5 of body height), appealing and readable silhouettes",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment",
+        "era_details": "authentic early-1980s clothing and objects, no modern items"
+      },
+      "constraints_for_3d": {
+        "purpose": "reference image for an image-to-3D AI generator (Meshy / Tripo); clarity matters more than drama",
+        "lighting": "flat, even, neutral studio light; no strong shadows, no rim light, no colored light, no ambient occlusion darkening",
+        "background": "plain solid light-gray background (#D9D9D9), nothing else in the scene",
+        "camera": "orthographic-like view, camera at mid-height of the subject, zero perspective distortion, no tilt",
+        "framing": "the entire subject fully visible and centered, generous empty margin on all sides, nothing cropped (feet, wheels, hair, hands all in frame)",
+        "detail": "sharp, high detail, clean edges, no motion blur, no depth of field, no film grain, no particles"
+      },
+      "negative": [
+        "text",
+        "letters",
+        "watermark",
+        "signature",
+        "logos or brand marks (no Nike swoosh, no car brand)",
+        "extra limbs or fingers",
+        "props held in hands",
+        "dramatic red sky",
+        "background scenery",
+        "cropped body parts",
+        "multiple characters",
+        "perspective distortion",
+        "shadows on the ground darker than a soft contact shadow",
+        "references to existing films/series (no 'Hawkins', no monsters)"
+      ]
+    }
+  },
+  {
+    "id": "34_textura_asfalto",
+    "titulo_pt": "Textura de asfalto",
+    "uso_no_jogo_pt": "Piso das ruas.",
+    "ferramenta_destino": "Godot (textura direta)",
+    "como_usar_pt": "Cole no ChatGPT. Esta imagem vai direto para o jogo, sem passar pelo gerador 3D.",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "1:1",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "material": "dark gray-purple worn asphalt with fine aggregate, hairline cracks and a few repaired tar patches",
+        "view": "perfectly top-down orthographic photo-texture covering the whole frame"
+      },
+      "style": {
+        "art_style": "stylized hand-painted game texture with subtle comic-book ink detailing, matching cel-shaded 3D art",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment"
+      },
+      "constraints": {
+        "tiling": "seamless and tileable on all four edges",
+        "lighting": "completely flat and uniform, no light direction",
+        "scale": "about 2 x 2 meters of surface"
+      },
+      "negative": [
+        "text",
+        "logos",
+        "perspective",
+        "objects",
+        "shadows from objects",
+        "vignette",
+        "visible seams",
+        "lighting gradient"
+      ]
+    }
+  },
+  {
+    "id": "35_textura_calcada",
+    "titulo_pt": "Textura de calçada",
+    "uso_no_jogo_pt": "Calçadas.",
+    "ferramenta_destino": "Godot (textura direta)",
+    "como_usar_pt": "Cole no ChatGPT. Esta imagem vai direto para o jogo, sem passar pelo gerador 3D.",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "1:1",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "material": "square concrete sidewalk slabs (about 1.5 m) with thin expansion joints, subtle stains, warm light-gray",
+        "view": "perfectly top-down orthographic photo-texture covering the whole frame"
+      },
+      "style": {
+        "art_style": "stylized hand-painted game texture with subtle comic-book ink detailing, matching cel-shaded 3D art",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment"
+      },
+      "constraints": {
+        "tiling": "seamless and tileable on all four edges",
+        "lighting": "completely flat and uniform, no light direction",
+        "scale": "about 2 x 2 meters of surface"
+      },
+      "negative": [
+        "text",
+        "logos",
+        "perspective",
+        "objects",
+        "shadows from objects",
+        "vignette",
+        "visible seams",
+        "lighting gradient"
+      ]
+    }
+  },
+  {
+    "id": "36_textura_grama",
+    "titulo_pt": "Textura de grama",
+    "uso_no_jogo_pt": "Gramados e zona de baixa aderência.",
+    "ferramenta_destino": "Godot (textura direta)",
+    "como_usar_pt": "Cole no ChatGPT. Esta imagem vai direto para o jogo, sem passar pelo gerador 3D.",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "1:1",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "material": "short autumn lawn grass, mix of dull green and yellow-brown, scattered dry leaves",
+        "view": "perfectly top-down orthographic photo-texture covering the whole frame"
+      },
+      "style": {
+        "art_style": "stylized hand-painted game texture with subtle comic-book ink detailing, matching cel-shaded 3D art",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment"
+      },
+      "constraints": {
+        "tiling": "seamless and tileable on all four edges",
+        "lighting": "completely flat and uniform, no light direction",
+        "scale": "about 2 x 2 meters of surface"
+      },
+      "negative": [
+        "text",
+        "logos",
+        "perspective",
+        "objects",
+        "shadows from objects",
+        "vignette",
+        "visible seams",
+        "lighting gradient"
+      ]
+    }
+  },
+  {
+    "id": "37_textura_asfalto_molhado",
+    "titulo_pt": "Textura de asfalto molhado",
+    "uso_no_jogo_pt": "Zonas molhadas (baixa aderência).",
+    "ferramenta_destino": "Godot (textura direta)",
+    "como_usar_pt": "Cole no ChatGPT. Esta imagem vai direto para o jogo, sem passar pelo gerador 3D.",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "1:1",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "material": "same dark asphalt but wet, darker, with shallow irregular puddles",
+        "view": "perfectly top-down orthographic photo-texture covering the whole frame"
+      },
+      "style": {
+        "art_style": "stylized hand-painted game texture with subtle comic-book ink detailing, matching cel-shaded 3D art",
+        "palette": "muted, slightly desaturated real-world colors; no color cast from the environment"
+      },
+      "constraints": {
+        "tiling": "seamless and tileable on all four edges",
+        "lighting": "completely flat and uniform, no light direction",
+        "scale": "about 2 x 2 meters of surface"
+      },
+      "negative": [
+        "text",
+        "logos",
+        "perspective",
+        "objects",
+        "shadows from objects",
+        "vignette",
+        "visible seams",
+        "lighting gradient"
+      ]
+    }
+  },
+  {
+    "id": "38_retrato_hud_andrew_mike",
+    "titulo_pt": "Retrato do HUD — Andrew-Mike Starr",
+    "uso_no_jogo_pt": "Retrato circular no canto do HUD e tela de classificação.",
+    "ferramenta_destino": "Godot (imagem 2D direta)",
+    "como_usar_pt": "Gere na MESMA conversa da vista frontal de Andrew-Mike Starr para manter o rosto igual.",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "1:1",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "character": "Andrew-Mike Starr",
+        "description": "12-year-old boy, light-tan skin, warm brown eyes, friendly confident expression; thick wavy medium-length chestnut-brown hair, slightly messy, covering the ears and forehead",
+        "outfit": "navy-blue zip-up track jacket with two parallel white stripes running down each sleeve, ribbed cuffs and waistband, open over a cream T-shirt with horizontal red and navy stripes; straight-leg medium-blue denim jeans with one wide rolled cuff at the ankle; plain white high-top canvas sneakers with no logos; brown canvas school backpack with two shoulder straps worn on both shoulders",
+        "framing": "head-and-shoulders portrait, face centered, looking slightly toward the viewer with a characteristic expression, fits inside a circle (keep all important features within the central 80%)",
+        "consistency": "match the same character from earlier images in this conversation exactly"
+      },
+      "style": {
+        "art_style": "1980s comic-book illustration, bold ink lines, cel shading, dramatic warm red-orange rim light from behind",
+        "background": "plain dark crimson background"
+      },
+      "negative": [
+        "text",
+        "logos",
+        "watermark",
+        "multiple people",
+        "hands",
+        "cropped hair"
+      ]
+    }
+  },
+  {
+    "id": "39_retrato_hud_lucienne",
+    "titulo_pt": "Retrato do HUD — Lucienne",
+    "uso_no_jogo_pt": "Retrato circular no canto do HUD e tela de classificação.",
+    "ferramenta_destino": "Godot (imagem 2D direta)",
+    "como_usar_pt": "Gere na MESMA conversa da vista frontal de Lucienne para manter o rosto igual.",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "1:1",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "character": "Lucienne",
+        "description": "12-year-old girl, fair skin with light freckles, green-brown eyes, focused alert expression; chestnut-brown hair parted in the middle and tied in two pigtails (maria-chiquinhas) with red hair ties, pigtails reaching the shoulders",
+        "outfit": "light-blue denim jacket with chest pockets and rolled sleeves over a white T-shirt; medium-blue denim jeans; white canvas low-top sneakers with no logos; white tube socks with no stripes",
+        "framing": "head-and-shoulders portrait, face centered, looking slightly toward the viewer with a characteristic expression, fits inside a circle (keep all important features within the central 80%)",
+        "consistency": "match the same character from earlier images in this conversation exactly"
+      },
+      "style": {
+        "art_style": "1980s comic-book illustration, bold ink lines, cel shading, dramatic warm red-orange rim light from behind",
+        "background": "plain dark crimson background"
+      },
+      "negative": [
+        "text",
+        "logos",
+        "watermark",
+        "multiple people",
+        "hands",
+        "cropped hair"
+      ]
+    }
+  },
+  {
+    "id": "40_retrato_hud_russ",
+    "titulo_pt": "Retrato do HUD — Russ",
+    "uso_no_jogo_pt": "Retrato circular no canto do HUD e tela de classificação.",
+    "ferramenta_destino": "Godot (imagem 2D direta)",
+    "como_usar_pt": "Gere na MESMA conversa da vista frontal de Russ para manter o rosto igual.",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "1:1",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "character": "Russ",
+        "description": "13-year-old boy, pale skin with freckles, pale ice-blue eyes, mischievous smirk with one raised eyebrow; short spiky ginger-red hair",
+        "outfit": "faded olive-green bomber jacket with orange inner lining visible at the collar, worn over a black T-shirt; dark-gray worn jeans with a scuffed knee; dirty black-and-white canvas high-top sneakers with no logos; fingerless black gloves",
+        "framing": "head-and-shoulders portrait, face centered, looking slightly toward the viewer with a characteristic expression, fits inside a circle (keep all important features within the central 80%)",
+        "consistency": "match the same character from earlier images in this conversation exactly"
+      },
+      "style": {
+        "art_style": "1980s comic-book illustration, bold ink lines, cel shading, dramatic warm red-orange rim light from behind",
+        "background": "plain dark crimson background"
+      },
+      "negative": [
+        "text",
+        "logos",
+        "watermark",
+        "multiple people",
+        "hands",
+        "cropped hair"
+      ]
+    }
+  },
+  {
+    "id": "41_retrato_hud_mint",
+    "titulo_pt": "Retrato do HUD — Mint",
+    "uso_no_jogo_pt": "Retrato circular no canto do HUD e tela de classificação.",
+    "ferramenta_destino": "Godot (imagem 2D direta)",
+    "como_usar_pt": "Gere na MESMA conversa da vista frontal de Mint para manter o rosto igual.",
+    "prompt": {
+      "task": "Generate one single image.",
+      "output": {
+        "aspect_ratio": "1:1",
+        "resolution": "highest available",
+        "count": 1
+      },
+      "subject": {
+        "character": "Mint",
+        "description": "11-year-old Black girl, short and small for her age (about 10% shorter than the other kids), dark-brown skin, dark-brown eyes, determined confident smile; natural curly black hair in a rounded puff on top, held with a mint-green headband",
+        "outfit": "mint-green and white color-block windbreaker jacket, white T-shirt; navy athletic shorts with white piping over knee-length gray leggings; white sneakers with mint-green details and no logos; white wristbands",
+        "framing": "head-and-shoulders portrait, face centered, looking slightly toward the viewer with a characteristic expression, fits inside a circle (keep all important features within the central 80%)",
+        "consistency": "match the same character from earlier images in this conversation exactly"
+      },
+      "style": {
+        "art_style": "1980s comic-book illustration, bold ink lines, cel shading, dramatic warm red-orange rim light from behind",
+        "background": "plain dark crimson background"
+      },
+      "negative": [
+        "text",
+        "logos",
+        "watermark",
+        "multiple people",
+        "hands",
+        "cropped hair"
+      ]
+    }
+  }
+]

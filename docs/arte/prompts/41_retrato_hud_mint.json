@@ -1,0 +1,34 @@
+{
+  "id": "41_retrato_hud_mint",
+  "titulo_pt": "Retrato do HUD — Mint",
+  "uso_no_jogo_pt": "Retrato circular no canto do HUD e tela de classificação.",
+  "ferramenta_destino": "Godot (imagem 2D direta)",
+  "como_usar_pt": "Gere na MESMA conversa da vista frontal de Mint para manter o rosto igual.",
+  "prompt": {
+    "task": "Generate one single image.",
+    "output": {
+      "aspect_ratio": "1:1",
+      "resolution": "highest available",
+      "count": 1
+    },
+    "subject": {
+      "character": "Mint",
+      "description": "11-year-old Black girl, short and small for her age (about 10% shorter than the other kids), dark-brown skin, dark-brown eyes, determined confident smile; natural curly black hair in a rounded puff on top, held with a mint-green headband",
+      "outfit": "mint-green and white color-block windbreaker jacket, white T-shirt; navy athletic shorts with white piping over knee-length gray leggings; white sneakers with mint-green details and no logos; white wristbands",
+      "framing": "head-and-shoulders portrait, face centered, looking slightly toward the viewer with a characteristic expression, fits inside a circle (keep all important features within the central 80%)",
+      "consistency": "match the same character from earlier images in this conversation exactly"
+    },
+    "style": {
+      "art_style": "1980s comic-book illustration, bold ink lines, cel shading, dramatic warm red-orange rim light from behind",
+      "background": "plain dark crimson background"
+    },
+    "negative": [
+      "text",
+      "logos",
+      "watermark",
+      "multiple people",
+      "hands",
+      "cropped hair"
+    ]
+  }
+}
