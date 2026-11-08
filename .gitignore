@@ -1,0 +1,5 @@
+.godot/
+*.import
+builds/*
+!builds/.gitkeep
+.DS_Store
