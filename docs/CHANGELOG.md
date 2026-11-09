@@ -1,5 +1,10 @@
 # Registro de alterações
 
+## v1.0 — MVP (2026-11-09)
+- Perfil de exportação para macOS (universal: Apple Silicon + Intel, assinatura ad-hoc local).
+- Ícone do jogo, versão 1.0, tela de abertura escura; contador de FPS só na versão de desenvolvimento.
+- Critérios de aceite documentados em `docs/ACEITE.md`.
+
 ## v0.7.1 — Ajustes de atributos pedidos (2026-11-09)
 - Russ: pedalada normal a 30 km/h. Lucienne: aceleradores do chão a 50 km/h, esquinas a 25 km/h,
   pula 70% das rampas, erra menos (trocas de faixa a cada 10–16 s) e se cansa menos (−40% de gasto, +30% de recuperação).

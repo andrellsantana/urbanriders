@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a0408"/>
+      <stop offset="1" stop-color="#e8401a"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="240" height="240" rx="52" fill="url(#sky)" stroke="#120205" stroke-width="10"/>
+  <g fill="none" stroke="#120205" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="72" cy="168" r="38"/>
+    <circle cx="184" cy="168" r="38"/>
+    <path d="M72 168 L112 110 L168 110 L184 168 M112 110 L132 168 L168 110 M100 92 L124 92 M160 96 L176 84"/>
+  </g>
+  <g fill="none" stroke="#f5d36a" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="72" cy="168" r="38"/>
+    <circle cx="184" cy="168" r="38"/>
+    <path d="M72 168 L112 110 L168 110 L184 168 M112 110 L132 168 L168 110 M100 92 L124 92 M160 96 L176 84"/>
+  </g>
+  <text x="128" y="62" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="40" font-weight="900" fill="#f5d36a" stroke="#120205" stroke-width="3">URBAN</text>
+</svg>

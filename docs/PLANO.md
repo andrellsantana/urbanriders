@@ -8,7 +8,7 @@
 | 4 | Lucienne, Russ e Mint (IA), largada, classificação, chegada | ✅ entregue (com correções v0.4.1) |
 | 5 | Sons sintetizados, efeitos, menus (inicial, pausa, configurações) | ✅ entregue — **aguardando sua avaliação** |
 | v2 | Visual definitivo: modelos 3D dos personagens, BMX e cenário (prompts em `docs/arte/`) | adiado a pedido |
-| 6 | Calibração, medição de FPS no Mac, build macOS | — |
+| 6 | Calibração, medição de FPS no Mac, build macOS | ✅ versão 1.0 — gerar o app no Mac (README) |
 
 Regras: incrementos pequenos; nada de recursos externos sem autorização (licença verificada);
 não avançar de fase sem aprovação.

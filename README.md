@@ -2,7 +2,7 @@
 
 Corrida 3D de bicicletas em **Red City** — Godot 4 + GDScript tipado, para macOS.
 
-> **Estado atual:** Fase 4 — corrida completa contra Lucienne, Russ e Mint (IA) no bairro de Red City.
+> **Estado atual:** **versão 1.0 (MVP)** — corrida completa contra Lucienne, Russ e Mint em Red City.
 > Personagem e cenário são **geometria provisória** (visual definitivo fica para a versão 2).
 
 ![Corrida em Red City](docs/screenshots/corrida_rivais.png)
@@ -21,6 +21,24 @@ Corrida 3D de bicicletas em **Red City** — Godot 4 + GDScript tipado, para mac
 4. Pressione **Cmd + B** (ou clique no botão ▶ no canto superior direito) para jogar.
    *(No Mac, F5 só funciona como **fn + F5**.)*
 5. Para a pista de testes da física: abra `scenes/test_track.tscn` e pressione **Cmd + R** (rodar cena atual).
+
+## Gerar o aplicativo para Mac (versão 1.0)
+
+O jogo vira um **Urban Riders.app** que abre com dois cliques, sem a Godot (Apple Silicon e Intel).
+
+1. Abra o projeto na Godot.
+2. Menu **Editor → Gerenciar Modelos de Exportação…** (*Manage Export Templates*) → **Baixar e Instalar**.
+   (Só na primeira vez; são ~1 GB.)
+3. Menu **Projeto → Exportar…** (*Project → Export*). O perfil **macOS** já está configurado.
+4. Clique em **Exportar Projeto…**, desmarque **"Exportar com Depuração"** (*Export With Debug*),
+   escolha onde salvar (ex.: Área de Trabalho) com o nome `Urban Riders.zip` e confirme.
+5. Dê dois cliques no `.zip`: aparece o **Urban Riders.app**. Arraste-o para **Aplicativos** se quiser.
+6. Na **primeira** abertura o macOS avisa que o desenvolvedor não é identificado:
+   clique com o botão direito no app → **Abrir** → **Abrir**. (Ou: Ajustes do Sistema → Privacidade e Segurança → **Abrir Mesmo Assim**.)
+   Nas próximas vezes, é só dar dois cliques.
+
+> O app é assinado localmente ("ad-hoc"), sem conta paga de desenvolvedor Apple. Para distribuir a outras
+> pessoas sem esse aviso, seria preciso assinatura e notarização da Apple (fora do escopo do MVP).
 
 ## Controles
 

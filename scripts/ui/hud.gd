@@ -208,8 +208,9 @@ func _on_draw() -> void:
 			canvas.draw_line(center + dir * r0 * Vector2(1, 0.6), center + dir * r1 * Vector2(1, 0.6),
 					Color(1, 0.92, 0.8, 0.35 * k), 3.0)
 
-	# FPS (desenvolvimento).
-	_text(Vector2(vp.x - 200, 44), "%d FPS" % Engine.get_frames_per_second(), 22, Color(0.85, 0.85, 0.85), HORIZONTAL_ALIGNMENT_RIGHT, 160)
+	# FPS (só na versão de desenvolvimento).
+	if OS.is_debug_build():
+		_text(Vector2(vp.x - 200, 44), "%d FPS" % Engine.get_frames_per_second(), 22, Color(0.85, 0.85, 0.85), HORIZONTAL_ALIGNMENT_RIGHT, 160)
 
 	# Ajuda de controles.
 	_text(Vector2(40, vp.y - 40), "Cima/W pedalar  ·  S acelerar  ·  Baixo/Espaço frear  ·  Esq/Dir ou A/D curvas  ·  R reiniciar  ·  Esc pausa", 20, Color(0.92, 0.88, 0.85))
