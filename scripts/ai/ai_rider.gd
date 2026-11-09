@@ -83,6 +83,13 @@ func setup(b: BikeController, c: Circuit, p: AIPersonality, all_riders: Array[Bi
 	if p.resist_vs_russ != 1.0:
 		b.resistance_vs["Russ"] = p.resist_vs_russ
 	b.config.max_speed_kmh = p.top_speed_kmh
+	b.config.cruise_speed_kmh = p.cruise_speed_kmh
+	b.config.max_hearts = p.max_hearts
+	b.hearts = p.max_hearts
+	b.pad_speed = p.pad_speed_kmh / 3.6
+	b.stamina.drain_normal *= p.normal_drain_mult
+	b.stamina.recover_coast *= p.recover_mult
+	b.stamina.recover_rest *= p.recover_mult
 	b.config.acceleration *= p.accel_mult
 	b.config.boost_ramp_time /= p.accel_mult
 

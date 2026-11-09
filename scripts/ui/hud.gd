@@ -367,7 +367,7 @@ func _draw_results(vp: Vector2) -> void:
 		if pr["finished"]:
 			t = RaceManager.format_time(pr["time"])
 		elif pr["lost"]:
-			t = "três quedas"
+			t = "fora (quedas)"
 		elif race.complete:
 			t = "não terminou"
 		var col := Color(1, 0.9, 0.5) if i == 0 else Color.WHITE

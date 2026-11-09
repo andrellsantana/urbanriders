@@ -67,6 +67,7 @@ var recovery_mult: float = 1.0 ## tempo no chão (Mint: 1,05)
 var pads_hit: int = 0
 var ramps_hit: int = 0
 var _pad_target: float = 12.2
+var pad_speed: float = 12.2 ## m/s no acelerador do chão (Lucienne: 50 km/h)
 const MAX_BUMP := 1.8 ## m/s máximos de empurrão acumulado
 
 const LAYER_WORLD := 1
@@ -305,7 +306,7 @@ func pad_boost() -> void:
 	if state != State.RIDING:
 		return
 	_pad_timer = 1.6
-	_pad_target = PAD_SPEED
+	_pad_target = pad_speed
 	pads_hit += 1
 	special.emit("acelerador")
 

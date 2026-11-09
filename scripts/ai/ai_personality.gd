@@ -44,6 +44,11 @@ extends Resource
 @export var overtake_specialist: bool = false ## Mint: troca de lado rápido e acelera para passar
 @export var evade_speed: float = 4.0 ## m/s de troca de faixa ao desviar (Mint: 6)
 @export var avoids_puddles: bool = false ## contorna poças (só Lucienne)
+@export var cruise_speed_kmh: float = 24.0 ## pedalada normal (Russ: 30)
+@export var pad_speed_kmh: float = 44.0 ## velocidade no acelerador do chão (Lucienne: 50)
+@export var max_hearts: int = 4 ## quedas até ficar fora da corrida
+@export var normal_drain_mult: float = 1.0 ## gasto da pedalada normal (Lucienne: menor)
+@export var recover_mult: float = 1.0 ## recuperação com pedal solto (Lucienne: maior)
 @export var accel_mult: float = 1.0 ## aceleração (Russ: 0,75 = 25% mais lento para ganhar velocidade)
 @export var form_variation: float = 5.0 ## "dia bom/ruim": sorteio de ±% de energia aceita no turbo
 @export var overtake_lookahead: float = 8.0

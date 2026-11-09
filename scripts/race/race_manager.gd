@@ -72,7 +72,13 @@ func add_rider(b: BikeController, rider_name: String, color: Color) -> int:
 	rider_colors.append(color)
 	b.controls_enabled = false
 	progress.append({"next_gate": 0, "prev_side": _side_of(b, gates[0]), "finished": false, "time": 0.0, "lost": false})
-	return riders.size() - 1
+	var idx := riders.size() - 1
+	if idx > 0:
+		b.out_of_hearts.connect(func() -> void:
+			if not progress[idx]["finished"]:
+				progress[idx]["lost"] = true
+				b.set_ghost(true))
+	return idx
 
 
 func gate_count() -> int:

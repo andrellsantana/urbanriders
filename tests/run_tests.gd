@@ -79,7 +79,7 @@ func _test_stamina() -> void:
 	var ru: Resource = load("res://resources/ai_russ.tres")
 	var mi: Resource = load("res://resources/ai_mint.tres")
 	check(lu.get("erratic") and float(lu.get("corner_speed_kmh")) < float(mi.get("corner_speed_kmh")) \
-			and float(lu.get("boost_min_straight")) < float(mi.get("boost_min_straight")),
+			and float(lu.get("top_speed_kmh")) > float(mi.get("top_speed_kmh")),
 			"Lucienne: imprevisível, cautelosa nas curvas, turbo nas retas")
 	check(ru.get("aggressive") and not ru.get("knows_puddles"), "Russ: trapaceiro (fecha e empurra)")
 	check(mi.get("polite") and not mi.get("aggressive") and float(mi.get("boost_stamina_stop")) >= 12.0,
@@ -100,6 +100,19 @@ func _test_stamina() -> void:
 			"Lucienne e Russ dificultam ultrapassagens")
 	check(float(lu.get("top_speed_kmh")) > float(ru.get("top_speed_kmh")) and float(mi.get("corner_speed_kmh")) > float(ru.get("corner_speed_kmh")),
 			"Lucienne mais rápida na reta, Mint nas curvas")
+
+	check(is_equal_approx(float(ru.get("cruise_speed_kmh")), 30.0), "Russ: pedalada normal a 30 km/h")
+	check(is_equal_approx(float(lu.get("pad_speed_kmh")), 50.0), "Lucienne: acelerador do chão a 50 km/h")
+	check(absf(2.5 * float(mi.get("recovery_mult")) - 3.2) < 0.01, "Mint: 3,2 s no chão após queda")
+	check(int(lu.get("max_hearts")) == 4 and int(mi.get("max_hearts")) == 4 and int(ru.get("max_hearts")) == 4,
+			"rivais: 4 quedas permitidas")
+	check(is_equal_approx(float(mi.get("pad_chance")), 0.7) and is_equal_approx(float(lu.get("ramp_chance")), 0.7),
+			"Mint mira 70% dos aceleradores; Lucienne pula 70% das rampas")
+	check(is_equal_approx(float(lu.get("boost_min_straight")), 20.0) and is_equal_approx(float(mi.get("boost_min_straight")), 20.0)
+			and is_equal_approx(float(ru.get("boost_min_straight")), 20.0), "turbo a partir de 20 m de reta livre")
+	check(is_equal_approx(float(lu.get("corner_speed_kmh")), 25.0), "Lucienne entra nas esquinas a 25 km/h")
+	check(float(lu.get("normal_drain_mult")) < 1.0 and float(lu.get("recover_mult")) > 1.0 and (lu.get("erratic_interval") as Vector2).x >= 10.0,
+			"Lucienne erra menos e se cansa menos")
 
 	var d := Stamina.new()
 	for i in 60 * 30:

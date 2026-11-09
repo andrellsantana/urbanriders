@@ -158,7 +158,6 @@ func _spawn_rivals(circuit: Circuit) -> void:
 		b.use_player_input = false
 		b.look = look
 		var cfg: Resource = load("res://resources/bike_default.tres").duplicate()
-		cfg.set("max_hearts", 99) # rivais não são eliminados por quedas
 		b.config = cfg
 		_place_on_grid(b, circuit, GRID[k + 1])
 		add_child(b)

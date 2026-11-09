@@ -1,5 +1,11 @@
 # Registro de alterações
 
+## v0.7.1 — Ajustes de atributos pedidos (2026-11-09)
+- Russ: pedalada normal a 30 km/h. Lucienne: aceleradores do chão a 50 km/h, esquinas a 25 km/h,
+  pula 70% das rampas, erra menos (trocas de faixa a cada 10–16 s) e se cansa menos (−40% de gasto, +30% de recuperação).
+- Mint: 3,2 s no chão após queda; mira 70% dos aceleradores.
+- Todos os rivais: turbo a partir de 20 m de reta livre; 4 quedas permitidas (depois ficam fora da corrida).
+
 ## v0.7 — Personalidades de duelo (2026-11-09)
 - Esbarrão leve só empurra; queda só com batida forte, conforme a resistência de cada um
   (Lucienne 28 km/h, Mint 20 — 28 contra o Russ —, Russ 14, jogador 20).
