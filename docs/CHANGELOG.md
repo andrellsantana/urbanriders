@@ -1,5 +1,14 @@
 # Registro de alterações
 
+## v0.5 — Fase 5: sons, efeitos e menus (2026-11-09)
+- 14 sons sintetizados por código (sem recursos externos): pneus, corrente, catraca livre, freio, vento,
+  queda, encostão, poça, bipes, largada, checkpoint, fanfarra, derrota e trovões distantes.
+- Sons posicionais para cada ciclista (você ouve os rivais se aproximando).
+- Efeitos: poeira e folhas nas quedas, respingos nas poças, folhas de outono caindo, tremor de câmera,
+  linhas de velocidade no turbo.
+- Menu inicial, pausa no Esc (antes saía do jogo) e configurações (qualidade, sombras, tela cheia, volume).
+- 105 testes automatizados.
+
 ## v0.4.1 — Correções após o teste da Fase 4 (2026-11-09)
 - Energia justa e visível: pedalar gasta pouco e não recupera; só o pedal solto recupera.
   Seta "recuperando" no HUD e aviso na primeira vez que a energia fica baixa. Penalidade só abaixo de 25%.

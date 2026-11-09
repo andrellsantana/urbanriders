@@ -11,6 +11,7 @@ extends Node3D
 @export var max_fov: float = 78.0
 
 var target: CharacterBody3D
+var trauma: float = 0.0 ## tremor (0–1), decai sozinho
 var arm: SpringArm3D
 var camera: Camera3D
 
@@ -48,3 +49,11 @@ func _physics_process(dt: float) -> void:
 	var spd: float = target.get("speed")
 	var t := clampf(spd / 11.1, 0.0, 1.0)
 	camera.fov = lerpf(camera.fov, lerpf(base_fov, max_fov, t), 1.0 - exp(-3.0 * dt))
+	trauma = maxf(0.0, trauma - dt * 1.6)
+	var k := trauma * trauma
+	camera.h_offset = randf_range(-1.0, 1.0) * 0.25 * k
+	camera.v_offset = randf_range(-1.0, 1.0) * 0.18 * k
+
+
+func shake(amount: float) -> void:
+	trauma = clampf(trauma + amount, 0.0, 1.0)

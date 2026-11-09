@@ -30,6 +30,12 @@ scripts/race/race_manager.gd     contagem, checkpoints por ciclista, classifica�
 scripts/ai/ai_rider.gd           piloto da IA (aciona os mesmos comandos do jogador)
 scripts/ai/ai_personality.gd     parâmetros de personalidade (resources/ai_*.tres)
 scripts/core/characters.gd       aparência provisória de cada personagem
+scripts/core/settings.gd         configurações (qualidade, sombras, tela cheia, volume) em user://config.cfg
+scripts/audio/synth.gd           sintetizador: 14 sons gerados por código (AudioStreamWAV)
+scripts/audio/bike_audio.gd      sons posicionais de cada bicicleta
+scripts/audio/race_audio.gd      contagem, checkpoints, chegada, derrota, trovões
+scripts/fx/effects.gd            partículas (queda, poças, folhas)
+scripts/ui/menu.gd               menu inicial, pausa e configurações
 shaders/toon.gdshader            Cel Shading
 shaders/outline.gdshader         contorno de quadrinho (casca invertida)
 shaders/red_sky.gdshader         céu vermelho tempestuoso

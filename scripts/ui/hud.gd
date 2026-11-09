@@ -180,11 +180,25 @@ func _on_draw() -> void:
 	if player.sliding:
 		_text(Vector2(vp.x * 0.5 - 200, vp.y * 0.72), "DERRAPANDO!", 44, Color(1, 0.75, 0.2), HORIZONTAL_ALIGNMENT_CENTER, 400)
 
+	# Linhas de velocidade no turbo.
+	if player.boosting and player.speed > 8.0:
+		var k := clampf((player.speed - 8.0) / 3.1, 0.0, 1.0)
+		var rng := RandomNumberGenerator.new()
+		rng.seed = int(Time.get_ticks_msec() / 50)
+		var center := vp * Vector2(0.5, 0.45)
+		for i in 26:
+			var ang := rng.randf() * TAU
+			var dir := Vector2(cos(ang), sin(ang))
+			var r0 := rng.randf_range(0.42, 0.55) * vp.x
+			var r1 := r0 + rng.randf_range(60.0, 180.0)
+			canvas.draw_line(center + dir * r0 * Vector2(1, 0.6), center + dir * r1 * Vector2(1, 0.6),
+					Color(1, 0.92, 0.8, 0.35 * k), 3.0)
+
 	# FPS (desenvolvimento).
 	_text(Vector2(vp.x - 200, 44), "%d FPS" % Engine.get_frames_per_second(), 22, Color(0.85, 0.85, 0.85), HORIZONTAL_ALIGNMENT_RIGHT, 160)
 
 	# Ajuda de controles.
-	_text(Vector2(40, vp.y - 40), "Cima/W pedalar  ·  S acelerar  ·  Baixo/Espaço frear  ·  Esq/Dir ou A/D curvas  ·  R reiniciar  ·  Esc sair", 20, Color(0.92, 0.88, 0.85))
+	_text(Vector2(40, vp.y - 40), "Cima/W pedalar  ·  S acelerar  ·  Baixo/Espaço frear  ·  Esq/Dir ou A/D curvas  ·  R reiniciar  ·  Esc pausa", 20, Color(0.92, 0.88, 0.85))
 
 	if race != null:
 		_draw_race(vp)

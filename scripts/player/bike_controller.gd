@@ -10,6 +10,7 @@ const RiderVisual := preload("res://scripts/player/rider_visual.gd")
 signal crashed(hearts_left: int, reason: String)
 signal recovered
 signal out_of_hearts
+signal bumped(strength: float)
 
 enum State { RIDING, CRASHED, OUT }
 
@@ -232,6 +233,7 @@ func _check_impacts(pre_velocity: Vector3) -> void:
 				_bump = (_bump + n * hit * 0.4).limit_length(MAX_BUMP)
 				_bump_cooldown = 0.25
 				speed = maxf(0.0, speed - hit * 0.5)
+				bumped.emit(hit)
 			continue
 		var impact := -flat_pre.dot(n)
 		if impact > config.crash_impact_kmh / BikePhysics.KMH and _grace_timer <= 0.0:
@@ -247,6 +249,7 @@ func receive_bump(v: Vector3) -> void:
 		return
 	_bump_cooldown = 0.25
 	_bump = (_bump + Vector3(v.x, 0.0, v.z)).limit_length(MAX_BUMP)
+	bumped.emit(v.length())
 	_overload_timer += v.length() * 0.08
 
 

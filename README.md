@@ -31,7 +31,17 @@ Corrida 3D de bicicletas em **Red City** — Godot 4 + GDScript tipado, para mac
 | **↓** ou **Espaço** | Frear (progressivo) |
 | **← →** ou **A D** | Curvas |
 | **R** | Reiniciar |
-| **Esc** | Sair |
+| **Esc** | Pausa (Continuar, Reiniciar, Configurações, Sair) |
+
+## Menus e configurações
+- **Menu inicial:** Jogar, Configurações, Sair (setas + Enter ou mouse).
+- **Configurações:** qualidade gráfica (Baixa/Média/Alta), sombras, tela cheia e volume — salvas no computador.
+  Se o FPS cair, use **Baixa** ou desligue as sombras.
+
+## Sons e efeitos
+Todos os sons são **sintetizados pelo próprio jogo** (sem arquivos externos): pneus, corrente, catraca livre
+ao soltar o pedal, freio, vento, quedas, encostões, poças, bipes da largada, checkpoints, fanfarra e trovões.
+Efeitos: poeira nas quedas, respingos nas poças, folhas de outono caindo, tremor de câmera e linhas de velocidade no turbo.
 
 ## O que testar
 

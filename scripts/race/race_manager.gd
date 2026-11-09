@@ -34,6 +34,7 @@ var wrong_way: bool = false
 var save_records: bool = true
 var finish_order: Array[int] = []
 var complete: bool = false ## todos terminaram (ou acabou o tempo extra)
+var hold: bool = false ## verdadeiro enquanto o menu inicial está aberto (contagem não começa)
 
 ## Estado por ciclista: next_gate, prev_side, finished, time, lost.
 var progress: Array[Dictionary] = []
@@ -88,6 +89,8 @@ func _physics_process(dt: float) -> void:
 	if player == null:
 		return
 	if phase == Phase.COUNTDOWN:
+		if hold:
+			return
 		countdown -= dt
 		var c := ceili(countdown)
 		if c != _last_count:

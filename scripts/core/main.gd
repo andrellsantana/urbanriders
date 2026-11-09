@@ -13,12 +13,19 @@ const Hud := preload("res://scripts/ui/hud.gd")
 const Characters := preload("res://scripts/core/characters.gd")
 const AIRider := preload("res://scripts/ai/ai_rider.gd")
 const AIPersonality := preload("res://scripts/ai/ai_personality.gd")
+const Settings := preload("res://scripts/core/settings.gd")
+const Menu := preload("res://scripts/ui/menu.gd")
+const BikeAudio := preload("res://scripts/audio/bike_audio.gd")
+const RaceAudio := preload("res://scripts/audio/race_audio.gd")
+const Effects := preload("res://scripts/fx/effects.gd")
 const SKY_SHADER: Shader = preload("res://shaders/red_sky.gdshader")
 
 ## Verdadeiro: pista de testes da física (Fase 2). Falso: bairro + corrida.
 @export var use_test_track: bool = false
 ## Adversários da IA (Fase 4).
 @export var with_rivals: bool = true
+## Menu inicial antes da largada (desligado automaticamente nos testes headless).
+@export var show_menu: bool = true
 
 ## Grid de largada: (distância no laço, faixa lateral). [0] = jogador.
 const GRID: Array[Vector2] = [Vector2(3.0, 1.3), Vector2(7.0, -1.3), Vector2(7.0, 1.3), Vector2(3.0, -1.3)]
@@ -31,6 +38,10 @@ var camera_rig: CameraRig
 var hud: Hud
 var rivals: Array[BikeController] = []
 var ai_riders: Array[AIRider] = []
+var menu: Menu
+var effects: Effects
+var race_audio: RaceAudio
+var sun: DirectionalLight3D
 var load_time_ms: int = 0
 var _perf_timer: float = 0.0
 
@@ -66,8 +77,41 @@ func _ready() -> void:
 	hud.setup(player)
 	if race != null:
 		hud.setup_race(race)
+	_setup_audio_and_fx()
+	Settings.load_settings()
+	Settings.apply(get_viewport(), sun)
+	menu = Menu.new()
+	add_child(menu)
+	menu.play_pressed.connect(func() -> void:
+		if race != null:
+			race.hold = false)
+	menu.restart_pressed.connect(func() -> void: get_tree().reload_current_scene())
+	menu.settings_changed.connect(func() -> void: Settings.apply(get_viewport(), sun))
+	if show_menu and DisplayServer.get_name() != "headless":
+		if race != null:
+			race.hold = true
+		menu.open_main()
 	load_time_ms = Time.get_ticks_msec() - t0
 	print("[perf] cena montada em %d ms" % load_time_ms)
+
+
+func _setup_audio_and_fx() -> void:
+	effects = Effects.new()
+	add_child(effects)
+	effects.falling_leaves(camera_rig)
+	var bikes: Array[BikeController] = [player]
+	bikes.append_array(rivals)
+	for b in bikes:
+		var ba := BikeAudio.new()
+		b.add_child(ba)
+		ba.setup(b, b == player)
+		effects.watch(b)
+	player.crashed.connect(func(_h: int, _r: String) -> void: camera_rig.shake(0.8))
+	player.bumped.connect(func(s: float) -> void: camera_rig.shake(clampf(s * 0.15, 0.1, 0.4)))
+	if race != null:
+		race_audio = RaceAudio.new()
+		add_child(race_audio)
+		race_audio.setup(race)
 
 
 func _place_on_grid(b: BikeController, circuit: Circuit, slot: Vector2) -> void:
@@ -145,7 +189,7 @@ func _build_environment() -> void:
 	world_env.environment = env
 	add_child(world_env)
 
-	var sun := DirectionalLight3D.new()
+	sun = DirectionalLight3D.new()
 	sun.light_color = Color(1.0, 0.55, 0.4)
 	sun.light_energy = 1.05
 	sun.rotation_degrees = Vector3(-32.0, 25.0, 0.0)
@@ -156,10 +200,11 @@ func _build_environment() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("reiniciar"):
+	if event.is_action_pressed("reiniciar") and not menu.is_open():
 		get_tree().reload_current_scene()
-	elif event.is_action_pressed("sair"):
-		get_tree().quit()
+	elif event.is_action_pressed("sair") and not menu.is_open():
+		menu.open_pause()
+		get_viewport().set_input_as_handled()
 
 
 func _process(dt: float) -> void:

@@ -10,6 +10,8 @@ const BikeController := preload("res://scripts/player/bike_controller.gd")
 const Circuit := preload("res://scripts/race/circuit.gd")
 const RaceManager := preload("res://scripts/race/race_manager.gd")
 const AIRider := preload("res://scripts/ai/ai_rider.gd")
+const Synth := preload("res://scripts/audio/synth.gd")
+const Settings := preload("res://scripts/core/settings.gd")
 
 var _passes: int = 0
 var _fails: int = 0
@@ -35,6 +37,9 @@ func _run() -> void:
 	_test_ik()
 	print("\n== Testes de integração ==")
 	await _test_integration()
+	print("\n== Sons, efeitos e menus ==")
+	_test_synth()
+	await _test_menus_and_fx()
 	print("\n== Bairro e corrida ==")
 	_test_circuit()
 	await _test_neighborhood_race()
@@ -565,5 +570,97 @@ func _test_ai_race() -> void:
 		tmax = maxf(tmax, float(race.progress[i]["time"]))
 	check(tmax - tmin < 25.0, "pelotão equilibrado (diferença de %.1f s entre os rivais)" % (tmax - tmin))
 	check(race.position_of(0) >= 1 and race.position_of(0) <= 4, "posição do jogador: %dº" % race.position_of(0))
+	main.queue_free()
+	await _frames(2)
+
+
+# ------------------------------------------------------- sons, efeitos, menus
+
+func _test_synth() -> void:
+	var ok := true
+	var bad := PackedStringArray()
+	for n in Synth.NAMES:
+		var w := Synth.get_sound(n)
+		if w == null or w.data.size() < 1000 or w.mix_rate != Synth.RATE:
+			ok = false
+			bad.append(n)
+	check(ok, "%d sons sintetizados por código %s" % [Synth.NAMES.size(), ", ".join(bad)])
+	var loops := ["wind", "roll", "chain", "freewheel", "brake"]
+	var looped := true
+	for n: String in loops:
+		if Synth.get_sound(n).loop_mode != AudioStreamWAV.LOOP_FORWARD:
+			looped = false
+	check(looped, "sons contínuos em laço (pneu, corrente, catraca, freio, vento)")
+	var peak := 0
+	var crash := Synth.get_sound("crash")
+	for i in range(0, crash.data.size(), 2):
+		peak = maxi(peak, absi(crash.data.decode_s16(i)))
+	check(peak > 20000 and peak <= 32767, "som de queda com volume adequado, sem saturar")
+
+
+func _test_menus_and_fx() -> void:
+	var main: Node = load("res://scenes/main.tscn").instantiate()
+	root.add_child(main)
+	await _frames(5)
+	var race: RaceManager = main.get("race")
+	race.save_records = false
+	var p: BikeController = main.get("player")
+	var audios := 0
+	for b in race.riders:
+		for c in b.get_children():
+			if c.get_script() == preload("res://scripts/audio/bike_audio.gd"):
+				audios += 1
+	check(audios == race.riders.size(), "cada bicicleta tem sons próprios (%d)" % audios)
+	check(main.get("race_audio") != null, "sons da corrida (contagem, checkpoints, chegada, trovões)")
+
+	# Menu inicial segura a largada.
+	var menu: Node = main.get("menu")
+	race.hold = true
+	menu.call("open_main")
+	var cd := race.countdown
+	await _frames(30)
+	check(menu.call("is_open") and absf(race.countdown - cd) < 0.001, "menu inicial: largada só depois de Jogar")
+	menu.call("_on_play")
+	await _frames(30)
+	check(not menu.call("is_open") and race.countdown < cd, "Jogar inicia a contagem")
+
+	# Pausa.
+	menu.call("open_pause")
+	check(paused, "Esc pausa o jogo")
+	var t_before := race.countdown
+	await process_frame
+	await process_frame
+	check(absf(race.countdown - t_before) < 0.001, "corrida congelada durante a pausa")
+	menu.call("_on_resume")
+	check(not paused and not menu.call("is_open"), "Continuar retoma o jogo")
+
+	# Configurações.
+	var old_q := Settings.quality
+	var old_s := Settings.shadows
+	Settings.quality = Settings.Quality.LOW
+	Settings.shadows = false
+	Settings.apply(root.get_viewport(), main.get("sun"))
+	var sun: DirectionalLight3D = main.get("sun")
+	check(not sun.shadow_enabled and root.get_viewport().scaling_3d_scale < 1.0, "qualidade baixa: sem sombras e resolução 3D reduzida")
+	Settings.quality = old_q
+	Settings.shadows = old_s
+	Settings.apply(root.get_viewport(), sun)
+	check(sun.shadow_enabled == old_s, "configurações restauradas")
+	menu.call("open_settings", 1)
+	check(menu.get("mode") == 3, "tela de configurações abre pelo menu")
+	menu.call("hide_menu")
+
+	# Efeitos.
+	var fx: Node = main.get("effects")
+	var burst: Node = fx.call("burst", p.global_position, "crash")
+	check(burst is CPUParticles3D and (burst as CPUParticles3D).emitting, "efeito de queda (poeira e folhas)")
+	var rig: Node = main.get("camera_rig")
+	rig.call("shake", 0.8)
+	check(float(rig.get("trauma")) > 0.5, "câmera treme nas batidas")
+	var leaves := 0
+	for c in rig.get_children():
+		if c is CPUParticles3D:
+			leaves += 1
+	check(leaves >= 1, "folhas de outono caindo ao redor da câmera")
 	main.queue_free()
 	await _frames(2)
