@@ -4,8 +4,8 @@
 |---|---|---|
 | 1 | Estrutura, arquitetura, cena inicial, testes | ✅ entregue |
 | 2 | Bicicleta, física, energia, quedas, câmera, HUD mínimo (modelos provisórios) | ✅ entregue |
-| 3 | Bairro residencial expandido de Red City, circuito de 1,5 km, checkpoints, cronômetro, minimapa | ✅ entregue — **aguardando sua avaliação** |
-| 4 | Lucienne, Russ e Mint (IA), largada, classificação, chegada | — |
+| 3 | Bairro residencial expandido de Red City, circuito de 1,5 km, checkpoints, cronômetro, minimapa | ✅ entregue |
+| 4 | Lucienne, Russ e Mint (IA), largada, classificação, chegada | ✅ entregue — **aguardando sua avaliação** |
 | 5 | Sons, efeitos, HUD final | — |
 | v2 | Visual definitivo: modelos 3D dos personagens, BMX e cenário (prompts em `docs/arte/`) | adiado a pedido |
 | 6 | Calibração, medição de FPS no Mac, build macOS | — |

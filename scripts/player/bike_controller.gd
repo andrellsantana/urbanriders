@@ -17,6 +17,8 @@ enum State { RIDING, CRASHED, OUT }
 @export var use_player_input: bool = true
 ## Falso durante a contagem regressiva e após a chegada (segura no freio).
 var controls_enabled: bool = true
+## Aparência (characters.gd); vazio = Andrew-Mike.
+var look: Dictionary = {}
 
 var state: State = State.RIDING
 var speed: float = 0.0 ## m/s
@@ -32,6 +34,7 @@ var sliding: bool = false
 var pedaling: bool = false
 var boosting: bool = false
 var last_crash_reason: String = ""
+var crash_count: int = 0
 var stamina: Stamina = Stamina.new()
 var visual: RiderVisual
 
@@ -47,6 +50,10 @@ var _grace_timer: float = 0.0
 var _crash_normal: Vector3 = Vector3.ZERO
 var _zones: Array[Dictionary] = []
 var _spawn: Transform3D
+var _bump: Vector3 = Vector3.ZERO
+
+const LAYER_WORLD := 1
+const LAYER_RIDERS := 2
 
 
 func _ready() -> void:
@@ -65,7 +72,10 @@ func _ready() -> void:
 	shape.rotation = Vector3(PI / 2.0, 0.0, 0.0)
 	shape.position = Vector3(0.0, 0.34, 0.0)
 	add_child(shape)
+	collision_layer = LAYER_RIDERS
+	collision_mask = LAYER_WORLD | LAYER_RIDERS
 	visual = RiderVisual.new()
+	visual.look = look
 	add_child(visual)
 
 
@@ -182,10 +192,11 @@ func _ride(dt: float) -> void:
 
 	# Movimento.
 	if on_floor:
-		velocity = move_dir * speed - get_floor_normal() * 0.5 # mantém contato com o piso
+		velocity = move_dir * speed - get_floor_normal() * 0.5 + _bump # mantém contato com o piso
 	else:
 		var vy := velocity.y - cfg.gravity * dt
-		velocity = fwd * speed + Vector3.UP * vy
+		velocity = fwd * speed + Vector3.UP * vy + _bump
+	_bump = _bump.move_toward(Vector3.ZERO, 5.0 * dt)
 	var pre_velocity := velocity
 	var was_airborne := not on_floor
 	move_and_slide()
@@ -204,6 +215,19 @@ func _check_impacts(pre_velocity: Vector3) -> void:
 			continue
 		n.y = 0.0
 		n = n.normalized()
+		var other := col.get_collider()
+		if other is CharacterBody3D and other.has_method("receive_bump"):
+			var ov: Vector3 = (other as CharacterBody3D).velocity
+			var rel := flat_pre - Vector3(ov.x, 0.0, ov.z)
+			var hit := -rel.dot(n)
+			if hit > config.rider_crash_kmh / BikePhysics.KMH and _grace_timer <= 0.0:
+				_crash("Trombou em outro ciclista!", n)
+				return
+			if hit > 0.2:
+				other.receive_bump(-n * hit * 0.6)
+				_bump += n * hit * 0.4
+				speed = maxf(0.0, speed - hit * 0.5)
+			continue
 		var impact := -flat_pre.dot(n)
 		if impact > config.crash_impact_kmh / BikePhysics.KMH and _grace_timer <= 0.0:
 			_crash("Colisão!", n)
@@ -212,8 +236,35 @@ func _check_impacts(pre_velocity: Vector3) -> void:
 			speed = Vector2(velocity.x, velocity.z).length()
 
 
+## Empurrão recebido de outro ciclista (desequilibra um pouco).
+func receive_bump(v: Vector3) -> void:
+	if state != State.RIDING:
+		return
+	_bump += Vector3(v.x, 0.0, v.z)
+	_overload_timer += v.length() * 0.08
+
+
+## Sem colisão com outros ciclistas (após a chegada ou derrota).
+func set_ghost(on: bool) -> void:
+	collision_layer = 0 if on else LAYER_RIDERS
+	collision_mask = LAYER_WORLD if on else LAYER_WORLD | LAYER_RIDERS
+
+
+## Reposiciona parado sobre a pista (recuperação da IA).
+func teleport(pos: Vector3, dir: Vector3) -> void:
+	global_position = pos
+	rotation.y = atan2(-dir.x, -dir.z)
+	velocity = Vector3.ZERO
+	speed = 0.0
+	steer = 0.0
+	lean = 0.0
+	_bump = Vector3.ZERO
+	_grace_timer = config.recovery_grace
+
+
 func _crash(reason: String, wall_normal: Vector3) -> void:
 	last_crash_reason = reason
+	crash_count += 1
 	hearts = maxi(hearts - 1, 0)
 	_crash_normal = wall_normal
 	_crash_timer = config.recovery_time
@@ -224,6 +275,7 @@ func _crash(reason: String, wall_normal: Vector3) -> void:
 	boosting = false
 	sliding = false
 	speed *= 0.35
+	_bump = Vector3.ZERO
 	visual.start_crash(lean)
 	if hearts <= 0:
 		state = State.OUT

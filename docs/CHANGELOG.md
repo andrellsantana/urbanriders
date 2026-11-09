@@ -1,5 +1,15 @@
 # Registro de alterações
 
+## v0.4 — Fase 4: adversários e regras (2026-11-09)
+- Lucienne, Russ e Mint controlados por IA, com a mesma física do jogador e visual provisório próprio
+  (cores, cabelo — maria-chiquinhas, espetado, black puff —, bicicleta, altura).
+- Personalidades configuráveis em `resources/ai_*.tres`; ultrapassagens; Russ fecha e empurra.
+- Contato entre ciclistas (empurrão / queda), grid de largada 2×2, nomes sobre os rivais.
+- Classificação ao vivo, rivais no minimapa, quadro final com posições e tempos.
+- Recuperação automática da IA (sem bloqueios permanentes); ciclistas que chegam viram "fantasmas".
+- Energia recalibrada: pedalada normal sustentável (recupera abaixo de 60%); turbo é o recurso a administrar.
+- 84 testes automatizados (corrida completa com 4 ciclistas: Mint 3:20, Russ 3:37, Lucienne 3:38).
+
 ## v0.3 — Fase 3: bairro de Red City (2026-11-09)
 - Bairro residencial do interior americano: grade de ruas, ~280 casas baixas (varanda, garagem, chaminé,
   janelas acesas), gramados, calçadas, entradas de carro, árvores de outono, arbustos, cercas, caixas de correio,

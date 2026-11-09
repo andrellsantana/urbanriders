@@ -26,7 +26,10 @@ scripts/world/test_track.gd      pista de testes da física (scenes/test_track.t
 scripts/world/neighborhood.gd    bairro de Red City: grade de ruas, ~280 casas, postes, barreiras, poças
 scripts/world/mesh_batcher.gd    agrupa ~12 mil primitivas em ~90 malhas (cor por vértice + contorno)
 scripts/race/circuit.gd          laço de 1.470 m, checkpoints, projeção de progresso
-scripts/race/race_manager.gd     contagem, checkpoints em ordem, cronômetro, chegada, recorde, contramão
+scripts/race/race_manager.gd     contagem, checkpoints por ciclista, classificação ao vivo, chegada, recorde, contramão
+scripts/ai/ai_rider.gd           piloto da IA (aciona os mesmos comandos do jogador)
+scripts/ai/ai_personality.gd     parâmetros de personalidade (resources/ai_*.tres)
+scripts/core/characters.gd       aparência provisória de cada personagem
 shaders/toon.gdshader            Cel Shading
 shaders/outline.gdshader         contorno de quadrinho (casca invertida)
 shaders/red_sky.gdshader         céu vermelho tempestuoso
@@ -50,7 +53,7 @@ tests/run_tests.gd               testes de unidade e integração
 |---|---|
 | Parado | +9 %/s |
 | Sem pedalar, rodando | +5 %/s |
-| Pedalada normal | −1 %/s (leve: +1,5 %/s quando cansado) |
+| Pedalada normal | acima de 60 %: −0,3 %/s; abaixo de 60 %: +0,8 %/s (ritmo sustentável); cansado: +1,5 %/s |
 | Turbo (S) | até −9 %/s |
 | ≤ 10 % | "Cansado": sem turbo até voltar a 30 % |
 | < 40 % | velocidade máxima reduzida (até 70 %) |
@@ -68,3 +71,17 @@ tests/run_tests.gd               testes de unidade e integração
   pular um checkpoint não conta, e a chegada só vale após todos.
 - Barreiras nas ruas laterais de toda interseção da rota impedem desvios.
 - Recorde salvo em `user://recordes.cfg`.
+
+## Adversários (IA)
+- Cada rival é um `BikeController` igual ao do jogador; o `AIRider` só decide **pedalar, acelerar, frear e virar**.
+- Direção: mira um ponto à frente (5 m + 0,45·v) na faixa escolhida (±2,4 m, longe dos carros estacionados).
+- Velocidade: planeja a frenagem para a próxima esquina (v² − v_curva²)/(2·desaceleração) + margem;
+  reduz a velocidade de curva se conhece poças perto da esquina.
+- Turbo conforme a energia e a reta livre à frente; sprint final nos últimos metros.
+- Ultrapassagem: rival mais lento à frente na mesma faixa → muda para o lado com mais espaço.
+- Personalidades (`resources/ai_*.tres`): Mint (educada, estratégica), Lucienne (errática, cautelosa nas curvas,
+  turbo nas retas), Russ (agressivo: fecha e empurra; ignora poças).
+- Contato entre ciclistas: empurrão proporcional à velocidade relativa; acima de 16 km/h relativos, queda.
+- Sem bloqueios permanentes: parado por 3 s ou a mais de 9 m da rota → reposicionado na pista.
+- Ciclistas ficam na camada de colisão 2 (a câmera ignora); após a chegada viram "fantasmas" (sem colisão entre si).
+- Rivais não são eliminados por quedas (corações valem só para o jogador).

@@ -194,6 +194,7 @@ func _zone(rect: Rect2, grip: float, zone_name: String, color: Color) -> void:
 	box.size = Vector3(rect.size.x, 1.0, rect.size.y)
 	shape.shape = box
 	area.add_child(shape)
+	area.collision_mask = 3 # mundo + ciclistas
 	area.body_entered.connect(func(b: Node3D) -> void:
 		if b.has_method("enter_surface"):
 			b.enter_surface(grip, zone_name))

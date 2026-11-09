@@ -44,7 +44,7 @@ func sample(distance: float) -> Dictionary:
 
 ## Projeta uma posição no laço: distância percorrida, desvio lateral e direção local.
 func project(pos: Vector3) -> Dictionary:
-	var best := {"distance": 0.0, "lateral": INF, "dir": Vector3.FORWARD}
+	var best := {"distance": 0.0, "lateral": INF, "dir": Vector3.FORWARD, "point": Vector3.ZERO}
 	var p := Vector3(pos.x, 0.0, pos.z)
 	for i in points.size():
 		var a := points[i]
@@ -54,7 +54,7 @@ func project(pos: Vector3) -> Dictionary:
 		var q := a + ab * t
 		var lat := p.distance_to(q)
 		if lat < best["lateral"]:
-			best = {"distance": cumulative[i] + ab.length() * t, "lateral": lat, "dir": ab.normalized()}
+			best = {"distance": cumulative[i] + ab.length() * t, "lateral": lat, "dir": ab.normalized(), "point": q}
 	return best
 
 
@@ -105,3 +105,20 @@ static func edge_key(p0: Vector3, p1: Vector3) -> String:
 		a = b
 		b = t
 	return "%d,%d-%d,%d" % [a.x, a.y, b.x, b.y]
+
+
+## Desvio lateral com sinal (positivo = à direita do sentido da corrida).
+func signed_lateral(pos: Vector3) -> float:
+	var pr := project(pos)
+	var right: Vector3 = (pr["dir"] as Vector3).cross(Vector3.UP)
+	return (Vector3(pos.x, 0, pos.z) - (pr["point"] as Vector3)).dot(right)
+
+
+## Distância até a próxima esquina a partir de uma distância no laço.
+func distance_to_next_corner(distance: float) -> float:
+	var best := INF
+	for i in range(1, points.size() + 1):
+		var cd := cumulative[i] - distance
+		if cd > 0.0:
+			best = minf(best, cd)
+	return best

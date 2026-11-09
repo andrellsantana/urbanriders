@@ -10,16 +10,27 @@ const RaceManager := preload("res://scripts/race/race_manager.gd")
 const BikeController := preload("res://scripts/player/bike_controller.gd")
 const CameraRig := preload("res://scripts/core/camera_rig.gd")
 const Hud := preload("res://scripts/ui/hud.gd")
+const Characters := preload("res://scripts/core/characters.gd")
+const AIRider := preload("res://scripts/ai/ai_rider.gd")
+const AIPersonality := preload("res://scripts/ai/ai_personality.gd")
 const SKY_SHADER: Shader = preload("res://shaders/red_sky.gdshader")
 
 ## Verdadeiro: pista de testes da física (Fase 2). Falso: bairro + corrida.
 @export var use_test_track: bool = false
+## Adversários da IA (Fase 4).
+@export var with_rivals: bool = true
+
+## Grid de largada: (distância no laço, faixa lateral). [0] = jogador.
+const GRID: Array[Vector2] = [Vector2(3.0, 1.3), Vector2(7.0, -1.3), Vector2(7.0, 1.3), Vector2(3.0, -1.3)]
+const RIVAL_ORDER: Array[String] = ["russ", "mint", "lucienne"]
 
 var world: Node3D
 var player: BikeController
 var race: RaceManager
 var camera_rig: CameraRig
 var hud: Hud
+var rivals: Array[BikeController] = []
+var ai_riders: Array[AIRider] = []
 var load_time_ms: int = 0
 var _perf_timer: float = 0.0
 
@@ -40,14 +51,13 @@ func _ready() -> void:
 		world = Neighborhood.new()
 		add_child(world)
 		var circuit := Circuit.new()
-		var spawn := circuit.sample(Circuit.SPAWN_DISTANCE)
-		var dir: Vector3 = spawn["dir"]
-		player.position = spawn["pos"] + (dir.cross(Vector3.UP) * 2.0)
-		player.rotation.y = atan2(-dir.x, -dir.z)
+		_place_on_grid(player, circuit, GRID[0])
 		add_child(player)
 		race = RaceManager.new()
 		add_child(race)
 		race.setup(player, circuit)
+		if with_rivals:
+			_spawn_rivals(circuit)
 	camera_rig = CameraRig.new()
 	add_child(camera_rig)
 	camera_rig.setup(player)
@@ -58,6 +68,55 @@ func _ready() -> void:
 		hud.setup_race(race)
 	load_time_ms = Time.get_ticks_msec() - t0
 	print("[perf] cena montada em %d ms" % load_time_ms)
+
+
+func _place_on_grid(b: BikeController, circuit: Circuit, slot: Vector2) -> void:
+	var s := circuit.sample(slot.x)
+	var dir: Vector3 = s["dir"]
+	b.position = (s["pos"] as Vector3) + dir.cross(Vector3.UP) * slot.y
+	b.rotation.y = atan2(-dir.x, -dir.z)
+
+
+func _spawn_rivals(circuit: Circuit) -> void:
+	var all: Array[BikeController] = [player]
+	var personalities: Array[AIPersonality] = []
+	for k in RIVAL_ORDER.size():
+		var id := RIVAL_ORDER[k]
+		var look := Characters.look(id)
+		var b := BikeController.new()
+		b.name = String(look["name"])
+		b.use_player_input = false
+		b.look = look
+		var cfg: Resource = load("res://resources/bike_default.tres").duplicate()
+		cfg.set("max_hearts", 99) # rivais não são eliminados por quedas
+		b.config = cfg
+		_place_on_grid(b, circuit, GRID[k + 1])
+		add_child(b)
+		var tag := Label3D.new()
+		tag.text = String(look["name"])
+		tag.font_size = 40
+		tag.pixel_size = 0.0012
+		tag.fixed_size = true # tamanho constante na tela
+		tag.visibility_range_begin = 3.5
+		tag.outline_size = 10
+		tag.modulate = look["color"]
+		tag.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+		tag.position = Vector3(0, 2.05, 0)
+		tag.visibility_range_end = 45.0
+		b.add_child(tag)
+		race.add_rider(b, String(look["name"]), look["color"])
+		rivals.append(b)
+		all.append(b)
+		personalities.append(load("res://resources/ai_%s.tres" % id))
+	for k in rivals.size():
+		var ai := AIRider.new()
+		ai.name = "IA_" + rivals[k].name
+		add_child(ai)
+		ai.setup(rivals[k], circuit, personalities[k], all, (world as Neighborhood).puddles, 100 + k)
+		ai_riders.append(ai)
+	race.rider_finished.connect(func(i: int, _t: float, _p: int) -> void:
+		if i > 0:
+			ai_riders[i - 1].finished = true)
 
 
 func _build_environment() -> void:

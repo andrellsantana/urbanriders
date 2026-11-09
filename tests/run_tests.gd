@@ -9,6 +9,7 @@ const RiderVisual := preload("res://scripts/player/rider_visual.gd")
 const BikeController := preload("res://scripts/player/bike_controller.gd")
 const Circuit := preload("res://scripts/race/circuit.gd")
 const RaceManager := preload("res://scripts/race/race_manager.gd")
+const AIRider := preload("res://scripts/ai/ai_rider.gd")
 
 var _passes: int = 0
 var _fails: int = 0
@@ -60,6 +61,22 @@ func _test_stamina() -> void:
 	c.value = 50.0
 	c.update(Stamina.Effort.COAST, 0.0, 1.0)
 	check(c.value > 50.0, "sem pedalar: recupera energia")
+
+	var e := Stamina.new()
+	e.value = 30.0
+	for i in 60 * 10:
+		e.update(Stamina.Effort.NORMAL, 0.0, 1.0 / 60.0)
+	check(e.value > 30.0 and e.value <= e.sustainable_level, "pedalada leve abaixo de 60%%: recupera aos poucos (%.0f%%)" % e.value)
+
+	var lu: Resource = load("res://resources/ai_lucienne.tres")
+	var ru: Resource = load("res://resources/ai_russ.tres")
+	var mi: Resource = load("res://resources/ai_mint.tres")
+	check(lu.get("erratic") and float(lu.get("corner_speed_kmh")) < float(mi.get("corner_speed_kmh")) \
+			and float(lu.get("boost_min_straight")) < float(mi.get("boost_min_straight")),
+			"Lucienne: imprevisível, cautelosa nas curvas, turbo nas retas")
+	check(ru.get("aggressive") and not ru.get("knows_puddles"), "Russ: trapaceiro (fecha e empurra)")
+	check(mi.get("polite") and not mi.get("aggressive") and float(mi.get("boost_stamina_stop")) >= 40.0,
+			"Mint: competitiva e limpa, administra a energia")
 
 	var d := Stamina.new()
 	for i in 60 * 30:
@@ -394,6 +411,7 @@ func _test_neighborhood_race() -> void:
 	await _frames(2)
 
 	await _test_full_lap()
+	await _test_ai_race()
 
 	# Três quedas = derrota na corrida.
 	main = load("res://scenes/main.tscn").instantiate()
@@ -444,5 +462,87 @@ func _test_full_lap() -> void:
 	check(race.phase == RaceManager.Phase.FINISHED, "volta completa pedalando pelo circuito (%s)" % RaceManager.format_time(race.race_time))
 	check(race.race_time > 150.0 and race.race_time < 330.0, "duração da corrida dentro de 3–5 min (ritmo normal, sem turbo)")
 	check(p.hearts == p.config.max_hearts, "piloto cuidadoso completa sem quedas")
+	main.queue_free()
+	await _frames(2)
+
+
+## Corrida completa: jogador (piloto automático) + Lucienne, Russ e Mint (IA).
+func _test_ai_race() -> void:
+	var main: Node = load("res://scenes/main.tscn").instantiate()
+	root.add_child(main)
+	await _frames(10)
+	var p: BikeController = main.get("player")
+	var race: RaceManager = main.get("race")
+	race.save_records = false
+	check(race.riders.size() == 4, "4 competidores no grid")
+	var names := ", ".join(race.rider_names)
+	check(race.rider_names.has("Lucienne") and race.rider_names.has("Russ") and race.rider_names.has("Mint"),
+			"rivais: %s" % names)
+	var grid_ok := true
+	for i in race.riders.size():
+		for j in range(i + 1, race.riders.size()):
+			if race.riders[i].global_position.distance_to(race.riders[j].global_position) < 2.0:
+				grid_ok = false
+	check(grid_ok, "grid de largada sem sobreposição")
+	await _frames(60)
+	var moved := false
+	for r in race.riders:
+		if r.speed > 0.1:
+			moved = true
+	check(not moved, "ninguém larga antes do JÁ!")
+
+	p.use_player_input = false
+	var c := race.circuit
+	var lead_changes := 0
+	var last_order: Array[int] = race.standings()
+	var max_frames := 60 * 60 * 8
+	var f := 0
+	while f < max_frames and not race.complete:
+		if race.phase == RaceManager.Phase.RACING:
+			var proj := c.project(p.global_position)
+			var target: Vector3 = c.sample(float(proj["distance"]) + 7.0)["pos"]
+			var to := target - p.global_position
+			to.y = 0.0
+			var fwd := p.forward()
+			p.in_steer = clampf(atan2(fwd.cross(to).y, fwd.dot(to)) * 2.5, -1.0, 1.0)
+			var slow := c.distance_to_next_corner(proj["distance"]) < 14.0 and p.speed > 4.5
+			p.in_brake = slow
+			p.in_pedal = not slow
+		await physics_frame
+		f += 1
+		if f % 30 == 0:
+			var order := race.standings()
+			if order != last_order:
+				lead_changes += 1
+				last_order = order
+	var ais: Array[AIRider] = main.get("ai_riders")
+	var all_finished := true
+	var times := PackedStringArray()
+	for i in range(1, race.riders.size()):
+		var pr: Dictionary = race.progress[i]
+		if not pr["finished"]:
+			all_finished = false
+		times.append("%s %s/%d quedas" % [race.rider_names[i], RaceManager.format_time(pr["time"]), race.riders[i].crash_count])
+	check(all_finished, "os três adversários completam a corrida (%s)" % ", ".join(times))
+	var respawns := 0
+	for ai in ais:
+		respawns += ai.respawn_count
+	check(respawns <= 3, "sem bloqueios permanentes (%d reposicionamentos)" % respawns)
+	var sorted_ok := true
+	var order := race.standings()
+	for k in range(1, order.size()):
+		var a: Dictionary = race.progress[order[k - 1]]
+		var b: Dictionary = race.progress[order[k]]
+		if a["finished"] and b["finished"] and float(a["time"]) > float(b["time"]):
+			sorted_ok = false
+	check(sorted_ok and order.size() == 4, "classificação final ordenada pelo tempo de chegada")
+	var in_range := true
+	for i in range(1, race.riders.size()):
+		var t: float = race.progress[i]["time"]
+		if t < 150.0 or t > 300.0:
+			in_range = false
+	check(in_range, "tempos dos rivais competitivos (2:30–5:00)")
+	check(lead_changes > 0, "posições mudam durante a corrida (%d trocas)" % lead_changes)
+	check(race.position_of(0) >= 1 and race.position_of(0) <= 4, "posição do jogador: %dº" % race.position_of(0))
 	main.queue_free()
 	await _frames(2)

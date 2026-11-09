@@ -3,6 +3,7 @@ extends Node3D
 ## Animações procedurais: pedalada com IK das pernas, rodas, guidão, inclinação e queda.
 
 const Toon := preload("res://scripts/core/toon_materials.gd")
+const Characters := preload("res://scripts/core/characters.gd")
 
 const WHEEL_R := 0.26
 const GEAR_RATIO := 2.75 ## coroa/catraca (44/16)
@@ -13,6 +14,8 @@ const SHIN := 0.43
 const HIP_Y := 0.86
 const HIP_Z := 0.3
 
+## Aparência (ver characters.gd). Definir antes de entrar na árvore.
+var look: Dictionary = {}
 var lean_root: Node3D
 var rider: Node3D
 var rear_wheel: Node3D
@@ -40,16 +43,19 @@ var _shirt: Material
 
 
 func _ready() -> void:
-	_red = Toon.make(Color(0.78, 0.07, 0.06))
+	if look.is_empty():
+		look = Characters.look(Characters.ANDREW)
+	_red = Toon.make(look["frame"])
 	_chrome = Toon.make(Color(0.7, 0.68, 0.7))
 	_black = Toon.make(Color(0.07, 0.06, 0.07))
-	_navy = Toon.make(Color(0.1, 0.12, 0.3))
-	_white = Toon.make(Color(0.93, 0.92, 0.88))
-	_jeans = Toon.make(Color(0.24, 0.34, 0.58))
-	_skin = Toon.make(Color(0.9, 0.68, 0.52))
-	_hair = Toon.make(Color(0.36, 0.2, 0.1))
+	_navy = Toon.make(look["jacket"])
+	_white = Toon.make(look["stripe"] if look["stripe"] != null else Color.WHITE)
+	_jeans = Toon.make(look["pants"])
+	_skin = Toon.make(look["skin"])
+	_hair = Toon.make(look["hair"])
 	_bag = Toon.make(Color(0.4, 0.24, 0.1), Toon.Outline.BOX, 0.015)
-	_shirt = Toon.make(Color(0.8, 0.12, 0.12))
+	_shirt = Toon.make(look["shirt"])
+	scale = Vector3.ONE * float(look["scale"])
 	lean_root = Node3D.new()
 	lean_root.name = "LeanRoot"
 	add_child(lean_root)
@@ -189,7 +195,7 @@ func _build_bike() -> void:
 
 func _build_rider() -> void:
 	rider = Node3D.new()
-	rider.name = "AndrewMike"
+	rider.name = "Ciclista"
 	lean_root.add_child(rider)
 	var hip := Vector3(0.0, HIP_Y, HIP_Z)
 	var shoulder := Vector3(0.0, 1.28, -0.06)
@@ -202,13 +208,14 @@ func _build_rider() -> void:
 	torso.scale.x *= 1.15
 	_tube(rider, hip + Vector3(0, -0.04, 0.02), hip + Vector3(0, 0.08, 0), 0.155, _jeans)
 	_tube(rider, shoulder - torso_dir * 0.02, shoulder + torso_dir * 0.06, 0.07, _shirt)
-	# Mochila marrom.
+	# Mochila marrom (só Andrew-Mike).
 	var mid := (hip + shoulder) * 0.5 + torso_dir * 0.04
-	var bag := _box(Vector3(0.3, 0.34, 0.13), _bag, rider, mid + back_n * 0.17)
-	bag.rotation.x = -atan2(-torso_dir.z, torso_dir.y)
-	var flap := _box(Vector3(0.31, 0.12, 0.14), Toon.make(Color(0.32, 0.19, 0.08), Toon.Outline.BOX, 0.01), rider,
-			mid + back_n * 0.18 + torso_dir * 0.14)
-	flap.rotation.x = bag.rotation.x
+	if look["backpack"]:
+		var bag := _box(Vector3(0.3, 0.34, 0.13), _bag, rider, mid + back_n * 0.17)
+		bag.rotation.x = -atan2(-torso_dir.z, torso_dir.y)
+		var flap := _box(Vector3(0.31, 0.12, 0.14), Toon.make(Color(0.32, 0.19, 0.08), Toon.Outline.BOX, 0.01), rider,
+				mid + back_n * 0.18 + torso_dir * 0.14)
+		flap.rotation.x = bag.rotation.x
 	# Braços com listra branca até as manoplas.
 	for side: float in [-1.0, 1.0]:
 		var s := shoulder + Vector3(0.17 * side, -0.03, 0.0)
@@ -216,18 +223,15 @@ func _build_rider() -> void:
 		var elbow := (s + grip) * 0.5 + Vector3(0.06 * side, 0.03, 0.04)
 		_tube(rider, s, elbow, 0.055, _navy)
 		_tube(rider, elbow, grip, 0.05, _navy)
-		_tube(rider, s + Vector3(0.045 * side, 0.01, 0), elbow + Vector3(0.045 * side, 0.01, 0), 0.016, _white)
-		_tube(rider, elbow + Vector3(0.04 * side, 0.01, 0), grip + Vector3(0.035 * side, 0.03, 0.04), 0.014, _white)
+		if look["stripe"] != null:
+			_tube(rider, s + Vector3(0.045 * side, 0.01, 0), elbow + Vector3(0.045 * side, 0.01, 0), 0.016, _white)
+			_tube(rider, elbow + Vector3(0.04 * side, 0.01, 0), grip + Vector3(0.035 * side, 0.03, 0.04), 0.014, _white)
 		_sphere(0.045, _skin, rider, grip)
 	# Cabeça e cabelo castanho ondulado.
 	var head := Vector3(0.0, 1.47, -0.13)
 	_tube(rider, shoulder, head, 0.05, _skin)
 	_sphere(0.13, _skin, rider, head)
-	var hair := _sphere(0.145, _hair, rider, head + Vector3(0, 0.035, 0.03))
-	hair.scale = Vector3(1.08, 0.95, 1.05)
-	for i in 8:
-		var a := i * TAU / 8.0
-		_sphere(0.06, _hair, rider, head + Vector3(cos(a) * 0.13, 0.07 + sin(i * 1.7) * 0.03, 0.04 + sin(a) * 0.1))
+	_build_hair(head)
 	_sphere(0.03, _skin, rider, head + Vector3(0.13, 0.0, 0.0))
 	_sphere(0.03, _skin, rider, head + Vector3(-0.13, 0.0, 0.0))
 	# Pernas (jeans com barra dobrada) e tênis brancos.
@@ -235,11 +239,43 @@ func _build_rider() -> void:
 		var leg := {
 			"side": side,
 			"thigh": _tube(rider, Vector3.ZERO, Vector3.UP, 0.075, _jeans),
-			"shin": _tube(rider, Vector3.ZERO, Vector3.UP, 0.065, _jeans),
-			"cuff": _tube(rider, Vector3.ZERO, Vector3.UP, 0.072, Toon.make(Color(0.36, 0.47, 0.7))),
-			"shoe": _box(Vector3(0.1, 0.08, 0.22), Toon.make(Color(0.95, 0.95, 0.93), Toon.Outline.BOX, 0.012), rider, Vector3.ZERO),
+			"shin": _tube(rider, Vector3.ZERO, Vector3.UP, 0.065, Toon.make(look["shins"])),
+			"cuff": _tube(rider, Vector3.ZERO, Vector3.UP, 0.072, Toon.make(look["cuff"])),
+			"shoe": _box(Vector3(0.1, 0.08, 0.22), Toon.make(look["shoes"], Toon.Outline.BOX, 0.012), rider, Vector3.ZERO),
 		}
 		_legs.append(leg)
+
+
+func _build_hair(head: Vector3) -> void:
+	var accent := Toon.make(look["accent"])
+	match String(look["hair_style"]):
+		"pigtails":
+			var cap := _sphere(0.142, _hair, rider, head + Vector3(0, 0.03, 0.025))
+			cap.scale = Vector3(1.05, 0.95, 1.05)
+			for s: float in [-1.0, 1.0]:
+				_sphere(0.035, accent, rider, head + Vector3(s * 0.15, 0.0, 0.06))
+				var tail := _sphere(0.06, _hair, rider, head + Vector3(s * 0.19, -0.1, 0.08))
+				tail.scale = Vector3(0.8, 1.7, 0.8)
+		"spiky":
+			var cap := _sphere(0.138, _hair, rider, head + Vector3(0, 0.03, 0.02))
+			cap.scale = Vector3(1.02, 0.9, 1.02)
+			for i in 9:
+				var a := i * TAU / 9.0
+				var spike := _sphere(0.045, _hair, rider, head + Vector3(cos(a) * 0.08, 0.13, 0.03 + sin(a) * 0.08))
+				spike.scale = Vector3(0.7, 1.6, 0.7)
+		"puff":
+			var cap := _sphere(0.138, _hair, rider, head + Vector3(0, 0.02, 0.02))
+			cap.scale = Vector3(1.03, 0.92, 1.03)
+			var puff := _sphere(0.13, _hair, rider, head + Vector3(0, 0.17, 0.03))
+			puff.scale = Vector3(1.2, 0.95, 1.2)
+			var band := _tube(rider, head + Vector3(-0.14, 0.06, -0.02), head + Vector3(0.14, 0.06, -0.02), 0.03, accent)
+			band.scale.z *= 1.0
+		_:
+			var hair := _sphere(0.145, _hair, rider, head + Vector3(0, 0.035, 0.03))
+			hair.scale = Vector3(1.08, 0.95, 1.05)
+			for i in 8:
+				var a := i * TAU / 8.0
+				_sphere(0.06, _hair, rider, head + Vector3(cos(a) * 0.13, 0.07 + sin(i * 1.7) * 0.03, 0.04 + sin(a) * 0.1))
 
 
 # ------------------------------------------------------------------ animação

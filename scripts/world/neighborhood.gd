@@ -39,6 +39,7 @@ var batcher := MeshBatcher.new()
 var circuit := Circuit.new()
 var house_tops: Array[float] = []
 var barricades: Array[Vector3] = []
+var puddles: Array[Vector3] = []
 var mesh_instance_count: int = 0
 var _rng := RandomNumberGenerator.new()
 var _bodies: Dictionary = {}
@@ -517,6 +518,7 @@ func _build_puddles() -> void:
 
 
 func _puddle_zone(c: Vector3, size: Vector2) -> void:
+	puddles.append(c)
 	var area := Area3D.new()
 	area.position = c + Vector3(0, 0.5, 0)
 	var cs := CollisionShape3D.new()
@@ -524,6 +526,7 @@ func _puddle_zone(c: Vector3, size: Vector2) -> void:
 	box.size = Vector3(size.x, 1.0, size.y)
 	cs.shape = box
 	area.add_child(cs)
+	area.collision_mask = 3 # mundo + ciclistas
 	area.body_entered.connect(func(b: Node3D) -> void:
 		if b.has_method("enter_surface"):
 			b.enter_surface(0.45, "asfalto molhado"))

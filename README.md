@@ -2,10 +2,10 @@
 
 Corrida 3D de bicicletas em **Red City** — Godot 4 + GDScript tipado, para macOS.
 
-> **Estado atual:** Fase 3 — bairro de Red City com circuito de 1,5 km, checkpoints e cronômetro.
+> **Estado atual:** Fase 4 — corrida completa contra Lucienne, Russ e Mint (IA) no bairro de Red City.
 > Personagem e cenário são **geometria provisória** (visual definitivo fica para a versão 2).
 
-![Bairro de Red City](docs/screenshots/bairro_esquina.png)
+![Corrida em Red City](docs/screenshots/corrida_rivais.png)
 
 ## Como jogar no Mac
 
@@ -35,13 +35,22 @@ Corrida 3D de bicicletas em **Red City** — Godot 4 + GDScript tipado, para mac
 
 ## O que testar
 
+**Rivais (IA):**
+- **Mint** (verde-menta): competitiva e limpa — boas curvas, administra a energia, abre espaço e não encosta.
+- **Lucienne** (azul): cautelosa nas curvas, rápida nas retas (usa muito turbo) e imprevisível (muda de faixa sem aviso).
+- **Russ** (laranja): trapaceiro — fecha quem vem atrás e joga a bicicleta em cima de quem está ao lado.
+  Encostões **empurram**; trombada forte **derruba**.
+- Posição ao vivo à esquerda; rivais aparecem como pontos coloridos no minimapa; quadro final com tempos.
+
 **Corrida no bairro (cena principal):**
 - Contagem 3-2-1-JÁ!, depois siga a **seta amarela** no topo e o **minimapa** (canto superior direito).
 - Passe pelos **12 checkpoints em ordem** (portal com cortina amarela) e cruze a **LARGADA/CHEGADA**.
 - Ruas fora da rota estão fechadas por **barreiras laranja e brancas**.
 - **Poças** (manchas vermelhas) perto de duas esquinas e numa reta: curva rápida nelas derruba.
 - Andar na contramão mostra **SENTIDO ERRADO!**. Três quedas = corrida perdida.
-- Ao chegar: tempo e **recorde** (salvo no computador).
+- Ao chegar: classificação final, tempo e **recorde** (salvo no computador).
+- **Energia:** pedalando normal ela gasta pouco e, abaixo de 60%, recupera aos poucos; o turbo (S) é o que esgota.
+  Abaixo de 40% a velocidade máxima cai.
 
 **Pista de testes** (`scenes/test_track.tscn`): slalom de cones, rampa, piso molhado, grama e muros.
 

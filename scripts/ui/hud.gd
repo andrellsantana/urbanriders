@@ -57,6 +57,10 @@ func _on_finished(time: float, best: float) -> void:
 		"Pressione R para correr de novo"])
 
 
+static func ordinal(n: int) -> String:
+	return "%dº" % n
+
+
 func _on_crashed(hearts_left: int, reason: String) -> void:
 	if hearts_left > 0:
 		message = "%s  Levantando..." % reason
@@ -70,7 +74,10 @@ func _on_recovered() -> void:
 
 func _on_out() -> void:
 	game_over = true
-	message = "VOCÊ PERDEU A CORRIDA!\nTrês quedas. Pressione R para reiniciar."
+	if race != null:
+		message = "" # o quadro de resultado mostra a derrota
+	else:
+		message = "VOCÊ PERDEU A CORRIDA!\nTrês quedas. Pressione R para reiniciar."
 
 
 func _process(dt: float) -> void:
@@ -186,13 +193,10 @@ func _draw_race(vp: Vector2) -> void:
 		var size := int(170 + 60 * (1.0 - big_timer))
 		_text(Vector2(0, vp.y * 0.45), big_text, size, Color(1, 0.9, 0.4).lerp(Color.WHITE, big_timer),
 				HORIZONTAL_ALIGNMENT_CENTER, vp.x)
-	if result_lines.size() > 0:
-		var box := Rect2(Vector2(cx - 380, vp.y * 0.3), Vector2(760, 330))
-		canvas.draw_rect(box, Color(0.05, 0.0, 0.03, 0.82))
-		canvas.draw_rect(box, Color(1, 0.75, 0.3), false, 4.0)
-		for i in result_lines.size():
-			_text(Vector2(box.position.x, box.position.y + 90 + i * 72), result_lines[i],
-					72 if i == 0 else 38, Color(1, 0.85, 0.4) if i == 0 else Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, box.size.x)
+	if race.riders.size() > 1:
+		_draw_standings(vp)
+	if result_lines.size() > 0 or race.phase == RaceManager.Phase.LOST:
+		_draw_results(vp)
 	_draw_minimap(Vector2(vp.x - 170, 230), 125.0)
 
 
@@ -238,6 +242,11 @@ func _draw_minimap(c: Vector2, r: float) -> void:
 	var ng: Vector2 = to_map.call(race.next_gate_position())
 	if ng.distance_to(c) < r - 6:
 		canvas.draw_circle(ng, 8, Color(1, 0.9, 0.3))
+	for i in range(1, race.riders.size()):
+		var rp: Vector2 = to_map.call(race.riders[i].global_position)
+		if rp.distance_to(c) < r - 6:
+			canvas.draw_circle(rp, 7, Color(0.05, 0.0, 0.02))
+			canvas.draw_circle(rp, 5, race.rider_colors[i])
 	var fin: Vector2 = to_map.call(race.gates[race.gates.size() - 1]["pos"])
 	if fin.distance_to(c) < r - 6:
 		canvas.draw_rect(Rect2(fin - Vector2(7, 7), Vector2(14, 14)), Color.WHITE)
@@ -266,3 +275,60 @@ func _clip_line(c: Vector2, r: float, a: Vector2, b: Vector2, col: Color, width:
 	if t1 - t0 <= 0.0:
 		return
 	canvas.draw_line(a + d * t0, a + d * t1, col, width)
+
+
+## Posição do jogador e classificação ao vivo (lado esquerdo).
+func _draw_standings(vp: Vector2) -> void:
+	var order := race.standings()
+	var pos := order.find(0) + 1
+	if race.phase == RaceManager.Phase.RACING or race.phase == RaceManager.Phase.COUNTDOWN:
+		_text(Vector2(40, 260), ordinal(pos), 84, Color(1, 0.85, 0.35))
+		_text(Vector2(40 + (70 if pos < 10 else 100), 260), "/%d" % race.riders.size(), 40, Color(0.95, 0.9, 0.85))
+	var y := 320.0
+	for k in order.size():
+		var i := order[k]
+		var is_player := i == 0
+		var row := Rect2(Vector2(36, y - 30), Vector2(380, 38))
+		canvas.draw_rect(row, Color(0.05, 0.0, 0.03, 0.55 if not is_player else 0.85))
+		canvas.draw_rect(Rect2(row.position, Vector2(8, row.size.y)), race.rider_colors[i])
+		var label := "%s  %s" % [ordinal(k + 1), race.rider_names[i]]
+		_text(Vector2(54, y), label, 26, Color(1, 0.9, 0.5) if is_player else Color.WHITE)
+		var pr: Dictionary = race.progress[i]
+		if pr["finished"]:
+			_text(Vector2(36, y), RaceManager.format_time(pr["time"]), 22, Color(0.8, 1, 0.8), HORIZONTAL_ALIGNMENT_RIGHT, 370)
+		elif pr["lost"]:
+			_text(Vector2(36, y), "fora", 22, Color(1, 0.5, 0.4), HORIZONTAL_ALIGNMENT_RIGHT, 370)
+		y += 44.0
+
+
+## Quadro de resultado: classificação final com tempos.
+func _draw_results(vp: Vector2) -> void:
+	var cx := vp.x * 0.5
+	var order := race.standings()
+	var box := Rect2(Vector2(cx - 400, vp.y * 0.22), Vector2(800, 220 + order.size() * 58))
+	canvas.draw_rect(box, Color(0.05, 0.0, 0.03, 0.86))
+	canvas.draw_rect(box, Color(1, 0.75, 0.3), false, 4.0)
+	var lost := race.phase == RaceManager.Phase.LOST
+	var title := "VOCÊ PERDEU A CORRIDA" if lost else "CHEGADA! VOCÊ FICOU EM %s" % ordinal(order.find(0) + 1)
+	_text(Vector2(box.position.x, box.position.y + 76), title, 52, Color(1, 0.85, 0.4), HORIZONTAL_ALIGNMENT_CENTER, box.size.x)
+	var y := box.position.y + 150
+	for k in order.size():
+		var i := order[k]
+		var pr: Dictionary = race.progress[i]
+		var t := "correndo..."
+		if pr["finished"]:
+			t = RaceManager.format_time(pr["time"])
+		elif pr["lost"]:
+			t = "três quedas"
+		elif race.complete:
+			t = "não terminou"
+		var col := Color(1, 0.9, 0.5) if i == 0 else Color.WHITE
+		canvas.draw_rect(Rect2(Vector2(box.position.x + 80, y - 30), Vector2(10, 36)), race.rider_colors[i])
+		_text(Vector2(box.position.x + 110, y), "%s  %s" % [ordinal(k + 1), race.rider_names[i]], 34, col)
+		_text(Vector2(box.position.x, y), t, 34, col, HORIZONTAL_ALIGNMENT_RIGHT, box.size.x - 80)
+		y += 58.0
+	var foot := "Recorde: %s" % RaceManager.format_time(race.best_time) if race.best_time > 0.0 else ""
+	if result_lines.size() > 2 and result_lines[2] == "NOVO RECORDE!":
+		foot = "NOVO RECORDE!"
+	_text(Vector2(box.position.x, y + 14), foot, 30, Color(1, 0.8, 0.4), HORIZONTAL_ALIGNMENT_CENTER, box.size.x)
+	_text(Vector2(box.position.x, y + 60), "Pressione R para correr de novo", 28, Color(0.9, 0.88, 0.85), HORIZONTAL_ALIGNMENT_CENTER, box.size.x)

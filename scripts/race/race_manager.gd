@@ -1,5 +1,6 @@
 extends Node3D
-## Regras da corrida: contagem regressiva, checkpoints em ordem, cronômetro, chegada e derrota.
+## Regras da corrida: contagem regressiva, checkpoints em ordem (por ciclista), cronômetro,
+## classificação ao vivo, chegada de cada ciclista e derrota do jogador.
 
 const Circuit := preload("res://scripts/race/circuit.gd")
 const BikeController := preload("res://scripts/player/bike_controller.gd")
@@ -7,45 +8,68 @@ const Toon := preload("res://scripts/core/toon_materials.gd")
 
 signal countdown_changed(value: int)
 signal race_started
-signal checkpoint_passed(index: int, total: int)
-signal race_finished(time: float, best: float)
+signal checkpoint_passed(index: int, total: int) ## somente o jogador
+signal race_finished(time: float, best: float) ## somente o jogador
 signal race_lost
+signal rider_finished(rider_index: int, time: float, position: int)
 
-enum Phase { COUNTDOWN, RACING, FINISHED, LOST }
+enum Phase { COUNTDOWN, RACING, FINISHED, LOST } ## fase do JOGADOR
 
 const COUNTDOWN_TIME := 3.0
 const BEST_FILE := "user://recordes.cfg"
+const AFTER_PLAYER_TIMEOUT := 120.0 ## tempo extra para os rivais terminarem
 
 var circuit: Circuit
 var player: BikeController
+var riders: Array[BikeController] = [] ## [0] = jogador
+var rider_names: Array[String] = []
+var rider_colors: Array[Color] = []
 var gates: Array[Dictionary] = []
 var phase: Phase = Phase.COUNTDOWN
 var countdown: float = COUNTDOWN_TIME
-var race_time: float = 0.0
-var next_gate: int = 0
+var race_time: float = 0.0 ## cronômetro do jogador (para na chegada)
+var clock: float = 0.0 ## relógio geral da corrida
 var best_time: float = 0.0
 var wrong_way: bool = false
 var save_records: bool = true
+var finish_order: Array[int] = []
+var complete: bool = false ## todos terminaram (ou acabou o tempo extra)
 
-var _prev_side: float = -1.0
+## Estado por ciclista: next_gate, prev_side, finished, time, lost.
+var progress: Array[Dictionary] = []
+
+var next_gate: int:
+	get:
+		return progress[0]["next_gate"] if progress.size() > 0 else 0
+
 var _wrong_timer: float = 0.0
 var _gate_nodes: Array[Node3D] = []
 var _last_count: int = -1
+var _after_player: float = 0.0
 
 
-func setup(p: BikeController, c: Circuit) -> void:
+func setup(p: BikeController, c: Circuit, player_name: String = "Andrew-Mike",
+		player_color: Color = Color(1.0, 0.25, 0.2)) -> void:
 	player = p
 	circuit = c
 	gates = circuit.build_gates()
-	player.out_of_hearts.connect(_on_out_of_hearts)
-	player.controls_enabled = false
 	best_time = _load_best()
+	add_rider(p, player_name, player_color)
+	player.out_of_hearts.connect(_on_out_of_hearts)
 	for i in gates.size():
 		var node := _make_gate_visual(gates[i], i)
 		add_child(node)
 		_gate_nodes.append(node)
 	_refresh_gate_visibility()
-	_prev_side = _side_of(gates[0])
+
+
+func add_rider(b: BikeController, rider_name: String, color: Color) -> int:
+	riders.append(b)
+	rider_names.append(rider_name)
+	rider_colors.append(color)
+	b.controls_enabled = false
+	progress.append({"next_gate": 0, "prev_side": _side_of(b, gates[0]), "finished": false, "time": 0.0, "lost": false})
+	return riders.size() - 1
 
 
 func gate_count() -> int:
@@ -63,55 +87,113 @@ func next_gate_position() -> Vector3:
 func _physics_process(dt: float) -> void:
 	if player == null:
 		return
-	match phase:
-		Phase.COUNTDOWN:
-			countdown -= dt
-			var c := ceili(countdown)
-			if c != _last_count:
-				_last_count = c
-				countdown_changed.emit(maxi(c, 0))
-			if countdown <= 0.0:
-				phase = Phase.RACING
-				player.controls_enabled = true
-				race_started.emit()
-		Phase.RACING:
-			race_time += dt
-			_check_gate()
-			_check_wrong_way(dt)
+	if phase == Phase.COUNTDOWN:
+		countdown -= dt
+		var c := ceili(countdown)
+		if c != _last_count:
+			_last_count = c
+			countdown_changed.emit(maxi(c, 0))
+		if countdown <= 0.0:
+			phase = Phase.RACING
+			for r in riders:
+				r.controls_enabled = true
+			race_started.emit()
+		return
+	if complete:
+		return
+	clock += dt
+	if phase == Phase.RACING:
+		race_time = clock
+		_check_wrong_way(dt)
+	for i in riders.size():
+		if not progress[i]["finished"] and not progress[i]["lost"]:
+			_check_gate(i)
+	if phase != Phase.RACING:
+		_after_player += dt
+	var all_done := true
+	for pr in progress:
+		if not pr["finished"] and not pr["lost"]:
+			all_done = false
+	if all_done or _after_player > AFTER_PLAYER_TIMEOUT:
+		complete = true
 
 
-func _side_of(gate: Dictionary) -> float:
-	return (player.global_position - (gate["pos"] as Vector3)).dot(gate["dir"])
+static func _side_of(b: BikeController, gate: Dictionary) -> float:
+	return (b.global_position - (gate["pos"] as Vector3)).dot(gate["dir"])
 
 
-func _check_gate() -> void:
-	var gate := gates[next_gate]
-	var side := _side_of(gate)
-	var rel := player.global_position - (gate["pos"] as Vector3)
+func _check_gate(i: int) -> void:
+	var b := riders[i]
+	var pr := progress[i]
+	var gate := gates[pr["next_gate"]]
+	var side := _side_of(b, gate)
+	var rel := b.global_position - (gate["pos"] as Vector3)
 	var right := (gate["dir"] as Vector3).cross(Vector3.UP)
 	var lateral := absf(rel.dot(right))
-	if _prev_side < 0.0 and side >= 0.0 and lateral <= Circuit.GATE_HALF_WIDTH and absf(side) < 6.0:
-		_pass_gate()
+	if float(pr["prev_side"]) < 0.0 and side >= 0.0 and lateral <= Circuit.GATE_HALF_WIDTH and absf(side) < 6.0:
+		_pass_gate(i)
 	else:
-		_prev_side = side
+		pr["prev_side"] = side
 
 
-func _pass_gate() -> void:
-	var gate := gates[next_gate]
-	if gate["finish"]:
-		phase = Phase.FINISHED
-		player.controls_enabled = false
-		wrong_way = false
-		if best_time <= 0.0 or race_time < best_time:
-			best_time = race_time
-			_save_best(best_time)
-		_refresh_gate_visibility()
-		race_finished.emit(race_time, best_time)
+func _pass_gate(i: int) -> void:
+	var pr := progress[i]
+	var b := riders[i]
+	if gates[pr["next_gate"]]["finish"]:
+		pr["finished"] = true
+		pr["time"] = clock
+		finish_order.append(i)
+		b.set_ghost(true)
+		var pos := finish_order.size()
+		if i == 0:
+			phase = Phase.FINISHED
+			race_time = clock
+			player.controls_enabled = false
+			wrong_way = false
+			if best_time <= 0.0 or race_time < best_time:
+				best_time = race_time
+				_save_best(best_time)
+			_refresh_gate_visibility()
+			race_finished.emit(race_time, best_time)
+		rider_finished.emit(i, clock, pos)
 		return
-	next_gate += 1
-	checkpoint_passed.emit(next_gate, checkpoint_total())
-	_prev_side = _side_of(gates[next_gate])
-	_refresh_gate_visibility()
+	pr["next_gate"] = int(pr["next_gate"]) + 1
+	pr["prev_side"] = _side_of(b, gates[pr["next_gate"]])
+	if i == 0:
+		checkpoint_passed.emit(next_gate, checkpoint_total())
+		_refresh_gate_visibility()
+
+
+## Pontuação de progresso: checkpoints passados e distância até o próximo.
+func progress_score(i: int) -> float:
+	var pr := progress[i]
+	var g: Dictionary = gates[pr["next_gate"]]
+	var d: float = circuit.project(riders[i].global_position)["distance"]
+	var to_next := fposmod(float(g["distance"]) - d, circuit.length)
+	if to_next > circuit.length - 50.0:
+		to_next = 0.0 # já cruzou a linha mas o portal ainda não confirmou
+	return float(pr["next_gate"]) * 100000.0 - to_next
+
+
+## Índices dos ciclistas na ordem da classificação.
+func standings() -> Array[int]:
+	var order: Array[int] = finish_order.duplicate()
+	var rest: Array[int] = []
+	for i in riders.size():
+		if not order.has(i):
+			rest.append(i)
+	rest.sort_custom(func(a: int, b: int) -> bool:
+		var la: bool = progress[a]["lost"]
+		var lb: bool = progress[b]["lost"]
+		if la != lb:
+			return lb
+		return progress_score(a) > progress_score(b))
+	order.append_array(rest)
+	return order
+
+
+func position_of(i: int) -> int:
+	return standings().find(i) + 1
 
 
 func _check_wrong_way(dt: float) -> void:
@@ -124,7 +206,9 @@ func _check_wrong_way(dt: float) -> void:
 func _on_out_of_hearts() -> void:
 	if phase == Phase.RACING or phase == Phase.COUNTDOWN:
 		phase = Phase.LOST
+		progress[0]["lost"] = true
 		player.controls_enabled = false
+		player.set_ghost(true)
 		race_lost.emit()
 
 
@@ -193,9 +277,9 @@ func _refresh_gate_visibility() -> void:
 	for i in _gate_nodes.size():
 		var is_finish: bool = gates[i]["finish"]
 		var node := _gate_nodes[i]
-		node.visible = is_finish or (i == next_gate and phase != Phase.FINISHED)
+		node.visible = is_finish or (i == next_gate and phase == Phase.RACING) or (i == next_gate and phase == Phase.COUNTDOWN)
 		var curtain := node.get_node("Curtain") as Node3D
-		curtain.visible = i == next_gate and phase != Phase.FINISHED
+		curtain.visible = i == next_gate and (phase == Phase.RACING or phase == Phase.COUNTDOWN)
 
 
 # ------------------------------------------------------------------- recordes

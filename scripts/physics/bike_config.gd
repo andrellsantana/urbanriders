@@ -29,6 +29,7 @@ extends Resource
 
 @export_group("Quedas")
 @export var crash_impact_kmh: float = 14.0 ## Impacto frontal mínimo que derruba.
+@export var rider_crash_kmh: float = 16.0 ## Batida relativa contra outro ciclista que derruba.
 @export var hard_landing_speed: float = 8.0 ## m/s de queda vertical que derruba.
 @export var grip_overload_time: float = 0.6 ## Tempo derrapando até cair.
 @export var recovery_time: float = 2.5 ## Recuperação após a queda (2–3 s).
