@@ -2,6 +2,7 @@ extends RefCounted
 ## Modelos provisórios (primitivas + Cel Shading) de carros, pedestres e do cão.
 
 const Toon := preload("res://scripts/core/toon_materials.gd")
+const MeshBatcher := preload("res://scripts/world/mesh_batcher.gd")
 
 
 static func _box(parent: Node3D, size: Vector3, pos: Vector3, color: Color) -> MeshInstance3D:
@@ -11,6 +12,7 @@ static func _box(parent: Node3D, size: Vector3, pos: Vector3, color: Color) -> M
 	mi.mesh = m
 	mi.position = pos
 	mi.material_override = Toon.make(color, Toon.Outline.BOX, 0.025)
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	parent.add_child(mi)
 	return mi
 
@@ -26,6 +28,7 @@ static func _cyl(parent: Node3D, r: float, h: float, pos: Vector3, color: Color,
 	mi.position = pos
 	mi.rotation = rot
 	mi.material_override = Toon.make(color, Toon.Outline.SMOOTH, 0.02)
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	parent.add_child(mi)
 	return mi
 
@@ -39,33 +42,29 @@ static func _sphere(parent: Node3D, r: float, pos: Vector3, color: Color) -> Mes
 	m.rings = 6
 	mi.mesh = m
 	mi.position = pos
-	mi.material_override = Toon.make(color, Toon.Outline.SMOOTH, 0.015)
+	mi.material_override = Toon.make(color, Toon.Outline.NONE)
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	parent.add_child(mi)
 	return mi
 
 
-## Carro dos anos 80 (frente = -Z local), com faróis acesos.
+## Carro dos anos 80 (frente = -Z local), com faróis acesos. Uma única malha (desempenho).
 static func car(color: Color) -> Node3D:
 	var root := Node3D.new()
-	_box(root, Vector3(1.9, 0.7, 4.6), Vector3(0, 0.65, 0), color)
-	_box(root, Vector3(1.75, 0.6, 2.4), Vector3(0, 1.3, 0.25), color.darkened(0.08))
-	_box(root, Vector3(1.6, 0.45, 0.06), Vector3(0, 1.33, -0.96), Color(0.1, 0.08, 0.12))
-	_box(root, Vector3(1.95, 0.18, 0.12), Vector3(0, 0.5, -2.32), Color(0.75, 0.75, 0.75))
+	var b := MeshBatcher.new()
+	b.cell_size = 1.0e6
+	b.outline_width = 0.03
+	b.add_box(Vector3(0, 0.65, 0), Vector3(1.9, 0.7, 4.6), color)
+	b.add_box(Vector3(0, 1.3, 0.25), Vector3(1.75, 0.6, 2.4), color.darkened(0.08))
+	b.add_box(Vector3(0, 0.5, -2.32), Vector3(1.95, 0.18, 0.12), Color(0.75, 0.75, 0.75))
+	b.add_panel(Vector3(0, 1.33, -0.96), 1.6, 0.45, Vector3.FORWARD, Color(0.1, 0.08, 0.12), MeshBatcher.Layer.FLAT)
 	for s: float in [-1.0, 1.0]:
 		for z: float in [-1.5, 1.4]:
-			_cyl(root, 0.36, 0.28, Vector3(s * 0.85, 0.36, z), Color(0.06, 0.06, 0.06), Vector3(0, 0, PI / 2))
-		var lamp := MeshInstance3D.new()
-		var q := QuadMesh.new()
-		q.size = Vector2(0.32, 0.2)
-		lamp.mesh = q
-		lamp.position = Vector3(s * 0.65, 0.72, -2.31)
-		lamp.rotation.y = PI
-		lamp.material_override = Toon.unlit_vertex_color()
-		var lm := StandardMaterial3D.new()
-		lm.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-		lm.albedo_color = Color(1.0, 0.95, 0.7)
-		lamp.material_override = lm
-		root.add_child(lamp)
+			var t := Transform3D(Basis(Vector3.BACK, -s * PI / 2), Vector3(s * 0.71, 0.36, z))
+			b.add_cylinder(t, 0.36, 0.28, Color(0.06, 0.06, 0.06), 8)
+		b.add_panel(Vector3(s * 0.65, 0.72, -2.33), 0.32, 0.2, Vector3.FORWARD, Color(1.0, 0.95, 0.7), MeshBatcher.Layer.GLOW)
+		b.add_panel(Vector3(s * 0.7, 0.72, 2.31), 0.3, 0.16, Vector3.BACK, Color(0.9, 0.1, 0.08), MeshBatcher.Layer.GLOW)
+	b.build(root)
 	return root
 
 

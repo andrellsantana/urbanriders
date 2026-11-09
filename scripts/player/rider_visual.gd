@@ -4,6 +4,7 @@ extends Node3D
 
 const Toon := preload("res://scripts/core/toon_materials.gd")
 const Characters := preload("res://scripts/core/characters.gd")
+const MeshMerge := preload("res://scripts/core/mesh_merge.gd")
 
 const WHEEL_R := 0.26
 const GEAR_RATIO := 2.75 ## coroa/catraca (44/16)
@@ -63,7 +64,33 @@ func _ready() -> void:
 	add_child(lean_root)
 	_build_bike()
 	_build_rider()
+	_merge_static_parts()
 	update_pose(0.0, 0.0, 0.0, false, 0.0, 0.0)
+
+
+func _no_outline(mat: ShaderMaterial) -> ShaderMaterial:
+	return Toon.make(mat.get_shader_parameter("albedo"), Toon.Outline.NONE)
+
+
+## Desempenho: peças que se movem juntas viram uma malha só (quadro, garfo, rodas, pedivela, corpo).
+func _merge_static_parts() -> void:
+	var leg_parts: Array = []
+	for leg: Dictionary in _legs:
+		leg_parts.append_array([leg["thigh"], leg["shin"], leg["cuff"], leg["shoe"]])
+	# Corpo: sem fusão (mantém a iluminação); peças pequenas perdem contorno e sombra.
+	for c in rider.get_children():
+		if c is MeshInstance3D and not leg_parts.has(c):
+			var mi := c as MeshInstance3D
+			if mi.get_aabb().size.length() * mi.transform.basis.get_scale().length() < 0.45:
+				var mat := mi.material_override as ShaderMaterial
+				if mat != null and mat.next_pass != null:
+					mi.material_override = _no_outline(mat)
+				mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	MeshMerge.merge_children(rear_wheel)
+	MeshMerge.merge_children(front_wheel)
+	MeshMerge.merge_children(fork_pivot)
+	MeshMerge.merge_children(crank)
+	MeshMerge.merge_children(rear_wheel.get_parent() as Node3D)
 
 
 # ---------------------------------------------------------------- construção
@@ -81,9 +108,12 @@ func _sphere(r: float, mat: Material, parent: Node3D, pos: Vector3) -> MeshInsta
 	var m := SphereMesh.new()
 	m.radius = r
 	m.height = r * 2.0
-	m.radial_segments = 16
-	m.rings = 8
-	return _mesh(m, mat, parent, pos)
+	m.radial_segments = 12
+	m.rings = 6
+	var mi := _mesh(m, mat, parent, pos)
+	if r < 0.1:
+		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	return mi
 
 
 func _box(size: Vector3, mat: Material, parent: Node3D, pos: Vector3) -> MeshInstance3D:
@@ -101,6 +131,8 @@ func _tube(parent: Node3D, a: Vector3, b: Vector3, r: float, mat: Material) -> M
 	m.rings = 1
 	var mi := _mesh(m, mat, parent)
 	place_tube(mi, a, b)
+	if r < 0.06:
+		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF # peças finas: sem sombra (desempenho)
 	return mi
 
 

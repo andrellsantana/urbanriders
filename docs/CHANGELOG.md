@@ -1,5 +1,11 @@
 # Registro de alterações
 
+## v0.6.1 — Desempenho e rivais mais fortes (2026-11-09)
+- Chamadas de desenho por quadro: 1.222 → 623 (elementos da pista e carros em poucas malhas,
+  bicicletas fundidas, peças pequenas sem contorno/sombra). Objetivo: voltar aos 60 FPS.
+- Rivais mais fortes por igual (curvas mais rápidas, frenagem menos antecipada, reação maior quando ficam para trás);
+  ninguém muda de faixa ao acaso perto das esquinas (evita travar na barreira).
+
 ## v0.6 — Bairro vivo e equilíbrio (2026-11-09)
 - Aceleradores no chão (44 km/h sem gastar energia), rampas com impulso no pouso, obstáculos com passagem lateral.
 - Trânsito nos dois sentidos (desvia dos carros estacionados e buzina), pedestres atravessando (alguns distraídos).

@@ -94,6 +94,10 @@ func _physics_process(dt: float) -> void:
 		# Russ corta a esquina por dentro (passando pela calçada).
 		if personality.cuts_corners and to_corner < 13.0:
 			desired_lane = circuit.next_turn_sign(dist) * 4.3
+		elif to_corner < 22.0:
+			# Perto da esquina: puxa para dentro da curva (nada de faixa aleatória).
+			desired_lane = circuit.next_turn_sign(dist) * 1.2
+			_erratic_timer = maxf(_erratic_timer, 1.0)
 		_seek_attractors(dist)
 	var max_lane := 4.5 if personality.cuts_corners and to_corner < 16.0 else MAX_LANE
 	desired_lane = clampf(desired_lane, -max_lane, max_lane)
@@ -114,7 +118,7 @@ func _physics_process(dt: float) -> void:
 	bike.in_steer = clampf(ang * personality.steer_gain, -1.0, 1.0)
 
 	# Velocidade: planeja a frenagem para a próxima esquina.
-	var corner_kmh := _corner_kmh
+	var corner_kmh := _corner_kmh + (1.5 if catching_up else 0.0)
 	if personality.knows_puddles and _puddle_near(dist + to_corner, 22.0):
 		corner_kmh = personality.wet_corner_speed_kmh
 	var vc := corner_kmh / KMH
@@ -267,7 +271,7 @@ func _update_catch_up() -> void:
 
 
 func _want_boost(to_corner: float, dist: float) -> bool:
-	var energy := bike.stamina.value + _form + (10.0 if catching_up else 0.0)
+	var energy := bike.stamina.value + _form + (18.0 if catching_up else 0.0)
 	var remaining := _remaining_distance(dist)
 	# Sprint final só quando a energia dá para chegar acelerando.
 	var reach := maxf(0.0, energy - 12.0) / bike.stamina.drain_boost * 11.1 * 1.3

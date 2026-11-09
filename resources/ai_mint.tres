@@ -5,11 +5,11 @@
 [resource]
 script = ExtResource("1")
 character_id = "mint"
-corner_speed_kmh = 21.0
+corner_speed_kmh = 24.0
 wet_corner_speed_kmh = 14.0
 knows_puddles = true
 brake_decel_estimate = 5.5
-brake_margin = 2.5
+brake_margin = 1.5
 steer_gain = 2.6
 boost_min_straight = 25.0
 boost_stamina_min = 40.0

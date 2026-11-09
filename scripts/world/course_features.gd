@@ -5,6 +5,8 @@ extends Node3D
 const Circuit := preload("res://scripts/race/circuit.gd")
 const BikeController := preload("res://scripts/player/bike_controller.gd")
 const Toon := preload("res://scripts/core/toon_materials.gd")
+const MeshBatcher := preload("res://scripts/world/mesh_batcher.gd")
+const Layer := MeshBatcher.Layer
 
 ## Aceleradores: (distância, lateral).
 const PADS: Array[Vector2] = [Vector2(60, -1.5), Vector2(330, 1.5), Vector2(600, 0.0), Vector2(820, -1.5),
@@ -27,6 +29,7 @@ var obstacles: Array[Dictionary] = []
 var attractors: Array[Dictionary] = []
 var crossing_points: Array[Dictionary] = []
 var _pad_cooldown: Dictionary = {}
+var batcher := MeshBatcher.new() ## todo o visual fixo vira poucas malhas (desempenho)
 
 
 func setup(c: Circuit) -> void:
@@ -39,6 +42,7 @@ func setup(c: Circuit) -> void:
 		_build_obstacle(float(o[0]), float(o[1]), String(o[2]))
 	for d in CROSSINGS:
 		_build_crossing(d)
+	batcher.build(self)
 
 
 func _frame(distance: float, lateral: float) -> Dictionary:
@@ -60,27 +64,15 @@ func _mat_unlit(color: Color) -> StandardMaterial3D:
 
 func _build_pad(distance: float, lateral: float) -> void:
 	var f := _frame(distance, lateral)
-	var root := Node3D.new()
-	root.position = (f["pos"] as Vector3) + Vector3(0, 0.045, 0)
-	root.rotation.y = f["rot"]
-	add_child(root)
-	var base := MeshInstance3D.new()
-	var pm := PlaneMesh.new()
-	pm.size = PAD_SIZE
-	base.mesh = pm
-	base.material_override = _mat_unlit(Color(0.15, 0.05, 0.25))
-	root.add_child(base)
+	var rot: float = f["rot"]
+	var bs := Basis(Vector3.UP, rot)
+	var c: Vector3 = (f["pos"] as Vector3) + Vector3(0, 0.045, 0)
+	batcher.add_flat(c, PAD_SIZE, Color(0.2, 0.06, 0.3), rot, Layer.GLOW)
 	# Três setas (chevrons) apontando no sentido da corrida.
 	for k in 3:
-		for s: float in [-1.0, 1.0]:
-			var bar := MeshInstance3D.new()
-			var bm := PlaneMesh.new()
-			bm.size = Vector2(0.95, 0.22)
-			bar.mesh = bm
-			bar.material_override = _mat_unlit(Color(1.0, 0.85, 0.2))
-			bar.position = Vector3(s * 0.38, 0.005, 1.0 - k * 0.95 - 0.25)
-			bar.rotation.y = -s * 0.6
-			root.add_child(bar)
+		for sd: float in [-1.0, 1.0]:
+			batcher.add_flat(c + bs * Vector3(sd * 0.38, 0.005, 1.0 - k * 0.95 - 0.25), Vector2(0.95, 0.22),
+					Color(1.0, 0.85, 0.2), rot - sd * 0.6, Layer.GLOW)
 	attractors.append({"pos": f["pos"], "distance": distance, "lateral": lateral, "kind": "pad"})
 
 
@@ -100,24 +92,12 @@ func _build_ramp(distance: float, lateral: float) -> void:
 	shape.shape = box
 	shape.transform = Transform3D(rot, center)
 	body.add_child(shape)
-	var mi := MeshInstance3D.new()
-	var bm := BoxMesh.new()
-	bm.size = box.size
-	mi.mesh = bm
-	mi.transform = shape.transform
-	mi.material_override = Toon.make(Color(0.75, 0.42, 0.15), Toon.Outline.BOX, 0.03)
-	body.add_child(mi)
+	batcher.add_box_xform(shape.transform, box.size, Color(0.75, 0.42, 0.15))
 	# Apoios sob a parte alta (só visual) e faixas amarelas na borda.
 	var dir: Vector3 = f["dir"]
 	var top: Vector3 = (f["pos"] as Vector3) + dir * (RAMP_SIZE.z * 0.5 - 0.15)
-	var leg := MeshInstance3D.new()
-	var lm := BoxMesh.new()
-	lm.size = Vector3(RAMP_SIZE.x * 0.95, RAMP_SIZE.y - 0.05, 0.12)
-	leg.mesh = lm
-	leg.position = top + Vector3(0, (RAMP_SIZE.y - 0.05) * 0.5, 0)
-	leg.rotation.y = f["rot"]
-	leg.material_override = Toon.make(Color(0.4, 0.25, 0.12), Toon.Outline.BOX, 0.02)
-	add_child(leg)
+	batcher.add_box(top + Vector3(0, (RAMP_SIZE.y - 0.05) * 0.5, 0), Vector3(RAMP_SIZE.x * 0.95, RAMP_SIZE.y - 0.05, 0.12),
+			Color(0.4, 0.25, 0.12), f["rot"])
 	attractors.append({"pos": f["pos"], "distance": distance, "lateral": lateral, "kind": "ramp"})
 
 
@@ -159,28 +139,12 @@ func _build_obstacle(distance: float, lateral: float, kind: String) -> void:
 	obstacles.append({"pos": p, "radius": radius, "kind": kind, "distance": distance, "lateral": lateral})
 
 
-func _vis_box(parent: Node3D, size: Vector3, pos: Vector3, rot: float, color: Color) -> void:
-	var mi := MeshInstance3D.new()
-	var m := BoxMesh.new()
-	m.size = size
-	mi.mesh = m
-	mi.position = pos
-	mi.rotation.y = rot
-	mi.material_override = Toon.make(color, Toon.Outline.BOX, 0.025)
-	parent.add_child(mi)
+func _vis_box(_parent: Node3D, size: Vector3, pos: Vector3, rot: float, color: Color) -> void:
+	batcher.add_box(pos, size, color, rot)
 
 
-func _vis_cyl(parent: Node3D, r: float, h: float, base: Vector3, color: Color) -> void:
-	var mi := MeshInstance3D.new()
-	var m := CylinderMesh.new()
-	m.top_radius = r * 0.35 if h < 0.8 and r < 0.25 else r
-	m.bottom_radius = r
-	m.height = h
-	m.radial_segments = 10
-	mi.mesh = m
-	mi.position = base + Vector3(0, h * 0.5, 0)
-	mi.material_override = Toon.make(color, Toon.Outline.SMOOTH, 0.02)
-	parent.add_child(mi)
+func _vis_cyl(_parent: Node3D, r: float, h: float, base: Vector3, color: Color) -> void:
+	batcher.add_cylinder_y(base, r, h, color, 8)
 
 
 func _col_box(body: StaticBody3D, size: Vector3, center: Vector3, rot: float) -> void:
@@ -206,17 +170,10 @@ func _col_cyl(body: StaticBody3D, r: float, h: float, base: Vector3) -> void:
 
 func _build_crossing(distance: float) -> void:
 	var f := _frame(distance, 0.0)
-	var white := _mat_unlit(Color(0.9, 0.88, 0.82))
 	var right: Vector3 = f["right"]
 	for k in 8:
-		var stripe := MeshInstance3D.new()
-		var pm := PlaneMesh.new()
-		pm.size = Vector2(0.6, 3.0)
-		stripe.mesh = pm
-		stripe.material_override = white
-		stripe.position = (f["pos"] as Vector3) + right * (-4.9 + k * 1.4) + Vector3(0, 0.042, 0)
-		stripe.rotation.y = f["rot"]
-		add_child(stripe)
+		batcher.add_flat((f["pos"] as Vector3) + right * (-4.9 + k * 1.4) + Vector3(0, 0.042, 0), Vector2(0.6, 3.0),
+				Color(0.9, 0.88, 0.82), f["rot"])
 	crossing_points.append({"pos": f["pos"], "dir": f["dir"], "right": right, "distance": distance})
 
 

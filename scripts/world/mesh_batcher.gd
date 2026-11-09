@@ -139,6 +139,15 @@ func add_box(center: Vector3, size: Vector3, color: Color, rot_y: float = 0.0,
 	add_convex(Transform3D(Basis(Vector3.UP, rot_y), center), v, _faces(BOX_FACES), color, layer)
 
 
+## Caixa com transformação qualquer (rampas inclinadas).
+func add_box_xform(xform: Transform3D, size: Vector3, color: Color, layer: Layer = Layer.SOLID) -> void:
+	var h := size * 0.5
+	var v := PackedVector3Array()
+	for i in 8:
+		v.append(Vector3(h.x if i & 1 else -h.x, h.y if i & 2 else -h.y, h.z if i & 4 else -h.z))
+	add_convex(xform, v, _faces(BOX_FACES), color, layer)
+
+
 ## Telhado de duas águas; cumeeira ao longo do X local. base_center = centro da base.
 func add_roof(base_center: Vector3, w: float, d: float, h: float, color: Color, rot_y: float = 0.0) -> void:
 	var v := PackedVector3Array([
