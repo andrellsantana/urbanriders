@@ -233,7 +233,7 @@ func _make_gate_visual(gate: Dictionary, index: int) -> Node3D:
 		cyl.radial_segments = 8
 		post.mesh = cyl
 		post.material_override = Toon.make(post_col)
-		post.position = Vector3(side * Circuit.GATE_HALF_WIDTH, 2.25, 0)
+		post.position = Vector3(side * 6.5, 2.25, 0)
 		root.add_child(post)
 	var banner := MeshInstance3D.new()
 	var bm := BoxMesh.new()

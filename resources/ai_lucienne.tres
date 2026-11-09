@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1")
 character_id = "lucienne"
-corner_speed_kmh = 20.0
+corner_speed_kmh = 24.0
 wet_corner_speed_kmh = 12.0
 knows_puddles = true
 brake_decel_estimate = 5.0
@@ -30,3 +30,4 @@ pace_variation = 1.0
 boost_efficiency = 0.75
 ramp_bonus = 0.0
 top_speed_kmh = 42.0
+racing_line = 2.2

@@ -25,7 +25,8 @@ extends Resource
 @export var aggressive: bool = false ## fecha e empurra rivais
 @export var polite: bool = false ## evita contato
 @export var hunts_player: bool = false ## persegue o jogador para fechar e empurrar
-@export var cuts_corners: bool = false ## corta esquinas por dentro (pela calçada)
+@export var cuts_corners: bool = false ## corta esquinas por dentro (pela calçada) — desativado a pedido
+@export var racing_line: float = 4.0 ## amplitude da linha de corrida nas esquinas (m; fora → dentro → fora)
 @export var hesitation_chance: float = 0.0 ## chance de hesitar a cada mudança errática
 @export var pace_variation: float = 0.0 ## variação aleatória de ritmo entre corridas (km/h nas curvas)
 @export var feminine: bool = false ## concordância nos avisos ("cansada")

@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1")
 character_id = "russ"
-corner_speed_kmh = 23.0
+corner_speed_kmh = 28.0
 wet_corner_speed_kmh = 20.0
 knows_puddles = false
 brake_decel_estimate = 6.0
@@ -21,10 +21,11 @@ aggressive = true
 rest_below = 15.0
 rest_until = 50.0
 hunts_player = true
-cuts_corners = true
+cuts_corners = false
 pad_chance = 0.6
 ramp_chance = 1.0
 pulse_strategy = true
 pace_variation = 1.0
 boost_efficiency = 1.0
 ramp_bonus = 0.8
+racing_line = 2.5

@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1")
 character_id = "mint"
-corner_speed_kmh = 24.0
+corner_speed_kmh = 30.0
 wet_corner_speed_kmh = 14.0
 knows_puddles = true
 brake_decel_estimate = 5.5
@@ -27,3 +27,4 @@ pad_chance = 1.0
 ramp_chance = 0.6
 boost_efficiency = 1.0
 ramp_bonus = 0.0
+racing_line = 2.6

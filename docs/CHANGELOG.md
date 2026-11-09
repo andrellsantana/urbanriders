@@ -1,5 +1,12 @@
 # Registro de alterações
 
+## v0.6.2 — Linha de corrida da IA (2026-11-09)
+- Rivais fazem a curva pela linha de corrida no asfalto (aberto → por dentro → aberto), freando bem menos;
+  ninguém corta pela calçada (Russ não corta mais).
+- Corrigido: rival que saía largo na última esquina passava fora do portal de chegada e não terminava a corrida.
+  Portais aceitam a calçada (8 m do centro).
+- Rivais podem trocar de faixa sobre poças (com risco de derrapar). Resolução 3D nativa mantida.
+
 ## v0.6.1 — Desempenho e rivais mais fortes (2026-11-09)
 - Chamadas de desenho por quadro: 1.222 → 623 (elementos da pista e carros em poucas malhas,
   bicicletas fundidas, peças pequenas sem contorno/sombra). Objetivo: voltar aos 60 FPS.

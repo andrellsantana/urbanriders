@@ -10,7 +10,7 @@ const CORNERS: Array[Vector2] = [
 const START_DISTANCE := 12.0 ## linha de largada/chegada (distância a partir de CORNERS[0])
 const SPAWN_DISTANCE := 5.0
 const CHECKPOINT_COUNT := 12
-const GATE_HALF_WIDTH := 6.5
+const GATE_HALF_WIDTH := 8.0 ## inclui a calçada
 
 var points: Array[Vector3] = []
 var cumulative: PackedFloat32Array = PackedFloat32Array()

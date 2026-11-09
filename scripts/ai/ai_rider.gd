@@ -26,6 +26,7 @@ var _form: float = 0.0
 var _hazard_brake_time: float = 0.0
 var _ignore_hazards: float = 0.0
 var _evading: float = 0.0 ## desviando: troca de faixa mais rápida
+var _last_turn: float = 1.0
 var _attractor_choice: Dictionary = {}
 var player_bike: BikeController
 var resting: bool = false ## soltou o pedal para recuperar energia
@@ -94,12 +95,20 @@ func _physics_process(dt: float) -> void:
 		# Russ corta a esquina por dentro (passando pela calçada).
 		if personality.cuts_corners and to_corner < 13.0:
 			desired_lane = circuit.next_turn_sign(dist) * 4.3
-		elif to_corner < 22.0:
-			# Perto da esquina: puxa para dentro da curva (nada de faixa aleatória).
-			desired_lane = circuit.next_turn_sign(dist) * 1.2
+		elif to_corner < 38.0 or _since_corner(dist) < 18.0:
+			# Linha de corrida no asfalto: aberto antes, encosta por dentro na esquina, abre na saída.
+			var turn := circuit.next_turn_sign(dist) if to_corner < 38.0 else _last_turn
+			var amp := personality.racing_line
+			if to_corner < 38.0:
+				_last_turn = turn
+				desired_lane = -turn * amp if to_corner > 16.0 else turn * amp
+			else:
+				desired_lane = -turn * amp * 0.6
 			_erratic_timer = maxf(_erratic_timer, 1.0)
+			_avoid_timer = 0.3
 		_seek_attractors(dist)
-	var max_lane := 4.5 if personality.cuts_corners and to_corner < 16.0 else MAX_LANE
+	var near_corner := to_corner < 38.0 or _since_corner(dist) < 18.0
+	var max_lane := 2.8 if near_corner else MAX_LANE
 	desired_lane = clampf(desired_lane, -max_lane, max_lane)
 	var hazard_brake := _avoid_hazards(route_dir, my_lat)
 	_evading = maxf(0.0, _evading - dt)
@@ -108,6 +117,8 @@ func _physics_process(dt: float) -> void:
 
 	# Direção: mira um ponto à frente na faixa escolhida (mais perto ao desviar).
 	var look := (4.0 + bike.speed * 0.3) if _evading > 0.0 else (5.0 + bike.speed * 0.45)
+	if near_corner and _evading <= 0.0:
+		look = 7.0 + bike.speed * 0.6 # arco mais suave na esquina
 	var s := circuit.sample(dist + look)
 	var right: Vector3 = (s["dir"] as Vector3).cross(Vector3.UP)
 	var target: Vector3 = (s["pos"] as Vector3) + right * lane
@@ -115,7 +126,8 @@ func _physics_process(dt: float) -> void:
 	to.y = 0.0
 	var fwd := bike.forward()
 	var ang := atan2(fwd.cross(to).y, fwd.dot(to))
-	bike.in_steer = clampf(ang * personality.steer_gain, -1.0, 1.0)
+	var gain := personality.steer_gain * (0.55 if bike.grip < 0.6 else 1.0)
+	bike.in_steer = clampf(ang * gain, -1.0, 1.0)
 
 	# Velocidade: planeja a frenagem para a próxima esquina.
 	var corner_kmh := _corner_kmh + (1.5 if catching_up else 0.0)
@@ -250,6 +262,16 @@ static func _lane_blocked(lat: float, blocked: Array[Vector2]) -> bool:
 		if absf(lat - b.x) < b.y:
 			return true
 	return false
+
+
+## Metros desde a última esquina.
+func _since_corner(dist: float) -> float:
+	var best := INF
+	for i in circuit.points.size() + 1:
+		var d := dist - circuit.cumulative[i]
+		if d >= 0.0:
+			best = minf(best, d)
+	return best
 
 
 ## Distância percorrida na corrida (após a largada).
