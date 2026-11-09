@@ -1,5 +1,18 @@
 # Registro de alterações
 
+## v0.6 — Bairro vivo e equilíbrio (2026-11-09)
+- Aceleradores no chão (44 km/h sem gastar energia), rampas com impulso no pouso, obstáculos com passagem lateral.
+- Trânsito nos dois sentidos (desvia dos carros estacionados e buzina), pedestres atravessando (alguns distraídos).
+- Cão a ¾ da corrida: late, atravessa na frente dos 3 primeiros e persegue o último (susto = pedalada forte grátis).
+- Relâmpagos que iluminam céu e cidade, trovões mais frequentes; asfalto mais cinza.
+- Som de cada pedalada e corrente mais audível; buzina, latido, impulso.
+- IA desvia de obstáculos, carros, pedestres e cão; mira aceleradores e rampas.
+- Equilíbrio: mesma base de energia para todos, habilidades diferentes (Mint curvas/aceleradores,
+  Lucienne retas a 42 km/h, Russ rampas/encostões), forma variável por corrida e reação de quem fica para trás.
+  Em 6 corridas simuladas: Mint 3 vitórias, Russ 2, Lucienne 1 (e 3 segundos lugares).
+- Corrigido: queda curta qualquer ativava o impulso de rampa.
+- 117 testes automatizados.
+
 ## v0.5 — Fase 5: sons, efeitos e menus (2026-11-09)
 - 14 sons sintetizados por código (sem recursos externos): pneus, corrente, catraca livre, freio, vento,
   queda, encostão, poça, bipes, largada, checkpoint, fanfarra, derrota e trovões distantes.

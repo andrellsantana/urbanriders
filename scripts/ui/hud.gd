@@ -33,6 +33,7 @@ func _ready() -> void:
 
 func setup(p: BikeController) -> void:
 	player = p
+	player.special.connect(_on_special)
 	player.crashed.connect(_on_crashed)
 	player.recovered.connect(_on_recovered)
 	player.out_of_hearts.connect(_on_out)
@@ -62,6 +63,19 @@ func _on_finished(time: float, best: float) -> void:
 
 static func ordinal(n: int) -> String:
 	return "%dº" % n
+
+
+func _on_special(kind: String) -> void:
+	match kind:
+		"acelerador":
+			message = "ACELERADOR!"
+			message_timer = 1.2
+		"susto":
+			message = "O CACHORRO! PEDALA!"
+			message_timer = 2.5
+		"tropeco":
+			message = "Cachorro na frente!"
+			message_timer = 1.8
 
 
 func _on_crashed(hearts_left: int, reason: String) -> void:
@@ -181,7 +195,7 @@ func _on_draw() -> void:
 		_text(Vector2(vp.x * 0.5 - 200, vp.y * 0.72), "DERRAPANDO!", 44, Color(1, 0.75, 0.2), HORIZONTAL_ALIGNMENT_CENTER, 400)
 
 	# Linhas de velocidade no turbo.
-	if player.boosting and player.speed > 8.0:
+	if (player.boosting or player.pad_active() or player.is_scared()) and player.speed > 8.0:
 		var k := clampf((player.speed - 8.0) / 3.1, 0.0, 1.0)
 		var rng := RandomNumberGenerator.new()
 		rng.seed = int(Time.get_ticks_msec() / 50)

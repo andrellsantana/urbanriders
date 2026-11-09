@@ -36,6 +36,10 @@ scripts/audio/bike_audio.gd      sons posicionais de cada bicicleta
 scripts/audio/race_audio.gd      contagem, checkpoints, chegada, derrota, trovões
 scripts/fx/effects.gd            partículas (queda, poças, folhas)
 scripts/ui/menu.gd               menu inicial, pausa e configurações
+scripts/world/course_features.gd aceleradores, rampas, obstáculos e faixas de pedestres (por distância/lateral no laço)
+scripts/world/hazards.gd         carros (AnimatableBody3D, camada 4), pedestres e cão
+scripts/world/props.gd           modelos provisórios de carro, pedestre e cão
+scripts/world/polyline.gd        laços deslocados (faixas dos carros)
 shaders/toon.gdshader            Cel Shading
 shaders/outline.gdshader         contorno de quadrinho (casca invertida)
 shaders/red_sky.gdshader         céu vermelho tempestuoso

@@ -11,6 +11,7 @@ signal crashed(hearts_left: int, reason: String)
 signal recovered
 signal out_of_hearts
 signal bumped(strength: float)
+signal special(kind: String) ## "acelerador", "susto", "tropeco"
 
 enum State { RIDING, CRASHED, OUT }
 
@@ -53,10 +54,17 @@ var _zones: Array[Dictionary] = []
 var _spawn: Transform3D
 var _bump: Vector3 = Vector3.ZERO
 var _bump_cooldown: float = 0.0
+var _pad_timer: float = 0.0
+var _scare_timer: float = 0.0
+const PAD_SPEED := 12.2 ## m/s (44 km/h) no acelerador
+var _air_time: float = 0.0
+## Impulso extra ao pousar de rampa (segundos), por personagem.
+var ramp_bonus: float = 0.0
 const MAX_BUMP := 1.8 ## m/s máximos de empurrão acumulado
 
 const LAYER_WORLD := 1
 const LAYER_RIDERS := 2
+const LAYER_TRAFFIC := 4
 
 
 func _ready() -> void:
@@ -64,7 +72,7 @@ func _ready() -> void:
 		config = BikeConfig.new()
 	hearts = config.max_hearts
 	_spawn = global_transform
-	floor_snap_length = 0.5
+	floor_snap_length = 0.3 # baixo o bastante para decolar no topo das rampas
 	floor_max_angle = deg_to_rad(40.0)
 	floor_constant_speed = true
 	var shape := CollisionShape3D.new()
@@ -76,7 +84,7 @@ func _ready() -> void:
 	shape.position = Vector3(0.0, 0.34, 0.0)
 	add_child(shape)
 	collision_layer = LAYER_RIDERS
-	collision_mask = LAYER_WORLD | LAYER_RIDERS
+	collision_mask = LAYER_WORLD | LAYER_RIDERS | LAYER_TRAFFIC
 	visual = RiderVisual.new()
 	visual.look = look
 	add_child(visual)
@@ -151,6 +159,13 @@ func _ride(dt: float) -> void:
 	else:
 		boost_level = move_toward(boost_level, 0.0, dt / cfg.boost_decay_time)
 	brake_level = move_toward(brake_level, 1.0, dt / cfg.brake_ramp_time) if in_brake else 0.0
+	# Susto (cão correndo atrás): pedala forte sem gastar energia.
+	_scare_timer = maxf(0.0, _scare_timer - dt)
+	_pad_timer = maxf(0.0, _pad_timer - dt)
+	var scared := _scare_timer > 0.0 and not in_brake
+	if scared:
+		pedaling = true
+	var physics_boost := maxf(boost_level, 0.85) if scared else boost_level
 
 	# Inclinação do piso.
 	var fwd := forward()
@@ -161,9 +176,11 @@ func _ride(dt: float) -> void:
 		move_dir = fwd.slide(get_floor_normal()).normalized()
 		slope_sin = move_dir.y
 
-	var accel := BikePhysics.longitudinal_accel(cfg, speed, pedaling, boost_level, brake_level,
-			stamina.performance(), slope_sin)
+	var accel := BikePhysics.longitudinal_accel(cfg, speed, pedaling, physics_boost, brake_level,
+			1.0 if scared else stamina.performance(), slope_sin)
 	speed = BikePhysics.step_speed(cfg, speed, accel, dt)
+	if _pad_timer > 0.0 and speed < PAD_SPEED:
+		speed = move_toward(speed, PAD_SPEED, 9.0 * dt)
 
 	# Direção com equilíbrio assistido e limite de aderência do piso.
 	steer = move_toward(steer, in_steer, cfg.steer_response * dt)
@@ -208,6 +225,14 @@ func _ride(dt: float) -> void:
 	if was_airborne and is_on_floor() and pre_velocity.y < -cfg.hard_landing_speed:
 		_crash("Aterrissagem forte!", Vector3.ZERO)
 		return
+	if not on_floor:
+		_air_time += dt
+	if was_airborne and is_on_floor():
+		if _air_time > 0.25 and speed > 4.0:
+			# Pouso de rampa: impulso extra.
+			_pad_timer = maxf(_pad_timer, 1.0 + ramp_bonus)
+			special.emit("rampa")
+		_air_time = 0.0
 	_check_impacts(pre_velocity)
 
 
@@ -253,10 +278,51 @@ func receive_bump(v: Vector3) -> void:
 	_overload_timer += v.length() * 0.08
 
 
+## Acelerador no chão: impulso até 44 km/h sem gastar energia.
+func pad_boost() -> void:
+	if state != State.RIDING:
+		return
+	_pad_timer = 1.6
+	special.emit("acelerador")
+
+
+func pad_active() -> bool:
+	return _pad_timer > 0.0
+
+
+## Susto: pedala forte por alguns segundos sem gastar energia.
+func scare(seconds: float) -> void:
+	if state != State.RIDING:
+		return
+	_scare_timer = seconds
+	special.emit("susto")
+
+
+func is_scared() -> bool:
+	return _scare_timer > 0.0
+
+
+## Esbarrou em algo que não é físico (pedestre): cai.
+func hit_obstacle(reason: String) -> void:
+	if state == State.RIDING and _grace_timer <= 0.0:
+		_crash(reason, Vector3.ZERO)
+
+
+## Tropeço (cão na frente): perde o embalo, sem cair.
+func stumble() -> void:
+	if state != State.RIDING:
+		return
+	speed *= 0.45
+	_pad_timer = 0.0
+	lean = 0.35 * (1.0 if randf() < 0.5 else -1.0)
+	special.emit("tropeco")
+	bumped.emit(2.0)
+
+
 ## Sem colisão com outros ciclistas (após a chegada ou derrota).
 func set_ghost(on: bool) -> void:
 	collision_layer = 0 if on else LAYER_RIDERS
-	collision_mask = LAYER_WORLD if on else LAYER_WORLD | LAYER_RIDERS
+	collision_mask = (LAYER_WORLD | LAYER_TRAFFIC) if on else (LAYER_WORLD | LAYER_RIDERS | LAYER_TRAFFIC)
 
 
 ## Reposiciona parado sobre a pista (recuperação da IA).

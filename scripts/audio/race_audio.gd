@@ -4,9 +4,12 @@ extends Node
 const Synth := preload("res://scripts/audio/synth.gd")
 const RaceManager := preload("res://scripts/race/race_manager.gd")
 
+signal lightning ## relâmpago (o trovão chega logo depois)
+
 var _ui: AudioStreamPlayer
 var _thunder: AudioStreamPlayer
-var _thunder_timer: float = 12.0
+var _thunder_timer: float = 6.0
+var _pending_thunder: float = -1.0
 var _rng := RandomNumberGenerator.new()
 
 
@@ -39,7 +42,12 @@ func _process(dt: float) -> void:
 	# Trovoada distante de vez em quando (céu tempestuoso).
 	_thunder_timer -= dt
 	if _thunder_timer <= 0.0:
-		_thunder_timer = _rng.randf_range(18.0, 40.0)
-		_thunder.volume_db = _rng.randf_range(-22.0, -12.0)
-		_thunder.pitch_scale = _rng.randf_range(0.8, 1.1)
-		_thunder.play()
+		_thunder_timer = _rng.randf_range(9.0, 22.0)
+		lightning.emit()
+		_pending_thunder = _rng.randf_range(0.3, 1.4) # luz antes do som
+	if _pending_thunder >= 0.0:
+		_pending_thunder -= dt
+		if _pending_thunder < 0.0:
+			_thunder.volume_db = _rng.randf_range(-9.0, -2.0)
+			_thunder.pitch_scale = _rng.randf_range(0.75, 1.05)
+			_thunder.play()

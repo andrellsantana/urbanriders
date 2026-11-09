@@ -17,7 +17,7 @@ const ROAD_HALF := 5.5
 const WALK_OUT := 7.5
 const PARK_BLOCKS: Array[Vector2i] = [Vector2i(2, 3), Vector2i(5, 1)]
 
-const ASPHALT := Color(0.26, 0.22, 0.26)
+const ASPHALT := Color(0.36, 0.35, 0.37) ## cinza (a luz vermelha do céu ainda tinge)
 const LAWN := Color(0.3, 0.32, 0.13)
 const FIELD := Color(0.36, 0.27, 0.14)
 const SIDEWALK := Color(0.58, 0.5, 0.48)
@@ -40,6 +40,7 @@ var circuit := Circuit.new()
 var house_tops: Array[float] = []
 var barricades: Array[Vector3] = []
 var puddles: Array[Vector3] = []
+var parked_cars: Array[Vector3] = [] ## carros estacionados nas ruas da corrida (para o trânsito desviar)
 var mesh_instance_count: int = 0
 var _rng := RandomNumberGenerator.new()
 var _bodies: Dictionary = {}
@@ -310,8 +311,12 @@ func _build_lot(front: Vector3, f: Vector3, lot_w: float, lot_d: float, back_fen
 		_col_box(L.call(0, 0.9, -lot_d), Vector3(lot_w, 1.8, 0.2), rot)
 
 	# Carro estacionado junto ao meio-fio.
+	var street_point: Vector3 = L.call(0, 0, WALK_OUT)
+	var on_route := float(circuit.project(street_point)["lateral"]) < 2.0
 	if _rng.randf() < 0.12:
 		var cx := -gs * lot_w * 0.25
+		if on_route:
+			parked_cars.append(L.call(cx, 0, (WALK_OUT - ROAD_HALF) + (ROAD_HALF - 4.3)))
 		_vehicle(L.call(cx, 0, (WALK_OUT - ROAD_HALF) + (ROAD_HALF - 4.3)), rot + PI / 2, _pick(CARS))
 
 

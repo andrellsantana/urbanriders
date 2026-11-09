@@ -26,6 +26,10 @@ static func get_sound(sound_name: String) -> AudioStreamWAV:
 		"finish": s = _fanfare()
 		"lose": s = _lose()
 		"thunder": s = _thunder()
+		"honk": s = _honk()
+		"bark": s = _bark()
+		"whoosh": s = _whoosh()
+		"pedal": s = _pedal()
 		_:
 			push_error("Som desconhecido: %s" % sound_name)
 			s = _beep(440.0, 0.1)
@@ -34,7 +38,7 @@ static func get_sound(sound_name: String) -> AudioStreamWAV:
 
 
 const NAMES: Array[String] = ["wind", "roll", "chain", "freewheel", "brake", "crash", "bump", "splash",
-	"beep", "go", "checkpoint", "finish", "lose", "thunder"]
+	"beep", "go", "checkpoint", "finish", "lose", "thunder", "honk", "bark", "whoosh", "pedal"]
 
 
 # ----------------------------------------------------------------- utilidades
@@ -241,3 +245,54 @@ static func _thunder() -> AudioStreamWAV:
 		env *= 0.99993
 		b[i] *= (env + 0.15) * exp(-t * 0.6) * minf(1.0, t * 8.0)
 	return _wav(_normalize(b, 0.8), false)
+
+
+## Buzina de carro dos anos 80 (duas notas).
+static func _honk() -> AudioStreamWAV:
+	var b := _buf(0.55)
+	for i in b.size():
+		var t := float(i) / RATE
+		var env := minf(1.0, t * 60.0) * minf(1.0, (0.55 - t) * 25.0)
+		var v := (1.0 if sin(t * TAU * 392.0) >= 0.0 else -1.0) + (1.0 if sin(t * TAU * 494.0) >= 0.0 else -1.0)
+		b[i] = v * 0.18 * env
+	return _wav(b, false)
+
+
+## Latido: dois "au!" curtos.
+static func _bark() -> AudioStreamWAV:
+	var b := _buf(0.5)
+	var n := _noise(0.5, 0.3, 101, 0.4)
+	for i in b.size():
+		var t := float(i) / RATE
+		var v := 0.0
+		for start: float in [0.0, 0.22]:
+			var lt := t - start
+			if lt >= 0.0 and lt < 0.16:
+				var f := lerpf(620.0, 380.0, lt / 0.16)
+				var env := minf(1.0, lt * 120.0) * exp(-lt * 14.0)
+				v += (sin(lt * TAU * f) + 0.5 * sin(lt * TAU * f * 2.1) + n[i]) * env
+		b[i] = v
+	return _wav(_normalize(b, 0.8), false)
+
+
+## Impulso do acelerador: chiado que sobe.
+static func _whoosh() -> AudioStreamWAV:
+	var b := _buf(0.7)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 111
+	var y := 0.0
+	for i in b.size():
+		var t := float(i) / RATE
+		var alpha := lerpf(0.03, 0.5, t / 0.7)
+		y += alpha * (rng.randf_range(-1.0, 1.0) - y)
+		b[i] = y * sin(PI * t / 0.7) + sin(t * TAU * lerpf(300.0, 900.0, t / 0.7)) * 0.15 * sin(PI * t / 0.7)
+	return _wav(_normalize(b, 0.6), false)
+
+
+## Pedalada: estalo do pedivela + roçar da corrente (um por meia volta).
+static func _pedal() -> AudioStreamWAV:
+	var b := _noise(0.16, 0.6, 121, 0.3)
+	for i in b.size():
+		var t := float(i) / RATE
+		b[i] = b[i] * exp(-t * 30.0) + sin(t * TAU * 180.0) * exp(-t * 45.0) * 0.6
+	return _wav(_normalize(b, 0.5), false)

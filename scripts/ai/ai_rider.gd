@@ -17,13 +17,23 @@ var hazards: Array[Vector3] = [] ## poças conhecidas
 var finished: bool = false
 var respawn_count: int = 0
 var tag: Label3D ## nome sobre a cabeça (mostra estado e provocações)
+var features: Node ## CourseFeatures (aceleradores, rampas, obstáculos fixos)
+var hazard_manager: Node ## Hazards (carros, pedestres, cão)
+var hazard_brakes: int = 0
+var race: Node ## RaceManager (para saber a distância até o líder)
+var catching_up: bool = false
+var _form: float = 0.0
+var _hazard_brake_time: float = 0.0
+var _ignore_hazards: float = 0.0
+var _evading: float = 0.0 ## desviando: troca de faixa mais rápida
+var _attractor_choice: Dictionary = {}
 var player_bike: BikeController
 var resting: bool = false ## soltou o pedal para recuperar energia
 var rest_time: float = 0.0
 var bumps_attempted: int = 0
 var blocks: int = 0
 var wait_time: float = 0.0
-const MAX_WAIT := 40.0 ## tempo máximo esperando o jogador por corrida
+const MAX_WAIT := 20.0 ## tempo máximo esperando o jogador por corrida
 var taunt: String = ""
 
 var lane: float = 0.0
@@ -56,6 +66,10 @@ func setup(b: BikeController, c: Circuit, p: AIPersonality, all_riders: Array[Bi
 	lane = c.signed_lateral(b.global_position)
 	desired_lane = p.base_lane
 	_corner_kmh = p.corner_speed_kmh + _rng.randf_range(-p.pace_variation, p.pace_variation)
+	_form = _rng.randf_range(-p.form_variation, p.form_variation)
+	b.stamina.drain_boost = 9.0 * p.boost_efficiency
+	b.ramp_bonus = p.ramp_bonus
+	b.config.max_speed_kmh = p.top_speed_kmh
 
 
 func _physics_process(dt: float) -> void:
@@ -80,12 +94,16 @@ func _physics_process(dt: float) -> void:
 		# Russ corta a esquina por dentro (passando pela calçada).
 		if personality.cuts_corners and to_corner < 13.0:
 			desired_lane = circuit.next_turn_sign(dist) * 4.3
+		_seek_attractors(dist)
 	var max_lane := 4.5 if personality.cuts_corners and to_corner < 16.0 else MAX_LANE
 	desired_lane = clampf(desired_lane, -max_lane, max_lane)
-	lane = move_toward(lane, desired_lane, personality.lane_change_speed * dt)
+	var hazard_brake := _avoid_hazards(route_dir, my_lat)
+	_evading = maxf(0.0, _evading - dt)
+	var lane_speed := maxf(personality.lane_change_speed, 4.0) if _evading > 0.0 else personality.lane_change_speed
+	lane = move_toward(lane, desired_lane, lane_speed * dt)
 
-	# Direção: mira um ponto à frente na faixa escolhida.
-	var look := 5.0 + bike.speed * 0.45
+	# Direção: mira um ponto à frente na faixa escolhida (mais perto ao desviar).
+	var look := (4.0 + bike.speed * 0.3) if _evading > 0.0 else (5.0 + bike.speed * 0.45)
 	var s := circuit.sample(dist + look)
 	var right: Vector3 = (s["dir"] as Vector3).cross(Vector3.UP)
 	var target: Vector3 = (s["pos"] as Vector3) + right * lane
@@ -109,6 +127,16 @@ func _physics_process(dt: float) -> void:
 		var gap := (ahead.global_position - bike.global_position).dot(route_dir)
 		if gap < 2.6 and bike.speed > ahead.speed:
 			braking = true
+	_ignore_hazards = maxf(0.0, _ignore_hazards - dt)
+	if hazard_brake and _ignore_hazards <= 0.0:
+		_hazard_brake_time += dt
+		if _hazard_brake_time > 2.0:
+			_ignore_hazards = 1.5 # impasse: segue e contorna
+			_hazard_brake_time = 0.0
+		braking = true
+		hazard_brakes += 1
+	else:
+		_hazard_brake_time = 0.0
 	_hesitate_timer = maxf(0.0, _hesitate_timer - dt)
 	var hesitate := _hesitate_timer > 0.0
 	if finished:
@@ -139,10 +167,107 @@ func _physics_process(dt: float) -> void:
 
 	_check_stuck(dt, proj)
 	_update_tag(dt)
+	if Engine.get_physics_frames() % 15 == 0:
+		_update_catch_up()
+
+
+## Mira aceleradores e rampas à frente (conforme a personalidade).
+func _seek_attractors(dist: float) -> void:
+	if features == null:
+		return
+	var best_gap := INF
+	var best_lat := 0.0
+	for a: Dictionary in features.get("attractors"):
+		var gap := fposmod(float(a["distance"]) - dist, circuit.length)
+		if gap < 2.0 or gap > 35.0 or gap >= best_gap:
+			continue
+		var key: int = int(a["distance"])
+		if not _attractor_choice.has(key):
+			var chance := personality.pad_chance if a["kind"] == "pad" else personality.ramp_chance
+			_attractor_choice[key] = _rng.randf() < chance
+		if _attractor_choice[key]:
+			best_gap = gap
+			best_lat = a["lateral"]
+	if best_gap < INF:
+		desired_lane = best_lat
+		_avoid_timer = 0.4
+
+
+## Desvia de obstáculos fixos e móveis (prevê a posição de quem se move). Devolve true se precisa frear.
+func _avoid_hazards(route_dir: Vector3, my_lat: float) -> bool:
+	var obs: Array[Dictionary] = []
+	if features != null:
+		for o: Dictionary in features.get("obstacles"):
+			obs.append({"pos": o["pos"], "vel": Vector3.ZERO, "radius": o["radius"]})
+	if hazard_manager != null:
+		obs.append_array(hazard_manager.call("obstacles_for_ai"))
+	if obs.is_empty():
+		return false
+	var window := 8.0 + bike.speed * 2.0
+	var blocked: Array[Vector2] = []
+	var nearest := INF
+	for o in obs:
+		var rel: Vector3 = (o["pos"] as Vector3) - bike.global_position
+		var ahead := rel.dot(route_dir)
+		if ahead < -1.5 or ahead > window:
+			continue
+		var t := clampf(maxf(ahead, 0.0) / maxf(bike.speed, 1.0), 0.0, 2.5)
+		var pred: Vector3 = (o["pos"] as Vector3) + (o["vel"] as Vector3) * t
+		var lat := circuit.signed_lateral(pred)
+		if absf(lat) > 5.5:
+			continue
+		blocked.append(Vector2(lat, float(o["radius"]) + 0.75))
+		if absf(lat - my_lat) < float(o["radius"]) + 0.75:
+			nearest = minf(nearest, ahead)
+	if blocked.is_empty():
+		return false
+	if not _lane_blocked(desired_lane, blocked) and not _lane_blocked(my_lat, blocked):
+		return false
+	var best := INF
+	var best_cost := INF
+	var c := -MAX_LANE
+	while c <= MAX_LANE + 0.001:
+		if not _lane_blocked(c, blocked):
+			var cost := absf(c - desired_lane) + 0.5 * absf(c - my_lat)
+			if cost < best_cost:
+				best_cost = cost
+				best = c
+		c += 0.3
+	if best < INF:
+		desired_lane = best
+		_avoid_timer = 0.6
+		_evading = 0.8
+		return nearest < 1.5 + bike.speed * 0.35 and _lane_blocked(my_lat, blocked)
+	return nearest < 3.0 + bike.speed * 0.9
+
+
+static func _lane_blocked(lat: float, blocked: Array[Vector2]) -> bool:
+	for b in blocked:
+		if absf(lat - b.x) < b.y:
+			return true
+	return false
+
+
+## Distância percorrida na corrida (após a largada).
+func _race_distance(r: BikeController) -> float:
+	return fposmod(float(circuit.project(r.global_position)["distance"]) - Circuit.START_DISTANCE, circuit.length)
+
+
+## Mais de ~3 s atrás do líder: arrisca mais no turbo para recuperar.
+func _update_catch_up() -> void:
+	catching_up = false
+	if _elapsed < 20.0:
+		return
+	var mine := _race_distance(bike)
+	var lead := mine
+	for r in rivals:
+		if r.collision_layer != 0:
+			lead = maxf(lead, _race_distance(r))
+	catching_up = lead - mine > bike.speed * 3.0 + 5.0
 
 
 func _want_boost(to_corner: float, dist: float) -> bool:
-	var energy := bike.stamina.value
+	var energy := bike.stamina.value + _form + (10.0 if catching_up else 0.0)
 	var remaining := _remaining_distance(dist)
 	# Sprint final só quando a energia dá para chegar acelerando.
 	var reach := maxf(0.0, energy - 12.0) / bike.stamina.drain_boost * 11.1 * 1.3
@@ -310,7 +435,7 @@ func _check_stuck(dt: float, proj: Dictionary) -> void:
 	if _stuck_timer > 3.0 or float(proj["lateral"]) > 9.0:
 		_stuck_timer = 0.0
 		respawn_count += 1
-		var s := circuit.sample(float(proj["distance"]) - 2.0)
+		var s := circuit.sample(float(proj["distance"]) + 6.0)
 		var right: Vector3 = (s["dir"] as Vector3).cross(Vector3.UP)
 		var free_lane := 0.0
 		for candidate: float in [0.0, 1.8, -1.8]:

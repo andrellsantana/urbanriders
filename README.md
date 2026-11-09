@@ -45,12 +45,23 @@ Efeitos: poeira nas quedas, respingos nas poças, folhas de outono caindo, tremo
 
 ## O que testar
 
-**Rivais (IA):**
-- **Mint** (verde-menta): competitiva e limpa — boas curvas, administra a energia, abre espaço e não encosta.
-- **Lucienne** (azul): cautelosa nas curvas, rápida nas retas (usa muito turbo) e imprevisível (muda de faixa sem aviso).
-- **Russ** (laranja): trapaceiro — **persegue você**: segura o ritmo para te esperar, fecha a sua frente
+**Na pista:**
+- **Aceleradores** (setas amarelas no chão): impulso até 44 km/h sem gastar energia.
+- **Rampas** de madeira: salto e impulso no pouso.
+- **Obstáculos** (cavaletes de obra, cones, lixeira, caçamba) — sempre há passagem ao lado.
+- **Carros** indo e vindo nas faixas externas; desviam dos estacionados (invadindo a sua faixa!) e buzinam.
+- **Pedestres** nas faixas de pedestres — alguns distraídos atravessam com você chegando. Esbarrar derruba.
+- **O cão** (a ¾ da corrida): late para quem passa, atravessa na frente dos 3 primeiros (quem encosta perde o embalo)
+  e corre atrás do último colocado — o susto faz pedalar mais forte por 10 s sem gastar energia.
+- **Relâmpagos e trovões** de vez em quando.
+
+**Rivais (IA)** — chances iguais, habilidades diferentes; cada corrida favorece um de forma diferente:
+- **Mint** (verde-menta): a melhor nas curvas, nunca perde um acelerador, joga limpo.
+- **Lucienne** (azul): cautelosa nas curvas, mas a **mais rápida nas retas** (turbo até 42 km/h e mais econômico); imprevisível.
+- **Russ** (laranja): o rei das rampas (pouso com impulso maior); trapaceiro — **persegue você**: segura o ritmo para te esperar, fecha a sua frente
   ("Sai da frente!"), joga a bicicleta em cima ("Abre!"), devolve ultrapassagens ("Volta aqui!") e corta esquinas pela calçada.
   Encostões **empurram**; trombada forte **derruba**.
+- Todos variam de corrida para corrida ("dia bom ou ruim") e arriscam mais no turbo quando ficam para trás.
 - Posição ao vivo à esquerda; rivais aparecem como pontos coloridos no minimapa; quadro final com tempos.
 
 **Corrida no bairro (cena principal):**

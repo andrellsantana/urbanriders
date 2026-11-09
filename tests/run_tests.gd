@@ -82,7 +82,7 @@ func _test_stamina() -> void:
 			and float(lu.get("boost_min_straight")) < float(mi.get("boost_min_straight")),
 			"Lucienne: imprevisível, cautelosa nas curvas, turbo nas retas")
 	check(ru.get("aggressive") and not ru.get("knows_puddles"), "Russ: trapaceiro (fecha e empurra)")
-	check(mi.get("polite") and not mi.get("aggressive") and float(mi.get("boost_stamina_stop")) >= 25.0,
+	check(mi.get("polite") and not mi.get("aggressive") and float(mi.get("boost_stamina_stop")) >= 12.0,
 			"Mint: competitiva e limpa, administra a energia")
 	check(float(lu.get("rest_below")) > 0.0 and float(ru.get("rest_below")) > 0.0 and float(mi.get("rest_below")) > 0.0,
 			"todos param de pedalar para recuperar energia")
@@ -280,7 +280,7 @@ func _test_integration() -> void:
 	root.add_child(main)
 	p = main.get("player")
 	await _frames(3)
-	_wall(main, Vector3(0, 2, -157.5), Vector3(10, 4, 0.5))
+	_wall(main, Vector3(0, 2, -158.3), Vector3(10, 4, 0.5))
 	_place(p, Vector3(0, 0.3, -160), 0.0, 0.0)
 	var rig: Node3D = main.get("camera_rig")
 	rig.global_position = p.global_position + Vector3.UP
@@ -288,7 +288,7 @@ func _test_integration() -> void:
 	var arm: SpringArm3D = rig.get("arm")
 	var cam: Camera3D = rig.get("camera")
 	check(arm.get_hit_length() < arm.spring_length - 1.0, "câmera encurta o braço com parede atrás")
-	check(cam.global_position.z < -157.7, "câmera fica do lado de dentro da parede")
+	check(cam.global_position.z < -158.5, "câmera fica do lado de dentro da parede")
 
 	# Câmera mostra o ciclista inteiro (rodas e cabeça dentro da tela)
 	_place(p, Vector3(0, 0.3, -140), 0.0, 0.0)
@@ -371,17 +371,30 @@ func _test_neighborhood_race() -> void:
 	var q := PhysicsShapeQueryParameters3D.new()
 	q.shape = sphere
 	q.exclude = [p.get_rid()]
+	q.collision_mask = 1
 	var blocked := 0
+	var with_obstacle := 0
 	var d := 0.0
 	while d < race.circuit.length:
 		var s := race.circuit.sample(d)
 		var right: Vector3 = (s["dir"] as Vector3).cross(Vector3.UP)
-		for off: float in [-2.5, 0.0, 2.5]:
-			q.transform = Transform3D(Basis.IDENTITY, (s["pos"] as Vector3) + right * off + Vector3(0, 0.8, 0))
+		var free_run := 0
+		var best_run := 0
+		var off := -2.4
+		while off <= 2.41:
+			q.transform = Transform3D(Basis.IDENTITY, (s["pos"] as Vector3) + right * off + Vector3(0, 1.2, 0))
 			if space.intersect_shape(q, 1).size() > 0:
-				blocked += 1
-		d += 5.0
-	check(blocked == 0, "rota do circuito livre de obstáculos (%d bloqueios)" % blocked)
+				free_run = 0
+				with_obstacle += 1
+			else:
+				free_run += 1
+				best_run = maxi(best_run, free_run)
+			off += 0.3
+		if best_run < 5: # menos de ~1,5 m livre
+			blocked += 1
+		d += 2.0
+	check(blocked == 0, "sempre há passagem livre na pista (%d pontos bloqueados)" % blocked)
+	check(with_obstacle > 0, "há obstáculos e rampas na pista")
 	var side_hit := 0
 	for b in bars:
 		q.transform = Transform3D(Basis.IDENTITY, b + Vector3(0, 0.8, 0))
@@ -419,6 +432,7 @@ func _test_neighborhood_race() -> void:
 	main.queue_free()
 	await _frames(2)
 
+	await _test_course_and_hazards()
 	await _test_full_lap()
 	await _test_ai_race()
 
@@ -439,6 +453,24 @@ func _test_neighborhood_race() -> void:
 
 
 ## Piloto automático simples percorre a volta inteira pedalando (física real).
+## Piloto da IA "neutro" (sem turbo, desvia de tudo) para o jogador nos testes.
+func _attach_pilot(main: Node, p: BikeController, race: RaceManager) -> void:
+	var per := preload("res://scripts/ai/ai_personality.gd").new()
+	per.boost_stamina_min = 1000.0
+	per.rest_below = -1.0
+	per.pad_chance = 0.0
+	per.ramp_chance = 0.0
+	per.polite = true
+	per.corner_speed_kmh = 17.0
+	var pilot := AIRider.new()
+	main.add_child(pilot)
+	var puddles: Array[Vector3] = (main.get("world") as Node).get("puddles")
+	pilot.setup(p, race.circuit, per, race.riders, puddles, 7)
+	pilot.features = main.get("features")
+	pilot.hazard_manager = main.get("hazards")
+	p.use_player_input = false
+
+
 func _test_full_lap() -> void:
 	var main: Node = load("res://scenes/main.tscn").instantiate()
 	root.add_child(main)
@@ -446,26 +478,10 @@ func _test_full_lap() -> void:
 	var p: BikeController = main.get("player")
 	var race: RaceManager = main.get("race")
 	race.save_records = false
-	p.use_player_input = false
-	var c := race.circuit
+	_attach_pilot(main, p, race)
 	var max_frames := 60 * 60 * 6
 	var f := 0
 	while f < max_frames and race.phase != RaceManager.Phase.FINISHED and race.phase != RaceManager.Phase.LOST:
-		var proj := c.project(p.global_position)
-		var target: Vector3 = c.sample(proj["distance"] + 7.0)["pos"]
-		var to := target - p.global_position
-		to.y = 0.0
-		var fwd := p.forward()
-		var ang := atan2(fwd.cross(to).y, fwd.dot(to))
-		p.in_steer = clampf(ang * 2.5, -1.0, 1.0)
-		var to_corner := INF
-		for i in c.points.size() + 1:
-			var cd: float = c.cumulative[i] - float(proj["distance"])
-			if cd > 0.0:
-				to_corner = minf(to_corner, cd)
-		var slow := to_corner < 14.0 and p.speed > 4.5
-		p.in_brake = slow
-		p.in_pedal = not slow
 		await physics_frame
 		f += 1
 	check(race.phase == RaceManager.Phase.FINISHED, "volta completa pedalando pelo circuito (%s)" % RaceManager.format_time(race.race_time))
@@ -500,23 +516,12 @@ func _test_ai_race() -> void:
 			moved = true
 	check(not moved, "ninguém larga antes do JÁ!")
 
-	p.use_player_input = false
-	var c := race.circuit
+	_attach_pilot(main, p, race)
 	var lead_changes := 0
 	var last_order: Array[int] = race.standings()
 	var max_frames := 60 * 60 * 8
 	var f := 0
 	while f < max_frames and not race.complete:
-		if race.phase == RaceManager.Phase.RACING:
-			var proj := c.project(p.global_position)
-			var target: Vector3 = c.sample(float(proj["distance"]) + 7.0)["pos"]
-			var to := target - p.global_position
-			to.y = 0.0
-			var fwd := p.forward()
-			p.in_steer = clampf(atan2(fwd.cross(to).y, fwd.dot(to)) * 2.5, -1.0, 1.0)
-			var slow := c.distance_to_next_corner(proj["distance"]) < 14.0 and p.speed > 4.5
-			p.in_brake = slow
-			p.in_pedal = not slow
 		await physics_frame
 		f += 1
 		if f % 30 == 0:
@@ -552,6 +557,12 @@ func _test_ai_race() -> void:
 			in_range = false
 	check(in_range, "tempos dos rivais competitivos (2:30–5:00)")
 	check(lead_changes > 0, "posições mudam durante a corrida (%d trocas)" % lead_changes)
+	var hz: Node = main.get("hazards")
+	var ev: Array[String] = hz.get("dog_events")
+	var has_chase := ev.any(func(e: String) -> bool: return e.begins_with("chase"))
+	var has_dart := ev.any(func(e: String) -> bool: return e.begins_with("dart"))
+	check(has_chase and has_dart and int(hz.get("barks")) > 3,
+			"cão late (%d), atravessa na frente dos primeiros e persegue o último (%s)" % [int(hz.get("barks")), ", ".join(ev)])
 	var rests := PackedStringArray()
 	var all_rest := true
 	var russ_bumps := 0
@@ -662,5 +673,91 @@ func _test_menus_and_fx() -> void:
 		if c is CPUParticles3D:
 			leaves += 1
 	check(leaves >= 1, "folhas de outono caindo ao redor da câmera")
+	main.queue_free()
+	await _frames(2)
+
+
+## Aceleradores, rampas, carros, pedestres e cão.
+func _test_course_and_hazards() -> void:
+	var main: Node = load("res://scenes/main.tscn").instantiate()
+	root.add_child(main)
+	await _frames(10)
+	var p: BikeController = main.get("player")
+	var race: RaceManager = main.get("race")
+	race.save_records = false
+	var feats: Node = main.get("features")
+	var hz: Node = main.get("hazards")
+	await _frames(int(RaceManager.COUNTDOWN_TIME * 60.0) + 5)
+	var attractors: Array[Dictionary] = feats.get("attractors")
+	var pads := 0
+	var ramps := 0
+	for a in attractors:
+		if a["kind"] == "pad":
+			pads += 1
+		else:
+			ramps += 1
+	var obs: Array[Dictionary] = feats.get("obstacles")
+	check(pads >= 4 and ramps >= 3 and obs.size() >= 4, "pista com %d aceleradores, %d rampas e %d obstáculos" % [pads, ramps, obs.size()])
+
+	# Acelerador: passa de 40 km/h sem gastar energia.
+	var pad: Dictionary = attractors.filter(func(a: Dictionary) -> bool: return a["kind"] == "pad")[0]
+	var s := race.circuit.sample(float(pad["distance"]) - 6.0)
+	var right: Vector3 = (s["dir"] as Vector3).cross(Vector3.UP)
+	p.use_player_input = false
+	_place(p, (s["pos"] as Vector3) + right * float(pad["lateral"]), atan2(-(s["dir"] as Vector3).x, -(s["dir"] as Vector3).z), 8.0)
+	var e0 := p.stamina.value
+	p.in_pedal = true
+	var top := 0.0
+	for i in 60:
+		await physics_frame
+		top = maxf(top, p.speed_kmh())
+	check(top > 40.5 and p.stamina.value >= e0 - 1.0, "acelerador: %.0f km/h sem gastar energia" % top)
+
+	# Rampa: decola e ganha impulso no pouso.
+	var ramp: Dictionary = attractors.filter(func(a: Dictionary) -> bool: return a["kind"] == "ramp")[0]
+	var s2 := race.circuit.sample(float(ramp["distance"]) - 10.0)
+	var right2: Vector3 = (s2["dir"] as Vector3).cross(Vector3.UP)
+	_place(p, (s2["pos"] as Vector3) + right2 * float(ramp["lateral"]), atan2(-(s2["dir"] as Vector3).x, -(s2["dir"] as Vector3).z), 10.0)
+	var got := [false]
+	var max_y := 0.0
+	p.special.connect(func(k: String) -> void:
+		if k == "rampa":
+			got[0] = true)
+	for i in 120:
+		await physics_frame
+		max_y = maxf(max_y, p.global_position.y)
+	check(max_y > 0.4 and got[0] and p.state == BikeController.State.RIDING, "rampa: salta %.1f m e acelera no pouso" % max_y)
+	p.in_pedal = false
+
+	# Trânsito e pedestres.
+	var cars: Array[Dictionary] = hz.get("cars")
+	var peds: Array[Dictionary] = hz.get("peds")
+	check(cars.size() >= 6 and peds.size() >= 4, "%d carros indo e vindo e %d pedestres" % [cars.size(), peds.size()])
+	var d0: float = cars[0]["d"]
+	var d1: float = cars[3]["d"] if cars.size() > 3 else 0.0
+	await _frames(120)
+	check(float(cars[0]["d"]) > d0 and float(cars[3]["d"]) < d1, "carros andam nos dois sentidos")
+	var parked: Array[Vector3] = (main.get("world") as Node).get("parked_cars")
+	check(parked.size() > 0, "carros estacionados nas ruas da corrida (%d)" % parked.size())
+	var walked := false
+	for i in 60 * 25:
+		await physics_frame
+		for pd in peds:
+			if pd["state"] == "walk":
+				walked = true
+		if walked and int(hz.get("swerves")) > 0:
+			break
+	check(walked, "pedestres atravessam a rua")
+	check(int(hz.get("swerves")) > 0, "carros desviam dos estacionados (%d desvios)" % int(hz.get("swerves")))
+	var ok_lane := true
+	for car in cars:
+		var lat := absf(race.circuit.signed_lateral((car["body"] as Node3D).global_position))
+		if lat < 1.4 or lat > 4.6:
+			ok_lane = false
+	check(ok_lane, "carros nas faixas externas (desvio no máximo até 1,9 m do centro)")
+
+	# Cão: latido, corre atrás do último e atravessa na frente dos primeiros.
+	var events: Array[String] = hz.get("dog_events")
+	check(events.is_empty(), "cão espera a ¾ da corrida")
 	main.queue_free()
 	await _frames(2)

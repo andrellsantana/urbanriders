@@ -29,4 +29,10 @@ extends Resource
 @export var hesitation_chance: float = 0.0 ## chance de hesitar a cada mudança errática
 @export var pace_variation: float = 0.0 ## variação aleatória de ritmo entre corridas (km/h nas curvas)
 @export var feminine: bool = false ## concordância nos avisos ("cansada")
+@export var pad_chance: float = 0.8 ## chance de mirar cada acelerador no chão
+@export var ramp_chance: float = 0.6 ## chance de pular cada rampa
+@export var boost_efficiency: float = 1.0 ## gasto do turbo (0,8 = gasta 20% menos)
+@export var ramp_bonus: float = 0.0 ## segundos extras de impulso ao pousar de rampa
+@export var top_speed_kmh: float = 40.0 ## velocidade máxima com turbo (Lucienne: mais rápida na reta)
+@export var form_variation: float = 5.0 ## "dia bom/ruim": sorteio de ±% de energia aceita no turbo
 @export var overtake_lookahead: float = 8.0

@@ -6,6 +6,7 @@ uniform vec3 horizon_color : source_color = vec3(0.95, 0.22, 0.08);
 uniform vec3 cloud_dark : source_color = vec3(0.12, 0.01, 0.03);
 uniform vec3 cloud_lit : source_color = vec3(1.0, 0.35, 0.18);
 uniform vec3 ground_color : source_color = vec3(0.18, 0.04, 0.05);
+uniform float flash = 0.0; // relâmpago controlado pelo jogo (0–1)
 
 float hash(vec2 p) {
 	return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
@@ -47,10 +48,8 @@ void sky() {
 		float fade = smoothstep(0.0, 0.18, d.y);
 		vec3 cloud_col = mix(cloud_lit, cloud_dark, smoothstep(0.45, 0.9, c2));
 		col = mix(col, cloud_col, clouds * fade * 0.85);
-		// relâmpago raro
-		float slot = floor(TIME * 1.5);
-		float flash = step(0.97, hash(vec2(slot, 7.0))) * (1.0 - fract(TIME * 1.5));
-		col += vec3(1.0, 0.55, 0.45) * flash * clouds * 0.6;
+		// relâmpago (sincronizado com o trovão)
+		col += vec3(1.0, 0.75, 0.7) * flash * (0.35 + clouds * 0.9);
 		COLOR = col;
 	}
 }

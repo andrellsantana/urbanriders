@@ -18,6 +18,8 @@ const Menu := preload("res://scripts/ui/menu.gd")
 const BikeAudio := preload("res://scripts/audio/bike_audio.gd")
 const RaceAudio := preload("res://scripts/audio/race_audio.gd")
 const Effects := preload("res://scripts/fx/effects.gd")
+const CourseFeatures := preload("res://scripts/world/course_features.gd")
+const Hazards := preload("res://scripts/world/hazards.gd")
 const SKY_SHADER: Shader = preload("res://shaders/red_sky.gdshader")
 
 ## Verdadeiro: pista de testes da física (Fase 2). Falso: bairro + corrida.
@@ -26,6 +28,8 @@ const SKY_SHADER: Shader = preload("res://shaders/red_sky.gdshader")
 @export var with_rivals: bool = true
 ## Menu inicial antes da largada (desligado automaticamente nos testes headless).
 @export var show_menu: bool = true
+## Trânsito, pedestres e cão.
+@export var with_hazards: bool = true
 
 ## Grid de largada: (distância no laço, faixa lateral). [0] = jogador.
 const GRID: Array[Vector2] = [Vector2(3.0, 1.3), Vector2(7.0, -1.3), Vector2(7.0, 1.3), Vector2(3.0, -1.3)]
@@ -42,6 +46,12 @@ var menu: Menu
 var effects: Effects
 var race_audio: RaceAudio
 var sun: DirectionalLight3D
+var features: CourseFeatures
+var hazards: Hazards
+var env: Environment
+var sky_mat: ShaderMaterial
+var _flash: float = 0.0
+var _flash_t: float = 0.0
 var load_time_ms: int = 0
 var _perf_timer: float = 0.0
 
@@ -69,6 +79,19 @@ func _ready() -> void:
 		race.setup(player, circuit)
 		if with_rivals:
 			_spawn_rivals(circuit)
+		features = CourseFeatures.new()
+		features.name = "ElementosDaPista"
+		add_child(features)
+		features.setup(circuit)
+		features.riders = race.riders
+		if with_hazards:
+			hazards = Hazards.new()
+			hazards.name = "Perigos"
+			add_child(hazards)
+			hazards.setup(circuit, race, race.riders, features.crossing_points, (world as Neighborhood).parked_cars)
+		for ai in ai_riders:
+			ai.features = features
+			ai.hazard_manager = hazards
 	camera_rig = CameraRig.new()
 	add_child(camera_rig)
 	camera_rig.setup(player)
@@ -112,6 +135,7 @@ func _setup_audio_and_fx() -> void:
 		race_audio = RaceAudio.new()
 		add_child(race_audio)
 		race_audio.setup(race)
+		race_audio.lightning.connect(func() -> void: _flash = 1.0)
 
 
 func _place_on_grid(b: BikeController, circuit: Circuit, slot: Vector2) -> void:
@@ -167,10 +191,10 @@ func _spawn_rivals(circuit: Circuit) -> void:
 
 
 func _build_environment() -> void:
-	var env := Environment.new()
+	env = Environment.new()
 	env.background_mode = Environment.BG_SKY
 	var sky := Sky.new()
-	var sky_mat := ShaderMaterial.new()
+	sky_mat = ShaderMaterial.new()
 	sky_mat.shader = SKY_SHADER
 	sky.sky_material = sky_mat
 	sky.radiance_size = Sky.RADIANCE_SIZE_32
@@ -208,6 +232,16 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _process(dt: float) -> void:
+	# Relâmpago: céu e cidade piscam; decai rápido.
+	if _flash > 0.0 or _flash_t > 0.0:
+		_flash_t += dt
+		_flash = maxf(0.0, _flash - dt * 2.2)
+		var f := _flash * (0.55 + 0.45 * absf(sin(_flash_t * 37.0)))
+		sky_mat.set_shader_parameter("flash", f)
+		env.ambient_light_energy = 0.42 + f * 1.3
+		sun.light_energy = 1.05 + f * 1.2
+		if _flash <= 0.0:
+			_flash_t = 0.0
 	# Métricas de desempenho no console (somente em desenvolvimento).
 	if not OS.is_debug_build():
 		return
