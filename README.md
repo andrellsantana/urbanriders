@@ -2,10 +2,10 @@
 
 Corrida 3D de bicicletas em **Red City** — Godot 4 + GDScript tipado, para macOS.
 
-> **Estado atual:** protótipo da Fase 1–2 (bicicleta, câmera e pista de testes).
-> Personagem e cenário são **geometria provisória**.
+> **Estado atual:** Fase 3 — bairro de Red City com circuito de 1,5 km, checkpoints e cronômetro.
+> Personagem e cenário são **geometria provisória** (visual definitivo fica para a versão 2).
 
-![Protótipo](docs/screenshots/prototipo_avenida.png)
+![Bairro de Red City](docs/screenshots/bairro_esquina.png)
 
 ## Como jogar no Mac
 
@@ -18,7 +18,9 @@ Corrida 3D de bicicletas em **Red City** — Godot 4 + GDScript tipado, para mac
    (Se já tiver a pasta: `git pull`.)
 3. Na Godot: **Importar** → selecione `urbanriders/project.godot` → **Importar e Editar**.
    Se a Godot perguntar sobre converter/atualizar o projeto para a versão nova, aceite.
-4. Pressione **F5** (ou o botão ▶ no canto superior direito) para jogar.
+4. Pressione **Cmd + B** (ou clique no botão ▶ no canto superior direito) para jogar.
+   *(No Mac, F5 só funciona como **fn + F5**.)*
+5. Para a pista de testes da física: abra `scenes/test_track.tscn` e pressione **Cmd + R** (rodar cena atual).
 
 ## Controles
 
@@ -31,17 +33,17 @@ Corrida 3D de bicicletas em **Red City** — Godot 4 + GDScript tipado, para mac
 | **R** | Reiniciar |
 | **Esc** | Sair |
 
-## O que testar na pista
+## O que testar
 
-- **Avenida:** pedalar, acelerar com S, frear e fazer curvas; veja a inclinação nas curvas.
-- **Cones (slalom):** zigue-zague logo após a largada.
-- **Postes e prédios:** bater rápido derruba (perde um coração); encostar devagar não.
-- **Rampa** (lado direito da avenida): subida reduz a velocidade, descida acelera.
-- **Asfalto molhado** (roxo, à esquerda no fim da avenida) e **grama** (à direita): menos aderência —
-  curva fechada em alta velocidade derrapa e derruba.
-- **Energia:** turbo contínuo esgota a energia → "CANSADO!" e sem turbo até recuperar.
-- **Três quedas** = perde a corrida.
-- **Câmera:** de costas, garoto e bicicleta inteiros; não atravessa paredes.
+**Corrida no bairro (cena principal):**
+- Contagem 3-2-1-JÁ!, depois siga a **seta amarela** no topo e o **minimapa** (canto superior direito).
+- Passe pelos **12 checkpoints em ordem** (portal com cortina amarela) e cruze a **LARGADA/CHEGADA**.
+- Ruas fora da rota estão fechadas por **barreiras laranja e brancas**.
+- **Poças** (manchas vermelhas) perto de duas esquinas e numa reta: curva rápida nelas derruba.
+- Andar na contramão mostra **SENTIDO ERRADO!**. Três quedas = corrida perdida.
+- Ao chegar: tempo e **recorde** (salvo no computador).
+
+**Pista de testes** (`scenes/test_track.tscn`): slalom de cones, rampa, piso molhado, grama e muros.
 
 ## Testes automatizados
 

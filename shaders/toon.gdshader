@@ -3,10 +3,12 @@ shader_type spatial;
 render_mode specular_disabled;
 
 uniform vec4 albedo : source_color = vec4(1.0);
+uniform bool use_vertex_color = false;
 uniform float rim_strength = 0.25;
 
 void fragment() {
-	ALBEDO = albedo.rgb;
+	vec3 vc = use_vertex_color ? pow(COLOR.rgb, vec3(2.2)) : vec3(1.0);
+	ALBEDO = albedo.rgb * vc;
 	ROUGHNESS = 1.0;
 	METALLIC = 0.0;
 }

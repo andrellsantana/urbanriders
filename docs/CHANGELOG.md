@@ -1,5 +1,16 @@
 # Registro de alterações
 
+## v0.3 — Fase 3: bairro de Red City (2026-11-09)
+- Bairro residencial do interior americano: grade de ruas, ~280 casas baixas (varanda, garagem, chaminé,
+  janelas acesas), gramados, calçadas, entradas de carro, árvores de outono, arbustos, cercas, caixas de correio,
+  picapes estacionadas, postes com fios, 2 praças, cinturão de árvores, caixa d'água e placa de Red City.
+- Circuito de 1.470 m com 12 checkpoints + largada/chegada, contagem regressiva, cronômetro, recorde,
+  aviso de contramão, seta para o próximo checkpoint e minimapa giratório.
+- Barreiras fecham as ruas fora da rota; poças de baixa aderência em pontos do circuito.
+- Malhas agrupadas para desempenho (~90 malhas para todo o cenário).
+- Pista de testes da física preservada em `scenes/test_track.tscn`.
+- 70 testes automatizados (incluindo uma volta completa com piloto automático: 4:03 sem turbo).
+
 ## v0.1 — Protótipo Fase 1–2 (2026-11-08)
 - Projeto Godot 4 (renderizador Mobile), estrutura de pastas e documentação.
 - Controlador da bicicleta com física híbrida: aceleração progressiva, inércia, resistência do ar e de

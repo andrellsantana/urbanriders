@@ -22,10 +22,15 @@ scripts/physics/stamina.gd       resistência física (energia)
 scripts/player/bike_controller.gd CharacterBody3D: estados RIDING/CRASHED/OUT, quedas, recuperação
 scripts/player/rider_visual.gd   modelo provisório + animação procedural (IK das pernas)
 scripts/ui/hud.gd                HUD desenhado (retrato, corações, energia, velocidade, turbo)
-scripts/world/test_track.gd      pista de testes procedural
+scripts/world/test_track.gd      pista de testes da física (scenes/test_track.tscn)
+scripts/world/neighborhood.gd    bairro de Red City: grade de ruas, ~280 casas, postes, barreiras, poças
+scripts/world/mesh_batcher.gd    agrupa ~12 mil primitivas em ~90 malhas (cor por vértice + contorno)
+scripts/race/circuit.gd          laço de 1.470 m, checkpoints, projeção de progresso
+scripts/race/race_manager.gd     contagem, checkpoints em ordem, cronômetro, chegada, recorde, contramão
 shaders/toon.gdshader            Cel Shading
 shaders/outline.gdshader         contorno de quadrinho (casca invertida)
 shaders/red_sky.gdshader         céu vermelho tempestuoso
+shaders/unlit_vc.gdshader        janelas acesas (sem iluminação)
 tests/run_tests.gd               testes de unidade e integração
 ```
 
@@ -49,3 +54,17 @@ tests/run_tests.gd               testes de unidade e integração
 | Turbo (S) | até −9 %/s |
 | ≤ 10 % | "Cansado": sem turbo até voltar a 30 % |
 | < 40 % | velocidade máxima reduzida (até 70 %) |
+
+## Bairro e desempenho
+- Mundo de ~525 × 540 m: 8 × 7 ruas, 42 quarteirões (2 praças), casas de 1 andar (algumas de 1½), altura máxima 7 m.
+- Toda a geometria estática é gerada por código e **agrupada por células de 130 m** em 3 camadas
+  (sólida com contorno, plana sem contorno, janelas acesas): ~90 malhas no total, com corte por distância (340 m).
+- Contorno das malhas agrupadas: direção calculada por vértice (o·n = 1 em cada face) e guardada em `CUSTOM0`.
+- Colisão em poucos `StaticBody3D` (um por célula) com formas simples.
+- Montagem do bairro: ~1,2 s.
+
+## Corrida
+- Checkpoints são planos verticais testados pela travessia (lado anterior → posterior), na ordem;
+  pular um checkpoint não conta, e a chegada só vale após todos.
+- Barreiras nas ruas laterais de toda interseção da rota impedem desvios.
+- Recorde salvo em `user://recordes.cfg`.

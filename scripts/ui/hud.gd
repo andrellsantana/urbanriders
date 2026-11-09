@@ -2,6 +2,9 @@ extends CanvasLayer
 ## HUD: retrato, corações (quedas permitidas), energia, velocidade, turbo e mensagens.
 
 const BikeController := preload("res://scripts/player/bike_controller.gd")
+const RaceManager := preload("res://scripts/race/race_manager.gd")
+const Circuit := preload("res://scripts/race/circuit.gd")
+const Neighborhood := preload("res://scripts/world/neighborhood.gd")
 
 var player: BikeController
 var canvas: Control
@@ -9,6 +12,11 @@ var font: Font
 var message: String = ""
 var message_timer: float = 0.0
 var game_over: bool = false
+var race: RaceManager
+var big_text: String = ""
+var big_timer: float = 0.0
+var result_lines: PackedStringArray = PackedStringArray()
+var cp_flash: float = 0.0
 
 
 func _ready() -> void:
@@ -25,6 +33,28 @@ func setup(p: BikeController) -> void:
 	player.crashed.connect(_on_crashed)
 	player.recovered.connect(_on_recovered)
 	player.out_of_hearts.connect(_on_out)
+
+
+func setup_race(r: RaceManager) -> void:
+	race = r
+	race.countdown_changed.connect(func(v: int) -> void:
+		big_text = str(v) if v > 0 else ""
+		big_timer = 1.0)
+	race.race_started.connect(func() -> void:
+		big_text = "JÁ!"
+		big_timer = 1.0)
+	race.checkpoint_passed.connect(func(_i: int, _t: int) -> void: cp_flash = 1.0)
+	race.race_finished.connect(_on_finished)
+	race.race_lost.connect(_on_out)
+
+
+func _on_finished(time: float, best: float) -> void:
+	game_over = true
+	message = ""
+	var record := absf(time - best) < 0.001
+	result_lines = PackedStringArray(["CHEGADA!", "Tempo: %s" % RaceManager.format_time(time),
+		("NOVO RECORDE!" if record else "Recorde: %s" % RaceManager.format_time(best)),
+		"Pressione R para correr de novo"])
 
 
 func _on_crashed(hearts_left: int, reason: String) -> void:
@@ -44,6 +74,8 @@ func _on_out() -> void:
 
 
 func _process(dt: float) -> void:
+	big_timer = maxf(0.0, big_timer - dt)
+	cp_flash = maxf(0.0, cp_flash - dt)
 	if message_timer > 0.0:
 		message_timer -= dt
 		if message_timer <= 0.0 and not game_over:
@@ -127,8 +159,110 @@ func _on_draw() -> void:
 	# Ajuda de controles.
 	_text(Vector2(40, vp.y - 40), "Cima/W pedalar  ·  S acelerar  ·  Baixo/Espaço frear  ·  Esq/Dir ou A/D curvas  ·  R reiniciar  ·  Esc sair", 20, Color(0.92, 0.88, 0.85))
 
+	if race != null:
+		_draw_race(vp)
+
 	if message != "":
 		var lines := message.split("\n")
 		for i in lines.size():
 			_text(Vector2(0, vp.y * 0.38 + i * 64), lines[i], 52 if i == 0 else 32,
 					Color(1, 0.9, 0.85), HORIZONTAL_ALIGNMENT_CENTER, vp.x)
+
+
+# ------------------------------------------------------------------- corrida
+
+func _draw_race(vp: Vector2) -> void:
+	var cx := vp.x * 0.5
+	# Cronômetro e checkpoints.
+	_text(Vector2(0, 70), RaceManager.format_time(race.race_time), 54, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, vp.x)
+	var cp_col := Color(1, 0.85, 0.3).lerp(Color.WHITE, 1.0 - cp_flash)
+	var passed := mini(race.next_gate, race.checkpoint_total())
+	_text(Vector2(0, 108), "CHECKPOINT %d/%d" % [passed, race.checkpoint_total()], 26, cp_col, HORIZONTAL_ALIGNMENT_CENTER, vp.x)
+	if race.phase == RaceManager.Phase.RACING:
+		_draw_arrow(Vector2(cx, 160), race.next_gate_position())
+	if race.wrong_way and race.phase == RaceManager.Phase.RACING:
+		_text(Vector2(0, vp.y * 0.3), "SENTIDO ERRADO!", 56, Color(1, 0.3, 0.2), HORIZONTAL_ALIGNMENT_CENTER, vp.x)
+	if big_timer > 0.0 and big_text != "":
+		var size := int(170 + 60 * (1.0 - big_timer))
+		_text(Vector2(0, vp.y * 0.45), big_text, size, Color(1, 0.9, 0.4).lerp(Color.WHITE, big_timer),
+				HORIZONTAL_ALIGNMENT_CENTER, vp.x)
+	if result_lines.size() > 0:
+		var box := Rect2(Vector2(cx - 380, vp.y * 0.3), Vector2(760, 330))
+		canvas.draw_rect(box, Color(0.05, 0.0, 0.03, 0.82))
+		canvas.draw_rect(box, Color(1, 0.75, 0.3), false, 4.0)
+		for i in result_lines.size():
+			_text(Vector2(box.position.x, box.position.y + 90 + i * 72), result_lines[i],
+					72 if i == 0 else 38, Color(1, 0.85, 0.4) if i == 0 else Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, box.size.x)
+	_draw_minimap(Vector2(vp.x - 170, 230), 125.0)
+
+
+## Seta que aponta para o próximo checkpoint (relativa à direção do ciclista).
+func _draw_arrow(c: Vector2, target: Vector3) -> void:
+	var to := target - player.global_position
+	var fwd := player.forward()
+	var right := fwd.cross(Vector3.UP)
+	var ang := atan2(to.dot(right), to.dot(fwd))
+	var pts := PackedVector2Array([Vector2(0, -26), Vector2(18, 14), Vector2(0, 4), Vector2(-18, 14)])
+	var outline := PackedVector2Array()
+	var fill := PackedVector2Array()
+	for p in pts:
+		fill.append(c + p.rotated(ang))
+		outline.append(c + (p * 1.25).rotated(ang))
+	canvas.draw_colored_polygon(outline, Color(0.05, 0.0, 0.02))
+	canvas.draw_colored_polygon(fill, Color(1, 0.8, 0.25))
+	var dist := Vector2(to.x, to.z).length()
+	_text(Vector2(c.x - 100, c.y + 46), "%d m" % roundi(dist), 22, Color(1, 0.9, 0.7), HORIZONTAL_ALIGNMENT_CENTER, 200)
+
+
+## Minimapa circular que gira com o ciclista (frente para cima).
+func _draw_minimap(c: Vector2, r: float) -> void:
+	var k := r / 210.0
+	canvas.draw_circle(c, r + 6, Color(0.9, 0.86, 0.78))
+	canvas.draw_circle(c, r, Color(0.12, 0.1, 0.08))
+	var origin := player.global_position
+	var fwd := player.forward()
+	var right := fwd.cross(Vector3.UP)
+	var to_map := func(w: Vector3) -> Vector2:
+		var rel := w - origin
+		return c + Vector2(rel.dot(right), -rel.dot(fwd)) * k
+	var b := Neighborhood.bounds()
+	for i in Neighborhood.NX:
+		var x := Neighborhood.grid_x(i)
+		_clip_line(c, r, to_map.call(Vector3(x, 0, b.position.y)), to_map.call(Vector3(x, 0, b.end.y)), Color(0.42, 0.38, 0.36), 7.0)
+	for j in Neighborhood.NZ:
+		var z := Neighborhood.grid_z(j)
+		_clip_line(c, r, to_map.call(Vector3(b.position.x, 0, z)), to_map.call(Vector3(b.end.x, 0, z)), Color(0.42, 0.38, 0.36), 7.0)
+	var pts := race.circuit.points
+	for i in pts.size():
+		_clip_line(c, r, to_map.call(pts[i]), to_map.call(pts[(i + 1) % pts.size()]), Color(0.95, 0.55, 0.15), 5.0)
+	var ng: Vector2 = to_map.call(race.next_gate_position())
+	if ng.distance_to(c) < r - 6:
+		canvas.draw_circle(ng, 8, Color(1, 0.9, 0.3))
+	var fin: Vector2 = to_map.call(race.gates[race.gates.size() - 1]["pos"])
+	if fin.distance_to(c) < r - 6:
+		canvas.draw_rect(Rect2(fin - Vector2(7, 7), Vector2(14, 14)), Color.WHITE)
+	canvas.draw_colored_polygon(PackedVector2Array([c + Vector2(0, -13), c + Vector2(10, 10), c + Vector2(-10, 10)]), Color(1, 0.25, 0.2))
+	var north: Vector2 = (to_map.call(origin + Vector3(0, 0, -1000)) - c).normalized() * (r - 2) + c
+	canvas.draw_circle(north, 15, Color(0.9, 0.86, 0.78))
+	_text(north + Vector2(-8, 9), "N", 24, Color(0.1, 0.05, 0.05))
+	canvas.draw_arc(c, r + 3, 0, TAU, 64, Color(0.05, 0.0, 0.02), 4.0)
+
+
+## Desenha só a parte do segmento dentro do círculo.
+func _clip_line(c: Vector2, r: float, a: Vector2, b: Vector2, col: Color, width: float) -> void:
+	var d := b - a
+	var f := a - c
+	var qa := d.dot(d)
+	if qa < 0.0001:
+		return
+	var qb := 2.0 * f.dot(d)
+	var qc := f.dot(f) - r * r
+	var disc := qb * qb - 4.0 * qa * qc
+	if disc <= 0.0:
+		return
+	var sq := sqrt(disc)
+	var t0 := clampf((-qb - sq) / (2.0 * qa), 0.0, 1.0)
+	var t1 := clampf((-qb + sq) / (2.0 * qa), 0.0, 1.0)
+	if t1 - t0 <= 0.0:
+		return
+	canvas.draw_line(a + d * t0, a + d * t1, col, width)

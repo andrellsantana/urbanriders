@@ -15,6 +15,8 @@ enum State { RIDING, CRASHED, OUT }
 
 @export var config: BikeConfig
 @export var use_player_input: bool = true
+## Falso durante a contagem regressiva e após a chegada (segura no freio).
+var controls_enabled: bool = true
 
 var state: State = State.RIDING
 var speed: float = 0.0 ## m/s
@@ -109,6 +111,11 @@ func _read_input() -> void:
 
 func _physics_process(dt: float) -> void:
 	_read_input()
+	if not controls_enabled:
+		in_pedal = false
+		in_boost = false
+		in_brake = true
+		in_steer = 0.0
 	if state == State.RIDING:
 		_ride(dt)
 	else:

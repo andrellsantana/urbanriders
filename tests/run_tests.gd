@@ -7,6 +7,8 @@ const BikePhysics := preload("res://scripts/physics/bike_physics.gd")
 const Stamina := preload("res://scripts/physics/stamina.gd")
 const RiderVisual := preload("res://scripts/player/rider_visual.gd")
 const BikeController := preload("res://scripts/player/bike_controller.gd")
+const Circuit := preload("res://scripts/race/circuit.gd")
+const RaceManager := preload("res://scripts/race/race_manager.gd")
 
 var _passes: int = 0
 var _fails: int = 0
@@ -32,6 +34,9 @@ func _run() -> void:
 	_test_ik()
 	print("\n== Testes de integração ==")
 	await _test_integration()
+	print("\n== Bairro e corrida ==")
+	_test_circuit()
+	await _test_neighborhood_race()
 	print("\nResultado: %d ok, %d falhas\n" % [_passes, _fails])
 	quit(1 if _fails > 0 else 0)
 
@@ -165,7 +170,7 @@ func _wall(main: Node, pos: Vector3, size: Vector3) -> void:
 
 
 func _test_integration() -> void:
-	var main: Node = load("res://scenes/main.tscn").instantiate()
+	var main: Node = load("res://scenes/test_track.tscn").instantiate()
 	root.add_child(main)
 	await _frames(15)
 	var p: BikeController = main.get("player")
@@ -245,7 +250,7 @@ func _test_integration() -> void:
 	# Câmera não atravessa paredes
 	main.queue_free()
 	await _frames(2)
-	main = load("res://scenes/main.tscn").instantiate()
+	main = load("res://scenes/test_track.tscn").instantiate()
 	root.add_child(main)
 	p = main.get("player")
 	await _frames(3)
@@ -278,5 +283,166 @@ func _test_integration() -> void:
 		if sp.x < 0 or sp.y < 0 or sp.x > vp_size.x or sp.y > vp_size.y:
 			all_in = false
 	check(all_in, "câmera enquadra o garoto e a bicicleta inteiros")
+	main.queue_free()
+	await _frames(2)
+
+
+# ------------------------------------------------------- bairro e corrida
+
+func _test_circuit() -> void:
+	var c := Circuit.new()
+	check(c.length > 1400.0 and c.length < 1600.0, "circuito com ~1,5 km (%.0f m)" % c.length)
+	var gates := c.build_gates()
+	check(gates.size() == Circuit.CHECKPOINT_COUNT + 1 and gates[-1]["finish"], "12 checkpoints + chegada")
+	var ordered := true
+	for i in range(1, gates.size() - 1):
+		if gates[i]["distance"] <= gates[i - 1]["distance"]:
+			ordered = false
+	check(ordered, "checkpoints em ordem ao longo do percurso")
+	var on_route := true
+	for g in gates:
+		if c.project(g["pos"])["lateral"] > 0.01:
+			on_route = false
+	check(on_route, "checkpoints sobre a rota")
+	var p := c.project(Vector3(3, 0, -100))
+	check(absf(p["distance"] - 100.0) < 0.01 and absf(p["lateral"] - 3.0) < 0.01, "projeção na rota (progresso e desvio)")
+	check(RaceManager.format_time(83.456) == "1:23.46", "formato do cronômetro")
+
+
+func _cross(p: BikeController, gate: Dictionary) -> void:
+	var pos: Vector3 = gate["pos"]
+	var dir: Vector3 = gate["dir"]
+	_place(p, pos - dir * 2.0, atan2(-dir.x, -dir.z), 0.0)
+	await _frames(3)
+	_place(p, pos + dir * 2.0, atan2(-dir.x, -dir.z), 0.0)
+	await _frames(3)
+
+
+func _test_neighborhood_race() -> void:
+	var main: Node = load("res://scenes/main.tscn").instantiate()
+	root.add_child(main)
+	await _frames(20)
+	var p: BikeController = main.get("player")
+	var race: RaceManager = main.get("race")
+	var world: Node = main.get("world")
+	race.save_records = false
+	check(p.is_on_floor(), "ciclista no chão na largada do bairro")
+	var load_ms: int = main.get("load_time_ms")
+	check(load_ms < 10000, "bairro monta em menos de 10 s (%d ms)" % load_ms)
+
+	var tops: Array[float] = world.get("house_tops")
+	check(tops.size() >= 200, "bairro expandido: %d casas" % tops.size())
+	check(tops.max() <= 8.0, "casas baixas: a mais alta tem %.1f m" % tops.max())
+	var meshes: int = world.get("mesh_instance_count")
+	check(meshes < 200, "cenário agrupado em poucas malhas (%d)" % meshes)
+	var bars: Array[Vector3] = world.get("barricades")
+	check(bars.size() > 10, "barreiras fecham ruas fora da rota (%d)" % bars.size())
+
+	# Rota livre de obstáculos (faixa central ±2,5 m).
+	var space := p.get_world_3d().direct_space_state
+	var sphere := SphereShape3D.new()
+	sphere.radius = 0.5
+	var q := PhysicsShapeQueryParameters3D.new()
+	q.shape = sphere
+	q.exclude = [p.get_rid()]
+	var blocked := 0
+	var d := 0.0
+	while d < race.circuit.length:
+		var s := race.circuit.sample(d)
+		var right: Vector3 = (s["dir"] as Vector3).cross(Vector3.UP)
+		for off: float in [-2.5, 0.0, 2.5]:
+			q.transform = Transform3D(Basis.IDENTITY, (s["pos"] as Vector3) + right * off + Vector3(0, 0.8, 0))
+			if space.intersect_shape(q, 1).size() > 0:
+				blocked += 1
+		d += 5.0
+	check(blocked == 0, "rota do circuito livre de obstáculos (%d bloqueios)" % blocked)
+	var side_hit := 0
+	for b in bars:
+		q.transform = Transform3D(Basis.IDENTITY, b + Vector3(0, 0.8, 0))
+		if space.intersect_shape(q, 1).size() > 0:
+			side_hit += 1
+	check(side_hit == bars.size(), "barreiras têm colisão")
+
+	# Contagem regressiva bloqueia a largada.
+	check(race.phase == RaceManager.Phase.COUNTDOWN, "corrida começa em contagem regressiva")
+	Input.action_press("pedalar")
+	await _frames(60)
+	check(p.speed < 0.1, "não anda durante a contagem")
+	await _frames(int(RaceManager.COUNTDOWN_TIME * 60.0))
+	check(race.phase == RaceManager.Phase.RACING, "largada após 3 s")
+	await _frames(60)
+	check(p.speed_kmh() > 5.0 and race.race_time > 0.5, "pedala e o cronômetro corre")
+	Input.action_release("pedalar")
+
+	# Pular checkpoint não conta.
+	await _cross(p, race.gates[1])
+	check(race.next_gate == 0, "atalho: pular o checkpoint 1 não conta")
+	await _cross(p, race.gates[0])
+	check(race.next_gate == 1, "checkpoint 1 registrado")
+	await _cross(p, race.gates[race.gates.size() - 1])
+	check(race.phase == RaceManager.Phase.RACING, "cruzar a chegada sem os checkpoints não termina a corrida")
+	for i in range(1, race.gates.size() - 1):
+		await _cross(p, race.gates[i])
+	check(race.next_gate == race.gates.size() - 1, "todos os checkpoints em ordem")
+	await _cross(p, race.gates[race.gates.size() - 1])
+	check(race.phase == RaceManager.Phase.FINISHED and race.race_time > 0.0, "chegada encerra a corrida")
+	var hud: Node = main.get("hud")
+	var lines: PackedStringArray = hud.get("result_lines")
+	check(lines.size() > 0 and lines[0] == "CHEGADA!", "HUD mostra resultado")
+	check(not p.controls_enabled, "controles travados após a chegada")
+	main.queue_free()
+	await _frames(2)
+
+	await _test_full_lap()
+
+	# Três quedas = derrota na corrida.
+	main = load("res://scenes/main.tscn").instantiate()
+	root.add_child(main)
+	await _frames(10)
+	p = main.get("player")
+	race = main.get("race")
+	race.save_records = false
+	await _frames(int(RaceManager.COUNTDOWN_TIME * 60.0) + 5)
+	for k in 3:
+		p.call("_crash", "teste", Vector3.ZERO)
+		await _frames(2)
+	check(race.phase == RaceManager.Phase.LOST, "três quedas: corrida perdida")
+	main.queue_free()
+	await _frames(2)
+
+
+## Piloto automático simples percorre a volta inteira pedalando (física real).
+func _test_full_lap() -> void:
+	var main: Node = load("res://scenes/main.tscn").instantiate()
+	root.add_child(main)
+	await _frames(10)
+	var p: BikeController = main.get("player")
+	var race: RaceManager = main.get("race")
+	race.save_records = false
+	p.use_player_input = false
+	var c := race.circuit
+	var max_frames := 60 * 60 * 6
+	var f := 0
+	while f < max_frames and race.phase != RaceManager.Phase.FINISHED and race.phase != RaceManager.Phase.LOST:
+		var proj := c.project(p.global_position)
+		var target: Vector3 = c.sample(proj["distance"] + 7.0)["pos"]
+		var to := target - p.global_position
+		to.y = 0.0
+		var fwd := p.forward()
+		var ang := atan2(fwd.cross(to).y, fwd.dot(to))
+		p.in_steer = clampf(ang * 2.5, -1.0, 1.0)
+		var to_corner := INF
+		for i in c.points.size() + 1:
+			var cd: float = c.cumulative[i] - float(proj["distance"])
+			if cd > 0.0:
+				to_corner = minf(to_corner, cd)
+		var slow := to_corner < 14.0 and p.speed > 4.5
+		p.in_brake = slow
+		p.in_pedal = not slow
+		await physics_frame
+		f += 1
+	check(race.phase == RaceManager.Phase.FINISHED, "volta completa pedalando pelo circuito (%s)" % RaceManager.format_time(race.race_time))
+	check(race.race_time > 150.0 and race.race_time < 330.0, "duração da corrida dentro de 3–5 min (ritmo normal, sem turbo)")
+	check(p.hearts == p.config.max_hearts, "piloto cuidadoso completa sem quedas")
 	main.queue_free()
 	await _frames(2)
