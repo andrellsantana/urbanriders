@@ -87,6 +87,20 @@ func _test_stamina() -> void:
 	check(float(lu.get("rest_below")) > 0.0 and float(ru.get("rest_below")) > 0.0 and float(mi.get("rest_below")) > 0.0,
 			"todos param de pedalar para recuperar energia")
 
+	check(float(lu.get("knock_resistance_kmh")) > float(mi.get("knock_resistance_kmh")) and float(mi.get("knock_resistance_kmh")) > float(ru.get("knock_resistance_kmh")),
+			"resistência a quedas: Lucienne > Mint > Russ")
+	check(float(ru.get("ramp_boost_mult")) >= 1.1 and float(ru.get("accel_mult")) <= 0.75,
+			"Russ: impulso de rampa 10% maior e aceleração 25% menor")
+	check(lu.get("avoids_puddles") and not mi.get("avoids_puddles") and not ru.get("avoids_puddles"),
+			"só a Lucienne contorna poças")
+	check(mi.get("overtake_specialist") and float(mi.get("evade_speed")) > float(lu.get("evade_speed")) \
+			and float(mi.get("resist_vs_russ")) > 1.0 and float(mi.get("recovery_mult")) >= 1.05,
+			"Mint: ultrapassa e desvia melhor, resiste ao Russ, fica 5% mais no chão")
+	check(lu.get("blocks_overtakes") and ru.get("blocks_overtakes") and not mi.get("blocks_overtakes"),
+			"Lucienne e Russ dificultam ultrapassagens")
+	check(float(lu.get("top_speed_kmh")) > float(ru.get("top_speed_kmh")) and float(mi.get("corner_speed_kmh")) > float(ru.get("corner_speed_kmh")),
+			"Lucienne mais rápida na reta, Mint nas curvas")
+
 	var d := Stamina.new()
 	for i in 60 * 30:
 		d.update(Stamina.Effort.BOOST, 1.0, 1.0 / 60.0)
@@ -250,6 +264,24 @@ func _test_integration() -> void:
 	await _frames(40)
 	Input.action_release("pedalar")
 	check(p.state == BikeController.State.RIDING, "encostar devagar na parede não derruba")
+
+	# Esbarrão leve empurra; batida forte derruba (conforme a resistência).
+	var dummy := BikeController.new()
+	dummy.name = "Russ"
+	main.add_child(dummy)
+	await _frames(2)
+	var hearts_before := p.hearts
+	p.call("receive_hit", 10.0 / 3.6, dummy, Vector3.RIGHT)
+	check(p.state == BikeController.State.RIDING and p.hearts == hearts_before, "esbarrão leve (10 km/h) não derruba")
+	await _frames(20)
+	dummy.knock_resistance_kmh = 14.0
+	dummy.call("receive_hit", 17.0 / 3.6, p, Vector3.LEFT)
+	check(dummy.state != BikeController.State.RIDING, "Russ cai com batida de 17 km/h (cai mais fácil)")
+	p.knock_resistance_kmh = 28.0
+	p.call("receive_hit", 22.0 / 3.6, dummy, Vector3.RIGHT)
+	check(p.state == BikeController.State.RIDING, "resistente (Lucienne) aguenta batida de 22 km/h")
+	p.knock_resistance_kmh = 20.0
+	dummy.queue_free()
 
 	# Perda de controle no asfalto molhado
 	_place(p, Vector3(-5, 0.3, -96), 0.0, 9.0)

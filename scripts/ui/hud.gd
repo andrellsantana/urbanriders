@@ -353,7 +353,7 @@ func _draw_standings(vp: Vector2) -> void:
 func _draw_results(vp: Vector2) -> void:
 	var cx := vp.x * 0.5
 	var order := race.standings()
-	var box := Rect2(Vector2(cx - 400, vp.y * 0.22), Vector2(800, 220 + order.size() * 58))
+	var box := Rect2(Vector2(cx - 440, vp.y * 0.2), Vector2(880, 290 + order.size() * 58))
 	canvas.draw_rect(box, Color(0.05, 0.0, 0.03, 0.86))
 	canvas.draw_rect(box, Color(1, 0.75, 0.3), false, 4.0)
 	var lost := race.phase == RaceManager.Phase.LOST
@@ -375,6 +375,13 @@ func _draw_results(vp: Vector2) -> void:
 		_text(Vector2(box.position.x + 110, y), "%s  %s" % [ordinal(k + 1), race.rider_names[i]], 34, col)
 		_text(Vector2(box.position.x, y), t, 34, col, HORIZONTAL_ALIGNMENT_RIGHT, box.size.x - 80)
 		y += 58.0
+	if race.phase == RaceManager.Phase.FINISHED:
+		var st: Dictionary = race.stats
+		var avg := float(st["dist"]) / maxf(race.race_time, 1.0) * 3.6
+		_text(Vector2(box.position.x, y + 104), "Média %.0f km/h · Máx %.0f · Turbo %.0fs · Acima de 25 km/h sem turbo %.0fs" % [
+			avg, float(st["max"]), float(st["boost"]), float(st["fast_no_boost"])], 22, Color(0.85, 0.8, 0.75), HORIZONTAL_ALIGNMENT_CENTER, box.size.x)
+		_text(Vector2(box.position.x, y + 132), "Aceleradores %d · Rampas %d · Fora do asfalto %.0fs · Percorrido %.0f m" % [
+			player.pads_hit, player.ramps_hit, float(st["offroad"]), float(st["dist"])], 22, Color(0.85, 0.8, 0.75), HORIZONTAL_ALIGNMENT_CENTER, box.size.x)
 	var foot := "Recorde: %s" % RaceManager.format_time(race.best_time) if race.best_time > 0.0 else ""
 	if result_lines.size() > 2 and result_lines[2] == "NOVO RECORDE!":
 		foot = "NOVO RECORDE!"

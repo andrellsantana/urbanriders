@@ -60,6 +60,13 @@ const PAD_SPEED := 12.2 ## m/s (44 km/h) no acelerador
 var _air_time: float = 0.0
 ## Impulso extra ao pousar de rampa (segundos), por personagem.
 var ramp_bonus: float = 0.0
+var ramp_boost_mult: float = 1.0 ## Russ: 1,1 (impulso de rampa 10% maior)
+var knock_resistance_kmh: float = 20.0 ## batida relativa que derruba
+var resistance_vs: Dictionary = {} ## multiplicador de resistência contra um rival específico
+var recovery_mult: float = 1.0 ## tempo no chão (Mint: 1,05)
+var pads_hit: int = 0
+var ramps_hit: int = 0
+var _pad_target: float = 12.2
 const MAX_BUMP := 1.8 ## m/s máximos de empurrão acumulado
 
 const LAYER_WORLD := 1
@@ -179,8 +186,8 @@ func _ride(dt: float) -> void:
 	var accel := BikePhysics.longitudinal_accel(cfg, speed, pedaling, physics_boost, brake_level,
 			1.0 if scared else stamina.performance(), slope_sin)
 	speed = BikePhysics.step_speed(cfg, speed, accel, dt)
-	if _pad_timer > 0.0 and speed < PAD_SPEED:
-		speed = move_toward(speed, PAD_SPEED, 9.0 * dt)
+	if _pad_timer > 0.0 and speed < _pad_target:
+		speed = move_toward(speed, _pad_target, 9.0 * dt * (_pad_target / PAD_SPEED))
 
 	# Direção com equilíbrio assistido e limite de aderência do piso.
 	steer = move_toward(steer, in_steer, cfg.steer_response * dt)
@@ -231,6 +238,8 @@ func _ride(dt: float) -> void:
 		if _air_time > 0.25 and speed > 4.0:
 			# Pouso de rampa: impulso extra.
 			_pad_timer = maxf(_pad_timer, 1.0 + ramp_bonus)
+			_pad_target = PAD_SPEED * ramp_boost_mult
+			ramps_hit += 1
 			special.emit("rampa")
 		_air_time = 0.0
 	_check_impacts(pre_velocity)
@@ -250,15 +259,14 @@ func _check_impacts(pre_velocity: Vector3) -> void:
 			var ov: Vector3 = (other as CharacterBody3D).velocity
 			var rel := flat_pre - Vector3(ov.x, 0.0, ov.z)
 			var hit := -rel.dot(n)
-			if hit > config.rider_crash_kmh / BikePhysics.KMH and _grace_timer <= 0.0:
-				_crash("Trombou em outro ciclista!", n)
-				return
 			if hit > 0.2 and _bump_cooldown <= 0.0:
-				other.receive_bump(-n * hit * 0.6)
-				_bump = (_bump + n * hit * 0.4).limit_length(MAX_BUMP)
-				_bump_cooldown = 0.25
+				# Os dois sentem a batida; cada um cai conforme a própria resistência.
+				other.call("receive_hit", hit, self, -n)
+				_bump_cooldown = 0.0
+				receive_hit(hit * 0.85, other as CharacterBody3D, n)
+				if state != State.RIDING:
+					return
 				speed = maxf(0.0, speed - hit * 0.5)
-				bumped.emit(hit)
 			continue
 		var impact := -flat_pre.dot(n)
 		if impact > config.crash_impact_kmh / BikePhysics.KMH and _grace_timer <= 0.0:
@@ -268,6 +276,20 @@ func _check_impacts(pre_velocity: Vector3) -> void:
 			speed = Vector2(velocity.x, velocity.z).length()
 
 
+## Batida de outro ciclista: abaixo da resistência só empurra; acima, derruba.
+func receive_hit(hit: float, from: CharacterBody3D, push_dir: Vector3) -> void:
+	if state != State.RIDING or _bump_cooldown > 0.0:
+		return
+	var res := knock_resistance_kmh / BikePhysics.KMH
+	if from != null:
+		res *= float(resistance_vs.get(String(from.name), 1.0))
+	if hit > res and _grace_timer <= 0.0:
+		var who := String(from.name) if from != null else "outro ciclista"
+		_crash("Derrubado por %s!" % who if from != null else "Trombou!", push_dir)
+		return
+	receive_bump(push_dir * hit * 0.6)
+
+
 ## Empurrão recebido de outro ciclista (desequilibra um pouco).
 func receive_bump(v: Vector3) -> void:
 	if state != State.RIDING or _bump_cooldown > 0.0:
@@ -275,7 +297,7 @@ func receive_bump(v: Vector3) -> void:
 	_bump_cooldown = 0.25
 	_bump = (_bump + Vector3(v.x, 0.0, v.z)).limit_length(MAX_BUMP)
 	bumped.emit(v.length())
-	_overload_timer += v.length() * 0.08
+	_overload_timer += v.length() * 0.03
 
 
 ## Acelerador no chão: impulso até 44 km/h sem gastar energia.
@@ -283,6 +305,8 @@ func pad_boost() -> void:
 	if state != State.RIDING:
 		return
 	_pad_timer = 1.6
+	_pad_target = PAD_SPEED
+	pads_hit += 1
 	special.emit("acelerador")
 
 
@@ -342,7 +366,7 @@ func _crash(reason: String, wall_normal: Vector3) -> void:
 	crash_count += 1
 	hearts = maxi(hearts - 1, 0)
 	_crash_normal = wall_normal
-	_crash_timer = config.recovery_time
+	_crash_timer = config.recovery_time * recovery_mult
 	_overload_timer = 0.0
 	boost_level = 0.0
 	brake_level = 0.0

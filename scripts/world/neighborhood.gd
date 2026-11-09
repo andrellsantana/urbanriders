@@ -40,7 +40,8 @@ var circuit := Circuit.new()
 var house_tops: Array[float] = []
 var barricades: Array[Vector3] = []
 var puddles: Array[Vector3] = []
-var parked_cars: Array[Vector3] = [] ## carros estacionados nas ruas da corrida (para o trânsito desviar)
+var parked_cars: Array[Vector3] = []
+var puddle_zones: Array[Dictionary] = [] ## {"pos", "size"} ## carros estacionados nas ruas da corrida (para o trânsito desviar)
 var mesh_instance_count: int = 0
 var _rng := RandomNumberGenerator.new()
 var _bodies: Dictionary = {}
@@ -517,13 +518,15 @@ func _barricade(c: Vector3, rot: float) -> void:
 # --------------------------------------------------------------------- poças
 
 func _build_puddles() -> void:
-	_puddle_zone(Vector3(136, 0, -270), Vector2(14, 9))
-	_puddle_zone(Vector3(360, 0, -360), Vector2(14, 9))
-	_puddle_zone(Vector3(375, 0, -215), Vector2(8, 16))
+	# Cobrem parte da rua: sempre sobra uma faixa seca para quem sabe contornar.
+	_puddle_zone(Vector3(136, 0, -271.5), Vector2(14, 6))
+	_puddle_zone(Vector3(360, 0, -358.5), Vector2(14, 6))
+	_puddle_zone(Vector3(376.5, 0, -215), Vector2(6, 16))
 
 
 func _puddle_zone(c: Vector3, size: Vector2) -> void:
 	puddles.append(c)
+	puddle_zones.append({"pos": c, "size": size})
 	var area := Area3D.new()
 	area.position = c + Vector3(0, 0.5, 0)
 	var cs := CollisionShape3D.new()

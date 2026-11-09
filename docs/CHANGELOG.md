@@ -1,5 +1,17 @@
 # Registro de alterações
 
+## v0.7 — Personalidades de duelo (2026-11-09)
+- Esbarrão leve só empurra; queda só com batida forte, conforme a resistência de cada um
+  (Lucienne 28 km/h, Mint 20 — 28 contra o Russ —, Russ 14, jogador 20).
+- Lucienne: a mais rápida na reta (43 km/h, turbo econômico), única que contorna poças, dificulta ultrapassagens.
+- Mint: a melhor nas curvas, especialista em ultrapassar (troca de lado rápido, acelera para passar),
+  desvia de barreiras com mais agilidade; fica 5% mais tempo no chão.
+- Russ: aceleração 25% menor, equilibrado (28 km/h na curva, 40 na reta), impulso de rampa 10% maior,
+  tenta derrubar todos, fecha ultrapassagens, cai com mais facilidade.
+- Poças cobrem parte da rua (sempre há faixa seca). Poça nunca faz a IA frear, só mudar de faixa.
+- Quadro de chegada mostra estatísticas do jogador (média, máxima, turbo, aceleradores, rampas, fora do asfalto).
+- 126 testes automatizados.
+
 ## v0.6.2 — Linha de corrida da IA (2026-11-09)
 - Rivais fazem a curva pela linha de corrida no asfalto (aberto → por dentro → aberto), freando bem menos;
   ninguém corta pela calçada (Russ não corta mais).

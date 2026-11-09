@@ -35,5 +35,15 @@ extends Resource
 @export var boost_efficiency: float = 1.0 ## gasto do turbo (0,8 = gasta 20% menos)
 @export var ramp_bonus: float = 0.0 ## segundos extras de impulso ao pousar de rampa
 @export var top_speed_kmh: float = 40.0 ## velocidade máxima com turbo (Lucienne: mais rápida na reta)
+@export_group("Duelo")
+@export var knock_resistance_kmh: float = 20.0 ## batida relativa que derruba (Lucienne 28, Russ 14)
+@export var resist_vs_russ: float = 1.0 ## Mint: 1,4 (mais difícil para o Russ derrubá-la)
+@export var recovery_mult: float = 1.0 ## tempo no chão (Mint: 1,05)
+@export var ramp_boost_mult: float = 1.0 ## impulso de rampa (Russ: 1,1)
+@export var blocks_overtakes: bool = false ## fecha quem tenta ultrapassar (Russ e Lucienne)
+@export var overtake_specialist: bool = false ## Mint: troca de lado rápido e acelera para passar
+@export var evade_speed: float = 4.0 ## m/s de troca de faixa ao desviar (Mint: 6)
+@export var avoids_puddles: bool = false ## contorna poças (só Lucienne)
+@export var accel_mult: float = 1.0 ## aceleração (Russ: 0,75 = 25% mais lento para ganhar velocidade)
 @export var form_variation: float = 5.0 ## "dia bom/ruim": sorteio de ±% de energia aceita no turbo
 @export var overtake_lookahead: float = 8.0

@@ -34,7 +34,9 @@ var wrong_way: bool = false
 var save_records: bool = true
 var finish_order: Array[int] = []
 var complete: bool = false ## todos terminaram (ou acabou o tempo extra)
-var hold: bool = false ## verdadeiro enquanto o menu inicial está aberto (contagem não começa)
+var hold: bool = false
+## Estatísticas do jogador (mostradas na chegada).
+var stats := {"dist": 0.0, "max": 0.0, "boost": 0.0, "offroad": 0.0, "fast_no_boost": 0.0} ## verdadeiro enquanto o menu inicial está aberto (contagem não começa)
 
 ## Estado por ciclista: next_gate, prev_side, finished, time, lost.
 var progress: Array[Dictionary] = []
@@ -108,6 +110,15 @@ func _physics_process(dt: float) -> void:
 	if phase == Phase.RACING:
 		race_time = clock
 		_check_wrong_way(dt)
+		var v := player.speed
+		stats["dist"] = float(stats["dist"]) + v * dt
+		stats["max"] = maxf(float(stats["max"]), v * 3.6)
+		if player.boosting:
+			stats["boost"] = float(stats["boost"]) + dt
+		elif v * 3.6 > 25.0:
+			stats["fast_no_boost"] = float(stats["fast_no_boost"]) + dt
+		if float(circuit.project(player.global_position)["lateral"]) > 5.6:
+			stats["offroad"] = float(stats["offroad"]) + dt
 	for i in riders.size():
 		if not progress[i]["finished"] and not progress[i]["lost"]:
 			_check_gate(i)

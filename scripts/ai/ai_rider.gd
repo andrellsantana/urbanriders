@@ -27,6 +27,13 @@ var _hazard_brake_time: float = 0.0
 var _ignore_hazards: float = 0.0
 var _evading: float = 0.0 ## desviando: troca de faixa mais rápida
 var _last_turn: float = 1.0
+var _overtaking: float = 0.0
+var puddle_zones: Array[Dictionary] = [] ## {"pos", "size"} (só quem contorna poças usa)
+var blocks_made: int = 0
+var _block_budget: float = 3.0 ## segundos de bloqueio seguidos (depois descansa)
+var _blocking: bool = false
+var _last_to_corner: float = 100.0
+var overtakes_tried: int = 0
 var _attractor_choice: Dictionary = {}
 var player_bike: BikeController
 var resting: bool = false ## soltou o pedal para recuperar energia
@@ -70,7 +77,14 @@ func setup(b: BikeController, c: Circuit, p: AIPersonality, all_riders: Array[Bi
 	_form = _rng.randf_range(-p.form_variation, p.form_variation)
 	b.stamina.drain_boost = 9.0 * p.boost_efficiency
 	b.ramp_bonus = p.ramp_bonus
+	b.ramp_boost_mult = p.ramp_boost_mult
+	b.knock_resistance_kmh = p.knock_resistance_kmh
+	b.recovery_mult = p.recovery_mult
+	if p.resist_vs_russ != 1.0:
+		b.resistance_vs["Russ"] = p.resist_vs_russ
 	b.config.max_speed_kmh = p.top_speed_kmh
+	b.config.acceleration *= p.accel_mult
+	b.config.boost_ramp_time /= p.accel_mult
 
 
 func _physics_process(dt: float) -> void:
@@ -86,6 +100,12 @@ func _physics_process(dt: float) -> void:
 	var my_lat := circuit.signed_lateral(bike.global_position)
 
 	var to_corner := circuit.distance_to_next_corner(dist)
+	_last_to_corner = to_corner
+	if _blocking:
+		blocks_made += 1
+	elif _block_budget < 3.0:
+		_block_budget = minf(3.0, _block_budget + dt * 0.6) # recarrega devagar
+	_blocking = false
 	var gap_player := _gap_to_player(dist)
 	if finished:
 		desired_lane = 2.2
@@ -112,7 +132,10 @@ func _physics_process(dt: float) -> void:
 	desired_lane = clampf(desired_lane, -max_lane, max_lane)
 	var hazard_brake := _avoid_hazards(route_dir, my_lat)
 	_evading = maxf(0.0, _evading - dt)
-	var lane_speed := maxf(personality.lane_change_speed, 4.0) if _evading > 0.0 else personality.lane_change_speed
+	_overtaking = maxf(0.0, _overtaking - dt)
+	var lane_speed := maxf(personality.lane_change_speed, personality.evade_speed) if _evading > 0.0 else personality.lane_change_speed
+	if _overtaking > 0.0 and personality.overtake_specialist:
+		lane_speed = maxf(lane_speed, 3.5)
 	lane = move_toward(lane, desired_lane, lane_speed * dt)
 
 	# Direção: mira um ponto à frente na faixa escolhida (mais perto ao desviar).
@@ -177,8 +200,9 @@ func _physics_process(dt: float) -> void:
 	var waiting := hunting and gap_player < -3.0 and gap_player > -45.0 and wait_time < MAX_WAIT
 	if waiting:
 		wait_time += dt
+	var overtake_push := personality.overtake_specialist and _overtaking > 0.0 and energy > 25.0 and to_corner > 15.0
 	bike.in_boost = not braking and not coasting and not finished and not waiting \
-			and (_want_boost(to_corner, dist) or chase)
+			and (_want_boost(to_corner, dist) or chase or overtake_push)
 
 
 	_check_stuck(dt, proj)
@@ -217,10 +241,23 @@ func _avoid_hazards(route_dir: Vector3, my_lat: float) -> bool:
 			obs.append({"pos": o["pos"], "vel": Vector3.ZERO, "radius": o["radius"]})
 	if hazard_manager != null:
 		obs.append_array(hazard_manager.call("obstacles_for_ai"))
+	if personality.avoids_puddles:
+		for pz in puddle_zones:
+			var pr := circuit.project(pz["pos"])
+			var right: Vector3 = (pr["dir"] as Vector3).cross(Vector3.UP)
+			var sz: Vector2 = pz["size"]
+			var half := absf(right.x) * sz.x * 0.5 + absf(right.z) * sz.y * 0.5
+			var along_half := absf(right.z) * sz.x * 0.5 + absf(right.x) * sz.y * 0.5
+			var dirp: Vector3 = pr["dir"]
+			var k := -along_half
+			while k <= along_half:
+				obs.append({"pos": (pz["pos"] as Vector3) + dirp * k, "vel": Vector3.ZERO, "radius": maxf(half - 0.75, 0.5), "soft": true})
+				k += 2.0
 	if obs.is_empty():
 		return false
 	var window := 8.0 + bike.speed * 2.0
 	var blocked: Array[Vector2] = []
+	var soft: Array[Vector2] = []
 	var nearest := INF
 	for o in obs:
 		var rel: Vector3 = (o["pos"] as Vector3) - bike.global_position
@@ -232,9 +269,19 @@ func _avoid_hazards(route_dir: Vector3, my_lat: float) -> bool:
 		var lat := circuit.signed_lateral(pred)
 		if absf(lat) > 5.5:
 			continue
-		blocked.append(Vector2(lat, float(o["radius"]) + 0.75))
-		if absf(lat - my_lat) < float(o["radius"]) + 0.75:
-			nearest = minf(nearest, ahead)
+		if o.get("soft", false):
+			soft.append(Vector2(lat, float(o["radius"]) + 0.75))
+		else:
+			blocked.append(Vector2(lat, float(o["radius"]) + 0.75))
+		if absf(lat - my_lat) < float(o["radius"]) + 0.75 and not o.get("soft", false):
+			nearest = minf(nearest, ahead) # poça: só muda de faixa, nunca freia
+	if blocked.is_empty() and soft.is_empty():
+		return false
+	# Primeiro tenta evitar tudo (inclusive poças); se não der, aceita atravessar a poça.
+	var all_blocks: Array[Vector2] = blocked.duplicate()
+	all_blocks.append_array(soft)
+	if _has_free_lane(all_blocks):
+		blocked = all_blocks
 	if blocked.is_empty():
 		return false
 	if not _lane_blocked(desired_lane, blocked) and not _lane_blocked(my_lat, blocked):
@@ -255,6 +302,15 @@ func _avoid_hazards(route_dir: Vector3, my_lat: float) -> bool:
 		_evading = 0.8
 		return nearest < 1.5 + bike.speed * 0.35 and _lane_blocked(my_lat, blocked)
 	return nearest < 3.0 + bike.speed * 0.9
+
+
+static func _has_free_lane(blocked: Array[Vector2]) -> bool:
+	var c := -MAX_LANE
+	while c <= MAX_LANE + 0.001:
+		if not _lane_blocked(c, blocked):
+			return true
+		c += 0.3
+	return false
 
 
 static func _lane_blocked(lat: float, blocked: Array[Vector2]) -> bool:
@@ -385,6 +441,16 @@ func _decide_lane(dt: float, route_dir: Vector3, my_lat: float) -> void:
 			var side := -1.0 if r_lat > 0.0 else 1.0
 			desired_lane = r_lat + side * 1.9
 			_avoid_timer = 1.2
+			if _overtaking <= 0.0:
+				overtakes_tried += 1
+			_overtaking = 1.5
+		# Fecha quem vem atrás tentando passar (Russ e Lucienne).
+		if personality.blocks_overtakes and _block_budget > 0.0 and _last_to_corner > 25.0 \
+				and along < -0.8 and along > -6.0 and absf(dlat) < 2.6 and r.speed > bike.speed - 0.5:
+			desired_lane = clampf(r_lat, my_lat - 1.5, my_lat + 1.5)
+			_avoid_timer = 0.5
+			_block_budget -= dt
+			_blocking = true
 	if _avoid_timer <= 0.0 and not personality.erratic:
 		desired_lane = move_toward(desired_lane, personality.base_lane, dt * 0.5)
 

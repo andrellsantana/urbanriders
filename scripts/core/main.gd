@@ -90,6 +90,7 @@ func _ready() -> void:
 			add_child(hazards)
 			hazards.setup(circuit, race, race.riders, features.crossing_points, (world as Neighborhood).parked_cars)
 		for ai in ai_riders:
+			ai.puddle_zones = (world as Neighborhood).puddle_zones
 			ai.features = features
 			ai.hazard_manager = hazards
 	camera_rig = CameraRig.new()
