@@ -51,6 +51,8 @@ var _crash_normal: Vector3 = Vector3.ZERO
 var _zones: Array[Dictionary] = []
 var _spawn: Transform3D
 var _bump: Vector3 = Vector3.ZERO
+var _bump_cooldown: float = 0.0
+const MAX_BUMP := 1.8 ## m/s máximos de empurrão acumulado
 
 const LAYER_WORLD := 1
 const LAYER_RIDERS := 2
@@ -132,6 +134,7 @@ func _physics_process(dt: float) -> void:
 		_fallen(dt)
 	if global_position.y < -30.0:
 		_respawn()
+	visual.tired = stamina.exhausted
 	visual.update_pose(speed, lean, steer, pedaling, boost_level, dt)
 
 
@@ -197,6 +200,7 @@ func _ride(dt: float) -> void:
 		var vy := velocity.y - cfg.gravity * dt
 		velocity = fwd * speed + Vector3.UP * vy + _bump
 	_bump = _bump.move_toward(Vector3.ZERO, 5.0 * dt)
+	_bump_cooldown = maxf(0.0, _bump_cooldown - dt)
 	var pre_velocity := velocity
 	var was_airborne := not on_floor
 	move_and_slide()
@@ -223,9 +227,10 @@ func _check_impacts(pre_velocity: Vector3) -> void:
 			if hit > config.rider_crash_kmh / BikePhysics.KMH and _grace_timer <= 0.0:
 				_crash("Trombou em outro ciclista!", n)
 				return
-			if hit > 0.2:
+			if hit > 0.2 and _bump_cooldown <= 0.0:
 				other.receive_bump(-n * hit * 0.6)
-				_bump += n * hit * 0.4
+				_bump = (_bump + n * hit * 0.4).limit_length(MAX_BUMP)
+				_bump_cooldown = 0.25
 				speed = maxf(0.0, speed - hit * 0.5)
 			continue
 		var impact := -flat_pre.dot(n)
@@ -238,9 +243,10 @@ func _check_impacts(pre_velocity: Vector3) -> void:
 
 ## Empurrão recebido de outro ciclista (desequilibra um pouco).
 func receive_bump(v: Vector3) -> void:
-	if state != State.RIDING:
+	if state != State.RIDING or _bump_cooldown > 0.0:
 		return
-	_bump += Vector3(v.x, 0.0, v.z)
+	_bump_cooldown = 0.25
+	_bump = (_bump + Vector3(v.x, 0.0, v.z)).limit_length(MAX_BUMP)
 	_overload_timer += v.length() * 0.08
 
 

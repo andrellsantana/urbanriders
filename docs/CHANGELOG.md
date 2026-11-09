@@ -1,5 +1,16 @@
 # Registro de alterações
 
+## v0.4.1 — Correções após o teste da Fase 4 (2026-11-09)
+- Energia justa e visível: pedalar gasta pouco e não recupera; só o pedal solto recupera.
+  Seta "recuperando" no HUD e aviso na primeira vez que a energia fica baixa. Penalidade só abaixo de 25%.
+- Rivais soltam o pedal visivelmente para recuperar, ficam "cansados" (pedalada pesada, corpo curvado)
+  e mostram o estado sobre o nome.
+- Pelotão equilibrado (rivais entre 3:13 e 3:19): Lucienne hesita menos e acelera mais nas retas;
+  Mint varia o ritmo entre corridas; corrigidos sprint final e "zona morta" de energia da IA.
+- Russ persegue o jogador: espera, fecha, empurra, devolve ultrapassagens e corta esquinas; provocações visíveis.
+- Empurrões limitados (antes podiam acumular velocidade extra).
+- 89 testes automatizados.
+
 ## v0.4 — Fase 4: adversários e regras (2026-11-09)
 - Lucienne, Russ e Mint controlados por IA, com a mesma física do jogador e visual provisório próprio
   (cores, cabelo — maria-chiquinhas, espetado, black puff —, bicicleta, altura).

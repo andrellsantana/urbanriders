@@ -5,17 +5,22 @@
 [resource]
 script = ExtResource("1")
 character_id = "lucienne"
-corner_speed_kmh = 15.0
+corner_speed_kmh = 16.0
 wet_corner_speed_kmh = 12.0
 knows_puddles = true
-brake_decel_estimate = 4.0
-brake_margin = 7.0
+brake_decel_estimate = 5.0
+brake_margin = 3.5
 steer_gain = 2.3
-boost_min_straight = 28.0
+boost_min_straight = 22.0
 boost_stamina_min = 50.0
-boost_stamina_stop = 22.0
+boost_stamina_stop = 30.0
 final_sprint_distance = 200.0
 base_lane = -1.0
 lane_change_speed = 2.2
 erratic = true
 erratic_interval = Vector2(2.0, 5.0)
+rest_below = 30.0
+rest_until = 70.0
+hesitation_chance = 0.06
+feminine = true
+pulse_strategy = true

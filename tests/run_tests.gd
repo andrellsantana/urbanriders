@@ -66,7 +66,9 @@ func _test_stamina() -> void:
 	e.value = 30.0
 	for i in 60 * 10:
 		e.update(Stamina.Effort.NORMAL, 0.0, 1.0 / 60.0)
-	check(e.value > 30.0 and e.value <= e.sustainable_level, "pedalada leve abaixo de 60%%: recupera aos poucos (%.0f%%)" % e.value)
+	check(e.value < 30.0 and e.value > 28.0, "pedalar não recupera energia, só gasta pouco (%.1f%%)" % e.value)
+	e.update(Stamina.Effort.COAST, 0.0, 2.0)
+	check(e.value > 34.0, "soltar o pedal recupera energia")
 
 	var lu: Resource = load("res://resources/ai_lucienne.tres")
 	var ru: Resource = load("res://resources/ai_russ.tres")
@@ -75,8 +77,10 @@ func _test_stamina() -> void:
 			and float(lu.get("boost_min_straight")) < float(mi.get("boost_min_straight")),
 			"Lucienne: imprevisível, cautelosa nas curvas, turbo nas retas")
 	check(ru.get("aggressive") and not ru.get("knows_puddles"), "Russ: trapaceiro (fecha e empurra)")
-	check(mi.get("polite") and not mi.get("aggressive") and float(mi.get("boost_stamina_stop")) >= 40.0,
+	check(mi.get("polite") and not mi.get("aggressive") and float(mi.get("boost_stamina_stop")) >= 25.0,
 			"Mint: competitiva e limpa, administra a energia")
+	check(float(lu.get("rest_below")) > 0.0 and float(ru.get("rest_below")) > 0.0 and float(mi.get("rest_below")) > 0.0,
+			"todos param de pedalar para recuperar energia")
 
 	var d := Stamina.new()
 	for i in 60 * 30:
@@ -543,6 +547,23 @@ func _test_ai_race() -> void:
 			in_range = false
 	check(in_range, "tempos dos rivais competitivos (2:30–5:00)")
 	check(lead_changes > 0, "posições mudam durante a corrida (%d trocas)" % lead_changes)
+	var rests := PackedStringArray()
+	var all_rest := true
+	var russ_bumps := 0
+	for ai in ais:
+		rests.append("%s %.0fs" % [ai.bike.name, ai.rest_time])
+		if ai.rest_time < 5.0:
+			all_rest = false
+		if ai.personality.hunts_player:
+			russ_bumps = ai.bumps_attempted + ai.blocks
+	check(all_rest, "rivais param de pedalar para recuperar (%s)" % ", ".join(rests))
+	check(russ_bumps > 0, "Russ fecha/empurra o jogador (%d investidas)" % russ_bumps)
+	var tmin := INF
+	var tmax := 0.0
+	for i in range(1, race.riders.size()):
+		tmin = minf(tmin, float(race.progress[i]["time"]))
+		tmax = maxf(tmax, float(race.progress[i]["time"]))
+	check(tmax - tmin < 25.0, "pelotão equilibrado (diferença de %.1f s entre os rivais)" % (tmax - tmin))
 	check(race.position_of(0) >= 1 and race.position_of(0) <= 4, "posição do jogador: %dº" % race.position_of(0))
 	main.queue_free()
 	await _frames(2)

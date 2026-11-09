@@ -14,6 +14,9 @@ extends Resource
 @export var boost_stamina_min: float = 45.0 ## energia mínima para começar o turbo (%)
 @export var boost_stamina_stop: float = 25.0 ## para o turbo abaixo desta energia (%)
 @export var final_sprint_distance: float = 250.0 ## na reta final, usa toda a energia
+@export var rest_below: float = 18.0 ## abaixo desta energia, solta o pedal para recuperar (%)
+@export var rest_until: float = 40.0 ## volta a pedalar quando a energia chega aqui (%)
+@export var pulse_strategy: bool = false ## alterna turbo e pedal solto (descansa sempre que não pode acelerar)
 @export_group("Comportamento")
 @export var base_lane: float = 0.0 ## faixa preferida (m; + = direita)
 @export var lane_change_speed: float = 1.6 ## m/s de deslocamento lateral
@@ -21,4 +24,9 @@ extends Resource
 @export var erratic_interval: Vector2 = Vector2(2.5, 6.0)
 @export var aggressive: bool = false ## fecha e empurra rivais
 @export var polite: bool = false ## evita contato
+@export var hunts_player: bool = false ## persegue o jogador para fechar e empurrar
+@export var cuts_corners: bool = false ## corta esquinas por dentro (pela calçada)
+@export var hesitation_chance: float = 0.0 ## chance de hesitar a cada mudança errática
+@export var pace_variation: float = 0.0 ## variação aleatória de ritmo entre corridas (km/h nas curvas)
+@export var feminine: bool = false ## concordância nos avisos ("cansada")
 @export var overtake_lookahead: float = 8.0

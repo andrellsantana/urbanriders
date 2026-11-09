@@ -38,7 +38,8 @@ Corrida 3D de bicicletas em **Red City** — Godot 4 + GDScript tipado, para mac
 **Rivais (IA):**
 - **Mint** (verde-menta): competitiva e limpa — boas curvas, administra a energia, abre espaço e não encosta.
 - **Lucienne** (azul): cautelosa nas curvas, rápida nas retas (usa muito turbo) e imprevisível (muda de faixa sem aviso).
-- **Russ** (laranja): trapaceiro — fecha quem vem atrás e joga a bicicleta em cima de quem está ao lado.
+- **Russ** (laranja): trapaceiro — **persegue você**: segura o ritmo para te esperar, fecha a sua frente
+  ("Sai da frente!"), joga a bicicleta em cima ("Abre!"), devolve ultrapassagens ("Volta aqui!") e corta esquinas pela calçada.
   Encostões **empurram**; trombada forte **derruba**.
 - Posição ao vivo à esquerda; rivais aparecem como pontos coloridos no minimapa; quadro final com tempos.
 
@@ -49,8 +50,11 @@ Corrida 3D de bicicletas em **Red City** — Godot 4 + GDScript tipado, para mac
 - **Poças** (manchas vermelhas) perto de duas esquinas e numa reta: curva rápida nelas derruba.
 - Andar na contramão mostra **SENTIDO ERRADO!**. Três quedas = corrida perdida.
 - Ao chegar: classificação final, tempo e **recorde** (salvo no computador).
-- **Energia:** pedalando normal ela gasta pouco e, abaixo de 60%, recupera aos poucos; o turbo (S) é o que esgota.
-  Abaixo de 40% a velocidade máxima cai.
+- **Energia:** pedalando normal ela gasta muito pouco (~7% por minuto) e **não** recupera;
+  só recupera com o **pedal solto**, freando ou parado (seta verde "recuperando" ao lado da barra).
+  O turbo (S) é o que esgota. Abaixo de 25% a velocidade máxima cai.
+- Os rivais seguem a mesma regra: você os verá **soltar o pedal** para recuperar ("recuperando" sobre o nome)
+  e ficar "cansado/cansada" quando exageram.
 
 **Pista de testes** (`scenes/test_track.tscn`): slalom de cones, rampa, piso molhado, grama e muros.
 

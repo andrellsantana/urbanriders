@@ -52,11 +52,11 @@ tests/run_tests.gd               testes de unidade e integração
 | Situação | Efeito |
 |---|---|
 | Parado | +9 %/s |
-| Sem pedalar, rodando | +5 %/s |
-| Pedalada normal | acima de 60 %: −0,3 %/s; abaixo de 60 %: +0,8 %/s (ritmo sustentável); cansado: +1,5 %/s |
+| Sem pedalar, rodando (ou freando) | +3,5 %/s |
+| Pedalada normal | −0,12 %/s (ritmo sustentável; pedalar **não** recupera) |
 | Turbo (S) | até −9 %/s |
 | ≤ 10 % | "Cansado": sem turbo até voltar a 30 % |
-| < 40 % | velocidade máxima reduzida (até 70 %) |
+| < 25 % | velocidade máxima reduzida (até 70 %) |
 
 ## Bairro e desempenho
 - Mundo de ~525 × 540 m: 8 × 7 ruas, 42 quarteirões (2 praças), casas de 1 andar (algumas de 1½), altura máxima 7 m.
@@ -77,7 +77,12 @@ tests/run_tests.gd               testes de unidade e integração
 - Direção: mira um ponto à frente (5 m + 0,45·v) na faixa escolhida (±2,4 m, longe dos carros estacionados).
 - Velocidade: planeja a frenagem para a próxima esquina (v² − v_curva²)/(2·desaceleração) + margem;
   reduz a velocidade de curva se conhece poças perto da esquina.
-- Turbo conforme a energia e a reta livre à frente; sprint final nos últimos metros.
+- Turbo conforme a energia e a reta livre à frente; sprint final só se a energia alcança a chegada.
+- Recuperação visível: abaixo de `rest_below` (ou sem energia para turbo, na estratégia de pulsos) solta o pedal
+  até `rest_until`. Estados aparecem sobre o nome: "recuperando", "cansado/cansada", provocações do Russ.
+- Russ (`hunts_player`): espera o jogador (até 40 s por corrida, sem soltar o pedal), fecha, empurra,
+  devolve ultrapassagens; `cuts_corners` corta esquinas por dentro.
+- Empurrões limitados (1,8 m/s acumulados, intervalo de 0,25 s) para não gerar velocidade extra.
 - Ultrapassagem: rival mais lento à frente na mesma faixa → muda para o lado com mais espaço.
 - Personalidades (`resources/ai_*.tres`): Mint (educada, estratégica), Lucienne (errática, cautelosa nas curvas,
   turbo nas retas), Russ (agressivo: fecha e empurra; ignora poças).

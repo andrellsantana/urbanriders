@@ -17,6 +17,9 @@ var big_text: String = ""
 var big_timer: float = 0.0
 var result_lines: PackedStringArray = PackedStringArray()
 var cp_flash: float = 0.0
+var energy_trend: float = 0.0 ## %/s suavizado (+ recuperando, - gastando)
+var _last_energy: float = -1.0
+var _hint_shown: bool = false
 
 
 func _ready() -> void:
@@ -82,6 +85,15 @@ func _on_out() -> void:
 
 func _process(dt: float) -> void:
 	big_timer = maxf(0.0, big_timer - dt)
+	if player != null and dt > 0.0:
+		var e := player.stamina.value
+		if _last_energy >= 0.0:
+			energy_trend = lerpf(energy_trend, (e - _last_energy) / dt, 1.0 - exp(-4.0 * dt))
+		_last_energy = e
+		if not _hint_shown and e < 30.0 and message == "":
+			_hint_shown = true
+			message = "Energia baixa! Solte o pedal para recuperar."
+			message_timer = 3.5
 	cp_flash = maxf(0.0, cp_flash - dt)
 	if message_timer > 0.0:
 		message_timer -= dt
@@ -147,6 +159,14 @@ func _on_draw() -> void:
 	_text(bar_pos + Vector2(0, 52), "ENERGIA %d%%" % roundi(e * 100.0), 22)
 	if player.stamina.exhausted:
 		_text(bar_pos + Vector2(170, 52), "CANSADO!", 22, Color(1, 0.4, 0.3))
+	# Seta: energia subindo (verde) ou descendo (laranja).
+	var ax := bar_pos.x + bar_size.x + 26.0
+	var ay := bar_pos.y + bar_size.y * 0.5
+	if energy_trend > 0.3:
+		canvas.draw_colored_polygon(PackedVector2Array([Vector2(ax, ay - 14), Vector2(ax + 12, ay + 6), Vector2(ax - 12, ay + 6)]), Color(0.4, 1, 0.45))
+		_text(Vector2(ax + 20, ay + 8), "recuperando", 18, Color(0.6, 1, 0.6))
+	elif energy_trend < -0.5:
+		canvas.draw_colored_polygon(PackedVector2Array([Vector2(ax, ay + 14), Vector2(ax + 12, ay - 6), Vector2(ax - 12, ay - 6)]), Color(1, 0.6, 0.2))
 
 	# Velocímetro e turbo.
 	var right := vp.x - 60.0

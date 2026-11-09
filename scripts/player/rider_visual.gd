@@ -16,6 +16,8 @@ const HIP_Z := 0.3
 
 ## Aparência (ver characters.gd). Definir antes de entrar na árvore.
 var look: Dictionary = {}
+## Cansado: pedalada pesada e corpo curvado.
+var tired: bool = false
 var lean_root: Node3D
 var rider: Node3D
 var rear_wheel: Node3D
@@ -310,7 +312,8 @@ func update_pose(speed: float, lean: float, steer: float, pedaling: bool, boost:
 	rear_wheel.rotation.x = _wheel_angle
 	front_wheel.rotation.x = _wheel_angle
 	if pedaling and not _crashing:
-		crank_angle = wrapf(crank_angle - maxf(wheel_rate, 4.0) / GEAR_RATIO * dt, -TAU, TAU)
+		var cadence := maxf(wheel_rate, 4.0) / GEAR_RATIO * (0.75 if tired else 1.0)
+		crank_angle = wrapf(crank_angle - cadence * dt, -TAU, TAU)
 	crank.rotation.x = crank_angle
 	fork_pivot.rotation.y = steer * 0.35
 
@@ -327,7 +330,8 @@ func update_pose(speed: float, lean: float, steer: float, pedaling: bool, boost:
 		shoe.position = foot + Vector3(0.0, 0.0, -0.04)
 
 	# Turbo: o garoto balança o corpo de um lado ao outro.
-	rider.rotation.z = sin(crank_angle) * 0.07 * boost
+	rider.rotation.z = sin(crank_angle) * 0.07 * boost + (sin(crank_angle * 2.0) * 0.04 if tired else 0.0)
+	rider.rotation.x = lerpf(rider.rotation.x, -0.12 if tired else 0.0, 1.0 - exp(-4.0 * dt))
 
 	if _crashing:
 		_crash_t += dt

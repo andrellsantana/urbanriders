@@ -122,3 +122,17 @@ func distance_to_next_corner(distance: float) -> float:
 		if cd > 0.0:
 			best = minf(best, cd)
 	return best
+
+
+## Sentido da próxima esquina: +1 = curva à direita, -1 = à esquerda.
+func next_turn_sign(distance: float) -> float:
+	var d := fposmod(distance, length)
+	for i in range(1, points.size() + 1):
+		if cumulative[i] > d:
+			var n := points.size()
+			var a := points[(i - 1) % n]
+			var b := points[i % n]
+			var c := points[(i + 1) % n]
+			var turn := (b - a).normalized().cross((c - b).normalized()).y
+			return 1.0 if turn < 0.0 else -1.0
+	return 1.0

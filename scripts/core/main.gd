@@ -80,6 +80,7 @@ func _place_on_grid(b: BikeController, circuit: Circuit, slot: Vector2) -> void:
 func _spawn_rivals(circuit: Circuit) -> void:
 	var all: Array[BikeController] = [player]
 	var personalities: Array[AIPersonality] = []
+	var tags: Array[Label3D] = []
 	for k in RIVAL_ORDER.size():
 		var id := RIVAL_ORDER[k]
 		var look := Characters.look(id)
@@ -104,6 +105,7 @@ func _spawn_rivals(circuit: Circuit) -> void:
 		tag.position = Vector3(0, 2.05, 0)
 		tag.visibility_range_end = 45.0
 		b.add_child(tag)
+		tags.append(tag)
 		race.add_rider(b, String(look["name"]), look["color"])
 		rivals.append(b)
 		all.append(b)
@@ -112,7 +114,8 @@ func _spawn_rivals(circuit: Circuit) -> void:
 		var ai := AIRider.new()
 		ai.name = "IA_" + rivals[k].name
 		add_child(ai)
-		ai.setup(rivals[k], circuit, personalities[k], all, (world as Neighborhood).puddles, 100 + k)
+		ai.setup(rivals[k], circuit, personalities[k], all, (world as Neighborhood).puddles, randi())
+		ai.tag = tags[k]
 		ai_riders.append(ai)
 	race.rider_finished.connect(func(i: int, _t: float, _p: int) -> void:
 		if i > 0:
